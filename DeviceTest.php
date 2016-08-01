@@ -250,7 +250,9 @@ class DeviceTest extends CallflowTestCase
             $this->assertTrue(self::$b_device->getCfParam("enabled"));
             $this->assertEquals(self::$b_device->getCfParam("number"), self::C_EXT);
         }
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::notice("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfDisable(){
@@ -271,14 +273,16 @@ class DeviceTest extends CallflowTestCase
             $channel->waitDestroy();
             $this->assertFalse(self::$b_device->getCfParam("enabled"));
         }
-
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfBasic(){
 	    Log::notice("testing Call Forward basic");
         $channels   = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
         $c_username = self::$c_device->getSipUsername();
 
         self::$b_device->resetCfParams(self::C_EXT);
@@ -293,13 +297,16 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $this->ensureAnswer($uuid, $c_channel);
         }
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfKeyPress(){
         Log::notice("testing Call Forward key press, AKA answering a forwarded call");
 	    $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
         self::$b_device->resetCfParams(self::C_EXT);
@@ -327,13 +334,17 @@ class DeviceTest extends CallflowTestCase
             $this->hangupChannels($a_channel, $c_channel);
 
         }
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfSubstituteFalse(){
 	    Log::notice("testing Call Forward substitute false");
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
+        $c_device_id = self::$c_device->getId();
         $b_username  = self::$b_device->getSipUsername();
         $c_username  = self::$c_device->getSipUsername();
 
@@ -343,6 +354,13 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfSubstituteFalse-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::notice("%s - device %s calls SIP URI %s\n
+                        and username-B %s on device-B %s\n
+                        and username-C %s on device-C %s",
+                        __METHOD__, $a_device_id, $sip_uri,
+                        $b_username, $b_device_id,
+                        $c_username, $c_device_id);
+
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -352,7 +370,9 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $this->ensureAnswer($uuid, $c_channel);
         }
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfSubstituteTrue(){
@@ -360,6 +380,7 @@ class DeviceTest extends CallflowTestCase
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
+        $c_device_id = self::$c_device->getId();
         $b_username  = self::$b_device->getSipUsername();
         $c_username  = self::$c_device->getSipUsername();
 
@@ -369,6 +390,13 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfSubstituteTrue-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::notice("%s - device %s calls SIP URI %s\n
+                        and username-B %s on device-B %s\n
+                        and username-C %s on device-C %s",
+                        __METHOD__, $a_device_id, $sip_uri,
+                        $b_username, $b_device_id,
+                        $c_username, $c_device_id);
+
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -378,7 +406,9 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $this->ensureAnswer($uuid, $c_channel);
         }
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
 
@@ -386,6 +416,7 @@ class DeviceTest extends CallflowTestCase
 	    Log::notice("testing Call Forward keep caller ID true");
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
         self::$b_device->resetCfParams(self::C_EXT);
@@ -406,13 +437,16 @@ class DeviceTest extends CallflowTestCase
             );
             $this->ensureAnswer($uuid, $c_channel);
         }
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfKeepCallerIdFalse(){
 	    Log::notice("testing Call Forward keep caller ID false");
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
         self::$b_device->resetCfParams(self::C_EXT);
@@ -433,13 +467,17 @@ class DeviceTest extends CallflowTestCase
             );
             $this->ensureAnswer($uuid, $c_channel);
         }
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfFailover(){
 	    Log::notice("testing Call Forward failover");
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
+        $no_device_id = self::$no_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
         $test_account = self::getTestAccount();
@@ -458,8 +496,13 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $this->ensureAnswer($uuid, $c_channel);
         }
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
+
+        Log::debug("Resetting Call Flow paramaters for device %s ...", $no_device_id);
         self::$no_device->resetCFParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $no_device_id);
     }
 
     public function testCfDirectCallsOnly(){
@@ -497,7 +540,9 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $this->ensureAnswer($uuid, $b_channel);
         }
+        Log::debug("Resetting Call Flow parameters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
+        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCidOffnet(){
