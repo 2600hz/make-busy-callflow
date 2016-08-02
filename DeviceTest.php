@@ -243,9 +243,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertTrue(self::$b_device->getCfParam("enabled"));
             $this->assertEquals(self::$b_device->getCfParam("number"), self::C_EXT);
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::notice("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfDisable(){
@@ -265,9 +263,7 @@ class DeviceTest extends CallflowTestCase
             $channel->waitDestroy();
             $this->assertFalse(self::$b_device->getCfParam("enabled"));
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfBasic(){
@@ -288,9 +284,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $this->ensureAnswer($uuid, $c_channel);
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfKeyPress(){
@@ -324,9 +318,7 @@ class DeviceTest extends CallflowTestCase
             $this->hangupChannels($a_channel, $c_channel);
 
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfSubstituteFalse(){
@@ -353,9 +345,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $this->ensureAnswer($uuid, $c_channel);
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfSubstituteTrue(){
@@ -382,9 +372,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $this->ensureAnswer($uuid, $c_channel);
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
 
@@ -413,9 +401,7 @@ class DeviceTest extends CallflowTestCase
             );
             $this->ensureAnswer($uuid, $c_channel);
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfKeepCallerIdFalse(){
@@ -443,9 +429,7 @@ class DeviceTest extends CallflowTestCase
             );
             $this->ensureAnswer($uuid, $c_channel);
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCfFailover(){
@@ -472,13 +456,9 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $this->ensureAnswer($uuid, $c_channel);
         }
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
 
-        Log::debug("Resetting Call Flow paramaters for device %s ...", $no_device_id);
         self::$no_device->resetCFParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $no_device_id);
     }
 
     public function testCfDirectCallsOnly(){
@@ -520,9 +500,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $this->ensureAnswer($uuid, $b_channel);
         }
-        Log::debug("Resetting Call Flow parameters for device %s ...", $b_device_id);
         self::$b_device->resetCfParams();
-        Log::info("Successfully reset Call Flows parameters for device %s.", $b_device_id);
     }
 
     public function testCidOffnet(){
@@ -547,7 +525,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCidOnnet(){
-	    Log::notice("%s - testing Caller ID on net", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -569,7 +547,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCidEmergency(){
-	    Log::notice("%s - testing Caller ID emergency", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -590,7 +568,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testRestrictedCallAllow(){
-	    Log::notice("%s - testing allowed Restricted Calls", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -608,7 +586,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testRestrictedCallDeny(){
-	    Log::notice("%s - testing denied Restricted Calls", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels     = self::getChannels();
         $a_device_id  = self::$a_device->getId();
 
@@ -629,7 +607,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCalleeDisabled() {
-	    Log::notice("%s - testing disabled Callee", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -653,7 +631,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCalleeEnabled() {
-	    Log::notice("%s - testing enabled Callee", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -678,7 +656,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCallerDisabled() {
-	    Log::notice("%s - testing disabled Caller", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -704,7 +682,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCallerEnabled() {
-	    Log::notice("%s - testing enabled Caller", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -730,7 +708,7 @@ class DeviceTest extends CallflowTestCase
 
 
     public function testUsernameChange(){
-	    Log::notice("%s - testing change user name", __METHOD__);
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -769,7 +747,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testPasswordChange(){
-	    Log::notice("testing change password");
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -808,7 +786,7 @@ class DeviceTest extends CallflowTestCase
         }
     }
     public function testDeviceBlindTransfer() {
-    	Log::notice("testing device's blind transfer");
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_name = self::$b_device->getSipUsername();
@@ -845,7 +823,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testDeviceAttendedTransfer() {
-	    Log::notice("testing device's attended transfer");
+	    Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -912,7 +890,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testRealmChangeRegistration() {
-	    Log::notice("testing Realm change registration");
+	    Log::notice("%s", __METHOD__);
         $test_account = self::getTestAccount();
         $a_device_id = self::$a_device->getId();
         $gateways = Profiles::getProfile('auth')->getGateways();
