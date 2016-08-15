@@ -10,6 +10,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\User;
 use \MakeBusy\Kazoo\Applications\Crossbar\Voicemail;
 
 use \MakeBusy\Common\Configuration;
+use \MakeBusy\Common\Log;
 
 class VoicemailTest extends CallflowTestCase
 {
@@ -64,6 +65,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-25
     public function testSetupOwnUser() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $b_device_id = self::$b_device->getId();
 
@@ -126,6 +128,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-25
     public function testSetupOtherUser() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -190,6 +193,7 @@ class VoicemailTest extends CallflowTestCase
 
     // MKBUSY-26
     public function testUserChangePin(){
+        Log::notice("%s", __METHOD__);
         $channels = self::getChannels();
 
         $b_device_id = self::$b_device->getId();
@@ -233,6 +237,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-28
     public function testCheckOtherMailboxNoMessages(){
+        Log::notice("%s", __METHOD__);
 
         $channels = self::getChannels();
 
@@ -266,6 +271,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-27
     public function testLeaveMessage() {
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $b_device_id = self::$b_device->getId();
@@ -315,6 +321,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY 27
     public function testLeaveMessageRerecord() {
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $b_device_id  = self::$b_device->getId();
@@ -373,6 +380,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-29
     public function testDeleteAfterNotify() {
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $a_device_id = self::$a_device->getId();
@@ -397,6 +405,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-34
     public function testSaveMessage() {
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $b_device_id  = self::$b_device->getId();
@@ -482,12 +491,14 @@ class VoicemailTest extends CallflowTestCase
 
 
     private function expectPrompt($channel, $descriptor, $timeout = 10){
+        Log::notice("%s", __METHOD__);
          $tone = $channel->detectTone($descriptor, $timeout);
          $expected = strtolower($descriptor);
          $this->assertEquals($expected, $tone);
     }
 
     private function leaveMessage($calling_device, $target, $freq, $refreq = null){
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $uuid    = $channels->gatewayOriginate($calling_device, $target);

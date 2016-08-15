@@ -14,6 +14,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
+use \MakeBusy\Common\Log;
 
 class QuickCallTest extends CallflowTestCase
 {
@@ -82,6 +83,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testDeviceQuickCall() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -100,6 +102,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testDeviceQuickCallAutoAnswer() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -132,6 +135,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testDeviceQuickCallCidName() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -164,6 +168,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testDeviceQuickCallCidNumber() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -196,6 +201,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testDeviceQuickCallAllowAnon() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -238,6 +244,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testUserQuickCall() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -257,6 +264,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testUserQuickCallAutoAnswer() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -290,6 +298,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testUserQuickCallCidName() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -323,6 +332,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testUserQuickCallCidNumber() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -445,6 +455,7 @@ class QuickCallTest extends CallflowTestCase
  */
 
     private function quickCall($user_or_dev, $user_dev_id, $target, $auth_token = NULL) {
+        Log::notice("%s", __METHOD__);
         $account_id  = self::getTestAccount()->getAccountId();
 
         $url = 'http://192.168.56.101:8000/v1';
@@ -455,6 +466,7 @@ class QuickCallTest extends CallflowTestCase
             $url .= '?auth_token=' . $auth_token;
         }
 
+        Log::debug("CURLing %s", $url);
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
@@ -468,6 +480,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     private function generateAuthToken($username, $password, $realm) {
+        Log::notice("%s", __METHOD__);
         $url = 'http://192.168.56.101:8000/v1/user_auth';
 
         $string = "$username:$password";
@@ -476,6 +489,7 @@ class QuickCallTest extends CallflowTestCase
 
         $data = '{ "data" : { "credentials" : "' . $credentials . '", "realm" : "'. $realm . '"},"verb":"PUT"}';
 
+        Log::debug("CURLing %s with data %s", $url, $data);
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -492,6 +506,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     private function ensureAnswer($a_user, $b_user) {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
 
         $a_channel = $channels->waitForInbound($a_user);
@@ -509,6 +524,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     private function ensureTalking($first_channel, $second_channel, $freq = 600){
+        Log::notice("%s", __METHOD__);
         $first_channel->playTone($freq, 3000, 0, 5);
         $tone = $second_channel->detectTone($freq, 20);
         $first_channel->breakout();
@@ -516,6 +532,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     private function hangupChannels($hangup_channel, $other_channels){
+        Log::notice("%s", __METHOD__);
         $hangup_channel->hangup();
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $hangup_channel->waitDestroy(30));
 

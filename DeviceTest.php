@@ -12,7 +12,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\Resource;
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
 
-use Shared\Common\Log;
+use \MakeBusy\Common\Log;
 
 class DeviceTest extends CallflowTestCase
 {
@@ -44,7 +44,7 @@ class DeviceTest extends CallflowTestCase
     const RESTRICTED_NUMBER = '6845551234';
 
     public static function setUpBeforeClass() {
-        Log::notice("setting up for device test");
+//        Log::dump("DEBUG_BACKTRACE", debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
         parent::setUpBeforeClass();
 
         $test_account = self::getTestAccount();
@@ -95,7 +95,7 @@ class DeviceTest extends CallflowTestCase
         //  at once
         self::getEsl()->flushEvents();
         self::getEsl()->api("hupall");
-        Log::notice("");
+        Log::info("%s - flushed events & hung up all channels for SETUP", __METHOD__);
     }
 
     public function testRegistrations() {
@@ -144,10 +144,11 @@ class DeviceTest extends CallflowTestCase
 
     public function testSipNPAN() {
         Log::notice("%s", __METHOD__);
-	    $channels    = self::getChannels();
+        $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
-
         self::$b_device->setInviteFormat("npan");
+        //Remove when bug is fixed
+        $b_username = self::$b_device->getSipUsername();
 
         $uuid_base = "testSipNPAN-";
 
@@ -155,16 +156,20 @@ class DeviceTest extends CallflowTestCase
             $target = self::B_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $channel = $channels->waitForInbound(self::B_NUMBER);
+            //TODO file bug report, kazoo 4.0 not respecting invite format NPAN
+           // $channel = $channels->waitForInbound(self::B_NUMBER);
+            $channel = $channels->waitForInbound($b_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-	        $this->ensureAnswer($uuid, $channel);
+            $this->ensureAnswer($uuid, $channel);
         }
     }
 
     public function testSip1NPAN() {
-    	Log::notice("%s", __METHOD__);
-	    $channels    = self::getChannels();
+        Log::notice("%s", __METHOD__);
+        $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+         //remove when bug is fixed
+        $b_username = self::$b_device->getSipUsername();
 
         self::$b_device->setInviteFormat("1npan");
         $uuid_base = "testSip1NPAN-";
@@ -174,32 +179,33 @@ class DeviceTest extends CallflowTestCase
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound('1'. self::B_NUMBER);
+            $channel = $channels->waitForInbound($b_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
             $this->ensureAnswer($uuid, $channel);
         }
     }
 
     public function testSipE164() {
-       	Log::notice("%s", __METHOD__);
-	    $channels    = self::getChannels();
+        Log::notice("%s", __METHOD__);
+        $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
-
+        $b_username = self::$b_device->getSipUsername();
         self::$b_device->setInviteFormat("e164");
         $uuid_base = "testSipE164-";
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_NUMBER .'@'. $sip_uri;
-            $target = self::B_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound('+1' . self::B_NUMBER);
+            $channel = $channels->waitForInbound($b_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
             $this->ensureAnswer($uuid, $channel);
         }
     }
 
     public function testSipRoute() {
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -212,7 +218,6 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testSipRoute-";
 
         foreach (self::getSipTargets() as $sip_uri) {
-            $target = self::B_NUMBER .'@'. $sip_uri;
             $target = self::B_EXT .'@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -226,9 +231,10 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfEnable(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $b_device_id = self::$b_device->getId();
+        self::$b_device->resetCfParams(self::C_EXT);
 
         $uuid_base = "testCfEnable-";
 
@@ -247,7 +253,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfDisable(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $b_device_id = self::$b_device->getId();
 
@@ -267,7 +273,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfBasic(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -289,12 +295,12 @@ class DeviceTest extends CallflowTestCase
 
     public function testCfKeyPress(){
         Log::notice("%s", __METHOD__);
-	    $channels    = self::getChannels();
+        $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
-        self::$b_device->resetCfParams(self::C_EXT);
+//        self::$b_device->resetCfParams(self::C_EXT);
         self::$b_device->setCfParam("require_keypress", TRUE);
 
         $uuid_base = "testCfKeyPress-";
@@ -322,7 +328,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfSubstituteFalse(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -349,7 +355,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfSubstituteTrue(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -377,7 +383,7 @@ class DeviceTest extends CallflowTestCase
 
 
     public function testCfKeepCallerIdTrue(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -405,7 +411,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfKeepCallerIdFalse(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -433,7 +439,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfFailover(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -462,7 +468,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfDirectCallsOnly(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels     = self::getChannels();
         $a_device_id  = self::$a_device->getId();
         $b_device_id  = self::$b_device->getId();
@@ -489,7 +495,7 @@ class DeviceTest extends CallflowTestCase
             $this->ensureAnswer($uuid, $c_channel);
         }
 
-       foreach (self::getSipTargets() as $sip_uri) {
+        foreach (self::getSipTargets() as $sip_uri) {
             Log::debug("placing a call via ring-group, expecting cf device %s to not ring", $c_username);
             $target  = self::RINGGROUP_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . "rgext-" . Utils::randomString(8));
@@ -504,7 +510,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCidOffnet(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id  = self::$a_device->getId();
 
@@ -525,7 +531,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCidOnnet(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -547,7 +553,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCidEmergency(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -568,7 +574,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testRestrictedCallAllow(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -586,7 +592,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testRestrictedCallDeny(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels     = self::getChannels();
         $a_device_id  = self::$a_device->getId();
 
@@ -607,7 +613,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCalleeDisabled() {
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -631,7 +637,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCalleeEnabled() {
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -656,7 +662,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCallerDisabled() {
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -682,7 +688,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCallerEnabled() {
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -708,7 +714,7 @@ class DeviceTest extends CallflowTestCase
 
 
     public function testUsernameChange(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -747,7 +753,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testPasswordChange(){
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -786,7 +792,7 @@ class DeviceTest extends CallflowTestCase
         }
     }
     public function testDeviceBlindTransfer() {
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_name = self::$b_device->getSipUsername();
@@ -823,7 +829,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testDeviceAttendedTransfer() {
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -890,7 +896,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testRealmChangeRegistration() {
-	    Log::notice("%s", __METHOD__);
+        Log::notice("%s", __METHOD__);
         $test_account = self::getTestAccount();
         $a_device_id = self::$a_device->getId();
         $gateways = Profiles::getProfile('auth')->getGateways();

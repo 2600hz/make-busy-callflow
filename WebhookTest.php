@@ -8,6 +8,7 @@ use \MakeBusy\FreeSWITCH\Sofia\Gateways;
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Kazoo\Applications\Crossbar\Webhook;
 use \MakeBusy\Kazoo\Applications\Crossbar\Device;
+use \MakeBusy\Common\Log;
 
 class WebhookTest extends CallflowTestCase
 {
@@ -35,7 +36,7 @@ class WebhookTest extends CallflowTestCase
         $webhook_answer  = new Webhook($test_account, array('uri' => "$uri",
                                                            'hook' => 'channel_answer'));
 
-        $webhook_destory = new Webhook($test_account, array('uri' => "$uri", 
+        $webhook_destory = new Webhook($test_account, array('uri' => "$uri",
                                                            'hook' => 'channel_destroy'));
 
         Profiles::loadFromAccounts();
@@ -51,6 +52,7 @@ class WebhookTest extends CallflowTestCase
     }
 
     public function testWebhookBasic() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_sipuser   = self::$b_device->getSipUsername();
@@ -92,6 +94,7 @@ class WebhookTest extends CallflowTestCase
     }
 
     private function ensureAnswer($bg_uuid, $b_channel){
+        Log::notice("%s", __METHOD__);
         $channels = self::getChannels();
 
         $b_channel->answer();
@@ -110,6 +113,7 @@ class WebhookTest extends CallflowTestCase
     }
 
     private function ensureTalking($first_channel, $second_channel, $freq = 600){
+        Log::notice("%s", __METHOD__);
         $first_channel->playTone($freq, 3000, 0, 5);
         $tone = $second_channel->detectTone($freq, 20);
         $first_channel->breakout();
@@ -117,6 +121,7 @@ class WebhookTest extends CallflowTestCase
     }
 
     private function hangupChannels($hangup_channel, $other_channels){
+        Log::notice("%s", __METHOD__);
         $hangup_channel->hangup();
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $hangup_channel->waitDestroy(30));
 

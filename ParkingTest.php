@@ -11,6 +11,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\Resource;
 
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
+use \MakeBusy\Common\Log;
 
 class ParkingTest extends CallflowTestCase
 {
@@ -57,6 +58,7 @@ class ParkingTest extends CallflowTestCase
 
     //MKBUSY-74: Attended transfer, using both park (*4) and retrieve (*5)
     public function testAttendedValetRetrieve() {
+        Log::notice("%s - Attended transfer using both park *4 and retrieve *5", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -64,6 +66,7 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
             $referred_by = '<sip:' . $b_device_name
                             . '@' . Configuration::getSipGateway('auth')
@@ -117,6 +120,7 @@ class ParkingTest extends CallflowTestCase
 
     //MKBUSY-72: Attended transfer, auto (park)
     public function testAttendedPark() {
+        Log::notice("%s - Attended transfer auto park", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -125,6 +129,7 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
             $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
@@ -172,6 +177,7 @@ class ParkingTest extends CallflowTestCase
 
     //MKBUSY-73: Blind transfer, auto (park)
     public function testBlindPark() {
+        Log::notice("%s - Blind transfer auto park", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $c_device_id = self::$c_device->getId();
@@ -179,6 +185,7 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
@@ -204,6 +211,7 @@ class ParkingTest extends CallflowTestCase
 
     //MKBUSY-77: Blind transfer, park, occupied slot.
     public function testBlindParkToOccupied() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $c_device_id = self::$c_device->getId();
@@ -214,6 +222,7 @@ class ParkingTest extends CallflowTestCase
         $realm = self::$realm;
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $b_ext= self::B_EXT . '@' . $sip_uri;
             $b_uri = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
@@ -256,6 +265,7 @@ class ParkingTest extends CallflowTestCase
     //MKBUSY-78
     //Test answering parked call ring back via attended transfer.
     public function testAttendedParkRingback() {
+        Log::notice("%s - answering parked call ring back via attended transfer", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -264,6 +274,7 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
             $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
@@ -310,6 +321,7 @@ class ParkingTest extends CallflowTestCase
 
     //MKBUSY-79: Test attended transfer, ignore ringback.
     public function testAttendedParkIgnoreRingback() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -318,6 +330,7 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
             $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
@@ -356,6 +369,7 @@ class ParkingTest extends CallflowTestCase
             $ringback = $channels->waitForInbound($b_device_name, 13);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $ringback);
 
+            Log::debug("Sleeping for 20 seconds...");
             sleep(20); // let it finish ringing...
 
             $uuid_2 = $channels->gatewayOriginate($c_device_id, $parking_spot);
@@ -407,6 +421,7 @@ class ParkingTest extends CallflowTestCase
 */
 
     private function ensureAnswer($bg_uuid, $b_channel){
+        Log::notice("%s", __METHOD__);
         $channels = self::getChannels();
 
         $b_channel->answer();
@@ -423,6 +438,7 @@ class ParkingTest extends CallflowTestCase
     }
 
     private function ensureTalking($first_channel, $second_channel, $freq = 600){
+        Log::notice("%s", __METHOD__);
         $first_channel->playTone($freq, 10000, 0, 5);
         $tone = $second_channel->detectTone($freq, 20);
         $first_channel->breakout();
@@ -430,6 +446,7 @@ class ParkingTest extends CallflowTestCase
     }
 
     private function hangupChannels($hangup_channel, $other_channels){
+        Log::notice("%s", __METHOD__);
         $hangup_channel->hangup();
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $hangup_channel->waitDestroy(30));
 
