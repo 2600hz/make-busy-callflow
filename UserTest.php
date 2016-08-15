@@ -790,42 +790,4 @@ class UserTest extends CallflowTestCase
         }
     }
 
-    private function ensureAnswer($bg_uuid, $b_channel){
-        Log::notice("%s", __METHOD__);
-        $channels = self::getChannels();
-
-        $b_channel->answer();
-
-        $a_channel = $channels->waitForOriginate($bg_uuid, 30);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
-
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $a_channel->waitAnswer(30));
-
-        $a_channel->log("we are connected!");
-
-        $this->ensureTalking($a_channel, $b_channel, 1600);
-        $this->ensureTalking($b_channel, $a_channel, 600);
-        $this->hangupChannels($a_channel, $b_channel);
-    }
-
-    private function ensureTalking($first_channel, $second_channel, $freq = 600){
-        Log::notice("%s", __METHOD__);
-        $first_channel->playTone($freq, 3000, 0, 5);
-        $tone = $second_channel->detectTone($freq, 2000);
-        $first_channel->breakout();
-        $this->assertEquals($freq, $tone);
-    }
-
-    private function hangupChannels($hangup_channel, $other_channels){
-        Log::notice("%s", __METHOD__);
-        $hangup_channel->hangup();
-
-        if (is_array($other_channels)){
-            foreach ($other_channels as $channel){
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $channel->waitDestroy());
-            }
-        } else {
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $other_channels->waitDestroy());
-        }
-    }
 }

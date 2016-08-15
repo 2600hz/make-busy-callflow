@@ -505,43 +505,4 @@ class QuickCallTest extends CallflowTestCase
         return $result->auth_token;
     }
 
-    private function ensureAnswer($a_user, $b_user) {
-        Log::notice("%s", __METHOD__);
-        $channels   = self::getChannels();
-
-        $a_channel = $channels->waitForInbound($a_user);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
-        $a_channel->answer();
-
-        $b_channel = $channels->waitForInbound($b_user);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
-        $b_channel->answer();
-
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
-        $this->hangupChannels($a_channel, $b_channel);
-    }
-
-    private function ensureTalking($first_channel, $second_channel, $freq = 600){
-        Log::notice("%s", __METHOD__);
-        $first_channel->playTone($freq, 3000, 0, 5);
-        $tone = $second_channel->detectTone($freq, 20);
-        $first_channel->breakout();
-        $this->assertEquals($freq, $tone);
-    }
-
-    private function hangupChannels($hangup_channel, $other_channels){
-        Log::notice("%s", __METHOD__);
-        $hangup_channel->hangup();
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $hangup_channel->waitDestroy(30));
-
-        if (is_array($other_channels)){
-            foreach ($other_channels as $channel){
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $channel->waitDestroy(30));
-            }
-        } else {
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $other_channels->waitDestroy(60));
-        }
-    }
 }
