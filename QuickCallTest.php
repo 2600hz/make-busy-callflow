@@ -98,7 +98,7 @@ class QuickCallTest extends CallflowTestCase
         $sdk        = new KazooSDK($auth_user, $options);
 
         $sdk->Account()->Device($admin_device_id)->quickcall($target);
-        $this->ensureAnswer($admin_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($admin_device_name, $a_sipuser);
     }
 
     public function testDeviceQuickCallAutoAnswer() {
@@ -128,9 +128,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayTalk($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -161,9 +159,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_name, self::CNAM);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayTalk($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -194,9 +190,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_number, self::CNUM);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayTalk($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -222,7 +216,7 @@ class QuickCallTest extends CallflowTestCase
         $admin_auth_token = $this->generateAuthToken($admin_username, self::PASSWORD, self::$realm);
         $quickcall_2 = $this->quickCall("devices", $admin_device_id, $target, $admin_auth_token);
         $this->assertEquals($quickcall_2->status, "success");
-        $this->ensureAnswer($admin_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($admin_device_name, $a_sipuser);
 
         // allow_anoymous = false; invalid auth_token
         $quickcall_5 = $this->quickCall("devices", $admin_device_id, $target, $anon_device_id);
@@ -230,16 +224,16 @@ class QuickCallTest extends CallflowTestCase
 
         // allow_anoymous = true; no auth_token
         $this->quickCall("devices", $anon_device_id, $target, NULL);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
         // allow_anoymous = true; anon_auth_token
         $anon_auth_token = $this->generateAuthToken($anon_username, self::PASSWORD, self::$realm);
         $quickcall_3 = $this->quickCall("devices", $anon_device_id, $target, $anon_auth_token);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
         // allow_anoymous = true; admin_auth_token
         $quickcall_4 = $this->quickCall("devices", $anon_device_id, $target, $admin_auth_token);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
     }
 
@@ -260,7 +254,7 @@ class QuickCallTest extends CallflowTestCase
         $sdk        = new KazooSDK($auth_user, $options);
 
         $sdk->Account()->User($admin_user_id)->quickcall($target);
-        $this->ensureAnswer($admin_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($admin_device_name, $a_sipuser);
     }
 
     public function testUserQuickCallAutoAnswer() {
@@ -291,9 +285,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayTalk($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -325,9 +317,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_name, self::CNAM);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayTalk($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -359,9 +349,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_number, self::CNUM);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayTalk($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 /*
@@ -432,7 +420,7 @@ class QuickCallTest extends CallflowTestCase
         $admin_auth_token = $this->generateAuthToken($admin_username, self::PASSWORD, self::$realm);
         $quickcall_2 = $this->quickCall("users", $admin_user_id, $target, $admin_auth_token);
         $this->assertEquals($quickcall_2->status, "success");
-        $this->ensureAnswer($admin_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($admin_device_name, $a_sipuser);
 
         // allow_anoymous = false; invalid auth_token
         $quickcall_5 = $this->quickCall("users", $admin_user_id, $target, $anon_device_id);
@@ -440,16 +428,16 @@ class QuickCallTest extends CallflowTestCase
 
         // allow_anoymous = true; no auth_token
         $this->quickCall("users", $anon_user_id, $target, NULL);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
         // allow_anoymous = true; anon_auth_token
         $anon_auth_token = $this->generateAuthToken($anon_username, self::PASSWORD, self::$realm);
         $quickcall_3 = $this->quickCall("users", $anon_user_id, $target, $anon_auth_token);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
         // allow_anoymous = true; admin_auth_token
         $quickcall_4 = $this->quickCall("users", $anon_user_id, $target, $admin_auth_token);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
     }
 
  */
