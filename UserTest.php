@@ -131,6 +131,8 @@ class UserTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_2);
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_1);
+            $this->ensureTwoWayAudio($a_channel, $b_channel_1);
+            $this->hangupChannels($a_channel, $b_channel_1);
         }
     }
 
@@ -157,6 +159,8 @@ class UserTest extends CallflowTestCase
             $this->assertEmpty($b_channel_2);
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_1);
+            $this->ensureTwoWayAudio($a_channel, $b_channel_1);
+            $this->hangupChannels($a_channel, $b_channel_1);
         }
 
         // also when we call c user, b_device_2 should ring
@@ -168,6 +172,8 @@ class UserTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_2);
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_2);
+            $this->ensureTwoWayAudio($a_channel, $b_channel_2);
+            $this->hangupChannels($a_channel, $b_channel_2);
         }
 
         //reset owner assignment back to b user
@@ -253,6 +259,8 @@ class UserTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
 
             $a_channel = $this->ensureAnswer($uuid, $c_channel_1);
+            $this->ensureTwoWayAudio($a_channel, $c_channel_1);
+            $this->hangupChannels($a_channel, $c_channel_1);
         }
         self::$b_user->resetCfParams();
     }
@@ -552,6 +560,8 @@ class UserTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
 
             $a_channel = $this->ensureAnswer($uuid, $c_channel_1);
+            $this->ensureTwoWayAudio($a_channel, $c_channel_1);
+            $this->hangupChannels($a_channel, $c_channel_1);
         }
 
         foreach (self::getSipTargets() as $sip_uri) {
@@ -573,6 +583,8 @@ class UserTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_2);
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_1);
+            $this->ensureTwoWayAudio($a_channel, $b_channel_1);
+            $this->hangupChannels($a_channel, $b_channel_1);
         }
         self::$b_user->resetCfParams();
     }
