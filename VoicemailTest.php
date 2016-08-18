@@ -489,4 +489,41 @@ class VoicemailTest extends CallflowTestCase
         }
     }
 
+    protected function leaveMessage($calling_device, $target, $freq, $refreq = null){
+        Log::notice("%s", __METHOD__);
+        $channels  = self::getChannels();
+
+        $uuid    = $channels->gatewayOriginate($calling_device, $target);
+        $channel = $channels->waitForOriginate($uuid, 60);
+
+        $channel->waitAnswer();
+
+        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
+
+        $this->expectPrompt($channel, "VM-PERSON");
+        $this->expectPrompt($channel, "VM-NOT_AVAILABLE");
+        $this->expectPrompt($channel, "VM-RECORD_MESSAGE");
+
+        $channel->playTone($freq);
+
+        $channel->sendDtmf("1");
+
+        $this->expectPrompt($channel, "VM-REVIEW_RECORDING", 20);
+
+        if ($refreq){
+            $channel->sendDtmf("3");
+            $channel->playTone($refreq, 2000);
+            $channel->sendDtmf("1");
+            $this->expectPrompt($channel, "VM-REVIEW_RECORDING", 20);
+        }
+
+        $channel->sendDtmf("1");
+
+        //This may be a bug in my environment, but sometimes it can take 40+ seconds to save messages
+        $this->expectPrompt($channel, "VM-SAVED", 60);
+        $this->expectPrompt($channel, "VM-THANK_YOU", 10);
+
+        $channel->waitHangup();
+    }
+
 }
