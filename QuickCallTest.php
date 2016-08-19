@@ -493,4 +493,21 @@ class QuickCallTest extends CallflowTestCase
         return $result->auth_token;
     }
 
+    private function ensureQuickCallAnswer() {
+        $channels   = self::getChannels();
+
+        $a_channel = $channels->waitForInbound($a_user);
+        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
+        $a_channel->answer();
+
+        $b_channel = $channels->waitForInbound($b_user);
+        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+        $b_channel->answer();
+
+        $this->ensureTalking($a_channel, $b_channel);
+        $this->ensureTalking($b_channel, $a_channel);
+
+        $this->hangupChannels($a_channel, $b_channel);
+    }
+
 }
