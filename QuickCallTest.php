@@ -128,7 +128,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
         $b_channel->answer();
 
-        $this->ensureTwoWayTalk($a_channel, $b_channel);
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -159,7 +159,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_name, self::CNAM);
         $b_channel->answer();
 
-        $this->ensureTwoWayTalk($a_channel, $b_channel);
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -190,7 +190,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_number, self::CNUM);
         $b_channel->answer();
 
-        $this->ensureTwoWayTalk($a_channel, $b_channel);
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -285,7 +285,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
         $b_channel->answer();
 
-        $this->ensureTwoWayTalk($a_channel, $b_channel);
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -317,7 +317,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_name, self::CNAM);
         $b_channel->answer();
 
-        $this->ensureTwoWayTalk($a_channel, $b_channel);
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
@@ -349,7 +349,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_number, self::CNUM);
         $b_channel->answer();
 
-        $this->ensureTwoWayTalk($a_channel, $b_channel);
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 /*
