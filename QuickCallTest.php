@@ -504,8 +504,8 @@ class QuickCallTest extends CallflowTestCase
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
+
 
         $this->hangupChannels($a_channel, $b_channel);
     }
