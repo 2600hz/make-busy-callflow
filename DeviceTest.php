@@ -113,6 +113,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCallBasic-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             // TODO: This is a call to milliwatt, we are crossing
             //  Kazoo applications....DONT CROSS THE STREAMS!
             $target = self::MILLIWATT_NUMBER . '@' . $sip_uri;
@@ -133,14 +134,15 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testSipUsername-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $channel = $channels->waitForInbound($b_username);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $a_channel = $this->ensureAnswer($uuid, $channel);
-            $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupChannels($a_channel, $channel);
+            $b_channel = $channels->waitForInbound($b_username);
+            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
+            $this->hangupChannels($a_channel, $b_channel);
         }
     }
 
@@ -153,6 +155,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testSipNPAN-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -173,6 +176,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testSip1NPAN-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -192,6 +196,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testSipE164-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -217,6 +222,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testSipRoute-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_EXT .'@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -240,6 +246,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfEnable-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::CALL_FWD_ENABLE . '@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($b_device_id, $target, $options);
@@ -262,6 +269,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfDisable-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::CALL_FWD_DISABLE . '@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($b_device_id, $target, $options);
@@ -284,6 +292,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfBasic-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_EXT .'@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -309,6 +318,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfKeyPress-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target    = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid      = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -343,6 +353,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfSubstituteFalse-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -372,6 +383,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfSubstituteTrue-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -400,6 +412,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfKeepCallerIdTrue-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -430,6 +443,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfKeepCallerIdFalse-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -464,6 +478,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfFailover-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::NO_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -495,6 +510,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfDirectCallsOnly-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             Log::debug("placing a direct call, expecting cf device %s to ring", $c_username);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . "bext-" . Utils::randomString(8));
@@ -509,6 +525,7 @@ class DeviceTest extends CallflowTestCase
         }
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             Log::debug("placing a call via ring-group, expecting cf device %s to not ring", $c_username);
             $target  = self::RINGGROUP_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . "rgext-" . Utils::randomString(8));
@@ -532,6 +549,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCidOffnet-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = '1' . self::OFFNET_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -556,6 +574,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCidOnnet-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -579,6 +598,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCidEmergency-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::EMERGENCY_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -602,6 +622,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testRestrictedCallAllow-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::RESTRICTED_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
 
@@ -624,6 +645,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testRestrictedCallDeny-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::RESTRICTED_NUMBER .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
 
@@ -651,6 +673,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCalleeDisabled-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -675,6 +698,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCalleeEnabled-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -701,6 +725,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCallerDisabled-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -730,6 +755,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCallerEnabled-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -758,6 +784,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testUsernameChange-";
 
          foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -772,6 +799,7 @@ class DeviceTest extends CallflowTestCase
         $this->assertTrue($gateways->findByName($a_device_id)->register());
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . "x2-" . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -799,6 +827,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testPasswordChange-";
 
          foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -813,6 +842,7 @@ class DeviceTest extends CallflowTestCase
         $this->assertFalse($gateways->findByName($a_device_id)->register());
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
             $options = array("origination_uuid" => $uuid_base . "x2-" . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -832,6 +862,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testDeviceBlindTransfer-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
             $target_2 = self::C_EXT . '@' . $sip_uri;
 
@@ -871,6 +902,7 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testDeviceAttendedTransfer-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
             $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $transferee = self::C_EXT . '@' . $sip_uri;
