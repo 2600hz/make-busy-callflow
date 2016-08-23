@@ -66,8 +66,8 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
-            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $referred_by = '<sip:' . $b_device_name
                             . '@' . Configuration::getSipGateway('auth')
                             . ':5060;transport=udp>';
@@ -129,8 +129,8 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
-            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
@@ -185,8 +185,8 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
-            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
@@ -274,8 +274,8 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
-            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
@@ -330,8 +330,8 @@ class ParkingTest extends CallflowTestCase
         $b_device_name = self::$b_device->getSipUsername();
 
         foreach (self::getSipTargets() as $sip_uri) {
-            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::B_EXT . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
@@ -396,6 +396,7 @@ class ParkingTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $valet = self::VALET . '@' . $sip_uri;
             $retrieve = self::RETRIEVE . '102@' . $sip_uri;
 
