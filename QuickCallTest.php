@@ -16,6 +16,8 @@ use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
 use \MakeBusy\Common\Log;
 
+use Exception;
+
 class QuickCallTest extends CallflowTestCase
 {
 
@@ -493,7 +495,7 @@ class QuickCallTest extends CallflowTestCase
         return $result->auth_token;
     }
 
-    private function ensureQuickCallAnswer() {
+    private function ensureQuickCallAnswer($a_user, $b_user) {
         $channels   = self::getChannels();
 
         $a_channel = $channels->waitForInbound($a_user);
