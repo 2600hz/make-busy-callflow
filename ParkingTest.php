@@ -310,7 +310,7 @@ class ParkingTest extends CallflowTestCase
             $b_channel->deflect($refer_to);
             $b_channel->waitDestroy();
 
-            $ringback = $channels->waitForInbound($b_device_name, 13);
+            $ringback = $channels->waitForInbound($b_device_name, 30);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $ringback);
 
             $ringback->answer();
