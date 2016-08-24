@@ -827,8 +827,8 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testPasswordChange-";
 
          foreach (self::getSipTargets() as $sip_uri) {
-            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying to call target %s with invalid credentials", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound($b_username);
@@ -838,12 +838,11 @@ class DeviceTest extends CallflowTestCase
         $gateways->findByName($a_device_id)->kill();
         Profiles::getProfile('auth')->rescan();
 
-        //TODO: Changed from assertFalse to assertTrue to bypass issue with KAZOO-1331
-        $this->assertFalse($gateways->findByName($a_device_id)->register());
+        $this->assertTrue($gateways->findByName($a_device_id)->register());
 
         foreach (self::getSipTargets() as $sip_uri) {
-            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying to call target %s with valid credentials", $target);
             $options = array("origination_uuid" => $uuid_base . "x2-" . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound($b_username);
