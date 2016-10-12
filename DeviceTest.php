@@ -766,7 +766,6 @@ class DeviceTest extends CallflowTestCase
         }
     }
 
-
     public function testUsernameChange(){
         Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
@@ -796,7 +795,6 @@ class DeviceTest extends CallflowTestCase
 
         //TODO: bypass bug KAZOO-1331
         $this->assertTrue($gateways->findByName($a_device_id)->register());
-
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
             Log::debug("trying target %s", $target);

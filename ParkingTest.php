@@ -176,7 +176,7 @@ class ParkingTest extends CallflowTestCase
     }
 
     //MKBUSY-73: Blind transfer, auto (park)
-    public function testBlindPark() {
+    public function testBlindParkToAvailable() {
         Log::notice("%s - Blind transfer auto park", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
