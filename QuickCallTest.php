@@ -14,6 +14,9 @@ use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
+use \MakeBusy\Common\Log;
+
+use Exception;
 
 class QuickCallTest extends CallflowTestCase
 {
@@ -82,6 +85,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     public function testDeviceQuickCall() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -96,10 +100,11 @@ class QuickCallTest extends CallflowTestCase
         $sdk        = new KazooSDK($auth_user, $options);
 
         $sdk->Account()->Device($admin_device_id)->quickcall($target);
-        $this->ensureAnswer($admin_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($admin_device_name, $a_sipuser);
     }
 
     public function testDeviceQuickCallAutoAnswer() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -125,13 +130,12 @@ class QuickCallTest extends CallflowTestCase
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
     public function testDeviceQuickCallCidName() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -157,13 +161,12 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_name, self::CNAM);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
     public function testDeviceQuickCallCidNumber() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -189,13 +192,12 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_number, self::CNUM);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
     public function testDeviceQuickCallAllowAnon() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -216,7 +218,7 @@ class QuickCallTest extends CallflowTestCase
         $admin_auth_token = $this->generateAuthToken($admin_username, self::PASSWORD, self::$realm);
         $quickcall_2 = $this->quickCall("devices", $admin_device_id, $target, $admin_auth_token);
         $this->assertEquals($quickcall_2->status, "success");
-        $this->ensureAnswer($admin_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($admin_device_name, $a_sipuser);
 
         // allow_anoymous = false; invalid auth_token
         $quickcall_5 = $this->quickCall("devices", $admin_device_id, $target, $anon_device_id);
@@ -224,20 +226,21 @@ class QuickCallTest extends CallflowTestCase
 
         // allow_anoymous = true; no auth_token
         $this->quickCall("devices", $anon_device_id, $target, NULL);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
         // allow_anoymous = true; anon_auth_token
         $anon_auth_token = $this->generateAuthToken($anon_username, self::PASSWORD, self::$realm);
         $quickcall_3 = $this->quickCall("devices", $anon_device_id, $target, $anon_auth_token);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
         // allow_anoymous = true; admin_auth_token
         $quickcall_4 = $this->quickCall("devices", $anon_device_id, $target, $admin_auth_token);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
     }
 
     public function testUserQuickCall() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -253,10 +256,11 @@ class QuickCallTest extends CallflowTestCase
         $sdk        = new KazooSDK($auth_user, $options);
 
         $sdk->Account()->User($admin_user_id)->quickcall($target);
-        $this->ensureAnswer($admin_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($admin_device_name, $a_sipuser);
     }
 
     public function testUserQuickCallAutoAnswer() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -283,13 +287,12 @@ class QuickCallTest extends CallflowTestCase
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
     public function testUserQuickCallCidName() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -316,13 +319,12 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_name, self::CNAM);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
     public function testUserQuickCallCidNumber() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $target     = self::A_EXT;
 
@@ -349,9 +351,7 @@ class QuickCallTest extends CallflowTestCase
         $this->assertEquals($cid_number, self::CNUM);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
-
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 /*
@@ -422,7 +422,7 @@ class QuickCallTest extends CallflowTestCase
         $admin_auth_token = $this->generateAuthToken($admin_username, self::PASSWORD, self::$realm);
         $quickcall_2 = $this->quickCall("users", $admin_user_id, $target, $admin_auth_token);
         $this->assertEquals($quickcall_2->status, "success");
-        $this->ensureAnswer($admin_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($admin_device_name, $a_sipuser);
 
         // allow_anoymous = false; invalid auth_token
         $quickcall_5 = $this->quickCall("users", $admin_user_id, $target, $anon_device_id);
@@ -430,21 +430,22 @@ class QuickCallTest extends CallflowTestCase
 
         // allow_anoymous = true; no auth_token
         $this->quickCall("users", $anon_user_id, $target, NULL);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
         // allow_anoymous = true; anon_auth_token
         $anon_auth_token = $this->generateAuthToken($anon_username, self::PASSWORD, self::$realm);
         $quickcall_3 = $this->quickCall("users", $anon_user_id, $target, $anon_auth_token);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
 
         // allow_anoymous = true; admin_auth_token
         $quickcall_4 = $this->quickCall("users", $anon_user_id, $target, $admin_auth_token);
-        $this->ensureAnswer($anon_device_name, $a_sipuser);
+        $this->ensureQuickCallAnswer($anon_device_name, $a_sipuser);
     }
 
  */
 
     private function quickCall($user_or_dev, $user_dev_id, $target, $auth_token = NULL) {
+        Log::notice("%s", __METHOD__);
         $account_id  = self::getTestAccount()->getAccountId();
 
         $url = 'http://192.168.56.101:8000/v1';
@@ -455,6 +456,7 @@ class QuickCallTest extends CallflowTestCase
             $url .= '?auth_token=' . $auth_token;
         }
 
+        Log::debug("CURLing %s", $url);
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
@@ -468,6 +470,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     private function generateAuthToken($username, $password, $realm) {
+        Log::notice("%s", __METHOD__);
         $url = 'http://192.168.56.101:8000/v1/user_auth';
 
         $string = "$username:$password";
@@ -476,6 +479,7 @@ class QuickCallTest extends CallflowTestCase
 
         $data = '{ "data" : { "credentials" : "' . $credentials . '", "realm" : "'. $realm . '"},"verb":"PUT"}';
 
+        Log::debug("CURLing %s with data %s", $url, $data);
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -491,7 +495,7 @@ class QuickCallTest extends CallflowTestCase
         return $result->auth_token;
     }
 
-    private function ensureAnswer($a_user, $b_user) {
+    private function ensureQuickCallAnswer($a_user, $b_user) {
         $channels   = self::getChannels();
 
         $a_channel = $channels->waitForInbound($a_user);
@@ -502,29 +506,10 @@ class QuickCallTest extends CallflowTestCase
         $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
         $b_channel->answer();
 
-        $this->ensureTalking($a_channel, $b_channel);
-        $this->ensureTalking($b_channel, $a_channel);
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
+
 
         $this->hangupChannels($a_channel, $b_channel);
     }
 
-    private function ensureTalking($first_channel, $second_channel, $freq = 600){
-        $first_channel->playTone($freq, 3000, 0, 5);
-        $tone = $second_channel->detectTone($freq, 20);
-        $first_channel->breakout();
-        $this->assertEquals($freq, $tone);
-    }
-
-    private function hangupChannels($hangup_channel, $other_channels){
-        $hangup_channel->hangup();
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $hangup_channel->waitDestroy(30));
-
-        if (is_array($other_channels)){
-            foreach ($other_channels as $channel){
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $channel->waitDestroy(30));
-            }
-        } else {
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $other_channels->waitDestroy(60));
-        }
-    }
 }

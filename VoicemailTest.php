@@ -10,6 +10,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\User;
 use \MakeBusy\Kazoo\Applications\Crossbar\Voicemail;
 
 use \MakeBusy\Common\Configuration;
+use \MakeBusy\Common\Log;
 
 class VoicemailTest extends CallflowTestCase
 {
@@ -64,10 +65,12 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-25
     public function testSetupOwnUser() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $b_device_id = self::$b_device->getId();
 
         foreach (self::getSipTargets() as $sip_uri){
+            Log::debug("trying target %s", $sip_uri);
             self::$b_voicemail_box->setVoicemailboxParam("is_setup", FALSE);
             $target  = self::B_USER_NUMBER . '@'. $sip_uri;
             $uuid    = $channels->gatewayOriginate($b_device_id, $target);
@@ -126,10 +129,12 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-25
     public function testSetupOtherUser() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
         foreach (self::getSipTargets() as $sip_uri){
+            Log::debug("trying target %s", $sip_uri);
             self::$b_voicemail_box->setVoicemailboxParam("is_setup", FALSE);
 
             $target  = self::VM_CHECK_NUMBER .'@'. $sip_uri;
@@ -190,11 +195,13 @@ class VoicemailTest extends CallflowTestCase
 
     // MKBUSY-26
     public function testUserChangePin(){
+        Log::notice("%s", __METHOD__);
         $channels = self::getChannels();
 
         $b_device_id = self::$b_device->getId();
 
         foreach (self::getSipTargets() as $sip_uri){
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_USER_NUMBER . '@' . $sip_uri;
             $uuid    = $channels->gatewayOriginate($b_device_id, $target);
             $channel = $channels->waitForOriginate($uuid);
@@ -233,12 +240,14 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-28
     public function testCheckOtherMailboxNoMessages(){
+        Log::notice("%s", __METHOD__);
 
         $channels = self::getChannels();
 
         $a_device_id = self::$a_device->getId();
 
         foreach (self::getSipTargets() as $sip_uri){
+            Log::debug("trying target %s", $sip_uri);
             $target  = self::B_USER_NUMBER . '@' . $sip_uri;
             $uuid    = $channels->gatewayOriginate($a_device_id, $target);
             $channel = $channels->waitForOriginate($uuid, 60);
@@ -266,12 +275,14 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-27
     public function testLeaveMessage() {
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $b_device_id = self::$b_device->getId();
         $a_device_id = self::$a_device->getId();
 
         foreach (self::getSipTargets() as $sip_uri){
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_USER_NUMBER . '@' . $sip_uri;
 
             $this->leaveMessage($a_device_id, $target, "600");
@@ -315,6 +326,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY 27
     public function testLeaveMessageRerecord() {
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $b_device_id  = self::$b_device->getId();
@@ -326,6 +338,7 @@ class VoicemailTest extends CallflowTestCase
         $count  = count(self::$b_voicemail_box->getVoicemailboxParam("messages"));
 
         foreach (self::getSipTargets() as $sip_uri){
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_USER_NUMBER . '@' . $sip_uri;
 
             self::$b_user->setUserParam("vm_to_email_enabled",TRUE);
@@ -373,6 +386,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-29
     public function testDeleteAfterNotify() {
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $a_device_id = self::$a_device->getId();
@@ -383,6 +397,7 @@ class VoicemailTest extends CallflowTestCase
         self::$b_voicemail_box->setVoicemailBoxParam('delete_after_notify',TRUE);
 
         foreach (self::getSipTargets() as $sip_uri){
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_USER_NUMBER . '@' . $sip_uri;
 
             $this->leaveMessage($a_device_id, $target, "600");
@@ -397,6 +412,7 @@ class VoicemailTest extends CallflowTestCase
 
     //MKBUSY-34
     public function testSaveMessage() {
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $b_device_id  = self::$b_device->getId();
@@ -408,6 +424,7 @@ class VoicemailTest extends CallflowTestCase
         $count  = count(self::$b_voicemail_box->getVoicemailboxParam("messages"));
 
         foreach (self::getSipTargets() as $sip_uri){
+            Log::debug("trying target %s", $sip_uri);
             $target = self::B_USER_NUMBER . '@' . $sip_uri;
 
 
@@ -480,14 +497,8 @@ class VoicemailTest extends CallflowTestCase
         }
     }
 
-
-    private function expectPrompt($channel, $descriptor, $timeout = 10){
-         $tone = $channel->detectTone($descriptor, $timeout);
-         $expected = strtolower($descriptor);
-         $this->assertEquals($expected, $tone);
-    }
-
-    private function leaveMessage($calling_device, $target, $freq, $refreq = null){
+    protected function leaveMessage($calling_device, $target, $freq, $refreq = null){
+        Log::notice("%s", __METHOD__);
         $channels  = self::getChannels();
 
         $uuid    = $channels->gatewayOriginate($calling_device, $target);

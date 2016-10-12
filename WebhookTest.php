@@ -8,6 +8,7 @@ use \MakeBusy\FreeSWITCH\Sofia\Gateways;
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Kazoo\Applications\Crossbar\Webhook;
 use \MakeBusy\Kazoo\Applications\Crossbar\Device;
+use \MakeBusy\Common\Log;
 
 class WebhookTest extends CallflowTestCase
 {
@@ -35,7 +36,7 @@ class WebhookTest extends CallflowTestCase
         $webhook_answer  = new Webhook($test_account, array('uri' => "$uri",
                                                            'hook' => 'channel_answer'));
 
-        $webhook_destory = new Webhook($test_account, array('uri' => "$uri", 
+        $webhook_destory = new Webhook($test_account, array('uri' => "$uri",
                                                            'hook' => 'channel_destroy'));
 
         Profiles::loadFromAccounts();
@@ -51,6 +52,7 @@ class WebhookTest extends CallflowTestCase
     }
 
     public function testWebhookBasic() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_sipuser   = self::$b_device->getSipUsername();
@@ -58,9 +60,11 @@ class WebhookTest extends CallflowTestCase
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT. '@' . $sip_uri;
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_leg = $channels->waitForInbound($b_sipuser);
+            $b_channel = $channels->waitForInbound($b_sipuser);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_leg);
-            $a_leg = $this->ensureAnswer($uuid, $b_leg);
+            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
+            $this->hangupChannels($a_channel, $b_channel);
 
         }
 
@@ -91,42 +95,5 @@ class WebhookTest extends CallflowTestCase
         unlink(realpath($b_leg_destroy));
     }
 
-    private function ensureAnswer($bg_uuid, $b_channel){
-        $channels = self::getChannels();
-
-        $b_channel->answer();
-
-        $a_channel = $channels->waitForOriginate($bg_uuid, 30);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $a_channel->waitAnswer(60));
-
-        $a_channel->log("we are connected!");
-
-        $this->ensureTalking($a_channel, $b_channel, 1600);
-        $this->ensureTalking($b_channel, $a_channel, 600);
-        $this->hangupChannels($b_channel, $a_channel);
-
-        return $a_channel;
-    }
-
-    private function ensureTalking($first_channel, $second_channel, $freq = 600){
-        $first_channel->playTone($freq, 3000, 0, 5);
-        $tone = $second_channel->detectTone($freq, 20);
-        $first_channel->breakout();
-        $this->assertEquals($freq, $tone);
-    }
-
-    private function hangupChannels($hangup_channel, $other_channels){
-        $hangup_channel->hangup();
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $hangup_channel->waitDestroy(30));
-
-        if (is_array($other_channels)){
-            foreach ($other_channels as $channel){
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $channel->waitDestroy(30));
-            }
-        } else {
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $other_channels->waitDestroy(60));
-        }
-    }
 }
 

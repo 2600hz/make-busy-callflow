@@ -13,6 +13,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\Device;
 use \MakeBusy\Kazoo\Applications\Crossbar\User;
 use \MakeBusy\Kazoo\Applications\Crossbar\RingGroup;
 
+use \MakeBusy\Common\Log;
 
 class RingGroupTest extends CallflowTestCase
 {
@@ -148,6 +149,7 @@ class RingGroupTest extends CallflowTestCase
      */
 
     public function testRingGroupTimeoutDelay() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$device['a']->getId();
 
@@ -158,16 +160,19 @@ class RingGroupTest extends CallflowTestCase
         $uuid_base = "testRingGroupTimeoutDelay-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::RG_EXT_1 . '@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
 
             foreach (range('b', 'g') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $race[$leg] = $channels->waitForInbound($username[$leg], 30);
                 $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $race[$leg]);
             }
 
             foreach (range('b', 'g') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $destroy[$leg] = $race[$leg]->waitDestroy("30");
                 $start[$leg] = $destroy[$leg]->getHeader('variable_start_epoch');
                 $duration[$leg] = $destroy[$leg]->getHeader('variable_duration');
@@ -177,6 +182,7 @@ class RingGroupTest extends CallflowTestCase
             $expected_duration = self::DURATION;
 
             foreach (range('b', 'g') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $dur_low  = $expected_duration - 2;
                 $dur_high = $expected_duration + 2;
 
@@ -206,26 +212,31 @@ class RingGroupTest extends CallflowTestCase
      */
 
     public function testRingGroupStrategyNone() {
+        Log::notice("%s", __METHOD__);
         $channels = self::getChannels();
         $a_device_id = self::$device['a']->getId();
 
         foreach (range('b', 'g') as $leg) {
+            Log::debug("trying leg %s", $leg);
             $username[$leg] = self::$device[$leg]->getSipUsername();
         }
 
         $uuid_base = "testRingGroupStrategyNone-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::RG_EXT_2 . '@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
 
             foreach (range('b', 'c') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $race[$leg] = $channels->waitForInbound($username[$leg], 10);
                 $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $race[$leg]);
             }
 
             foreach (range('b', 'c') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $destroy[$leg] = $race[$leg]->waitDestroy("21");
                 $start[$leg] = $destroy[$leg]->getHeader('variable_start_epoch');
             }
@@ -235,26 +246,31 @@ class RingGroupTest extends CallflowTestCase
     }
 
     public function testRingGroupStrategySimultaneous() {
+        Log::notice("%s", __METHOD__);
         $channels = self::getChannels();
         $a_device_id = self::$device['a']->getId();
 
         foreach (range('d', 'e') as $leg) {
+            Log::debug("trying leg %s", $leg);
             $username[$leg] = self::$device[$leg]->getSipUsername();
         }
 
         $uuid_base = "testRingGroupStrategySimultaneous-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::RG_EXT_3 . '@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
 
             foreach (range('d', 'e') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $race[$leg] = $channels->waitForInbound($username[$leg], 10);
                 $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $race[$leg]);
             }
 
             foreach (range('d', 'e') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $destroy[$leg] = $race[$leg]->waitDestroy("21");
                 $start[$leg] = $destroy[$leg]->getHeader('variable_start_epoch');
             }
@@ -265,26 +281,31 @@ class RingGroupTest extends CallflowTestCase
     }
 
     public function testRingGroupStrategySingle() {
+        Log::notice("%s", __METHOD__);
         $channels = self::getChannels();
         $a_device_id = self::$device['a']->getId();
 
         foreach (range('f', 'g') as $leg) {
+            Log::debug("trying leg %s", $leg);
             $username[$leg] = self::$device[$leg]->getSipUsername();
         }
 
         $uuid_base = "testRingGroupStrategySingle-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("trying SIP URI %s", $sip_uri);
             $target = self::RG_EXT_4 . '@' . $sip_uri;
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
 
             foreach (range('f', 'g') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $race[$leg] = $channels->waitForInbound($username[$leg], 21);
                 $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $race[$leg]);
             }
 
             foreach (range('f', 'g') as $leg) {
+                Log::debug("trying leg %s", $leg);
                 $destroy[$leg] = $race[$leg]->waitDestroy("21");
                 $start[$leg] = $destroy[$leg]->getHeader('variable_start_epoch');
                 $end[$leg] = $destroy[$leg]->getHeader('variable_end_epoch');
@@ -294,43 +315,5 @@ class RingGroupTest extends CallflowTestCase
         }
     }
 
-
-    private function ensureAnswer($bg_uuid, $b_channel){
-        $channels = self::getChannels();
-
-        $b_channel->answer();
-
-        $a_channel = $channels->waitForOriginate($bg_uuid, 30);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $a_channel->waitAnswer(60));
-
-        $a_channel->log("we are connected!");
-
-        $this->ensureTalking($a_channel, $b_channel, 1600);
-        $this->ensureTalking($b_channel, $a_channel, 600);
-        $this->hangupChannels($b_channel, $a_channel);
-
-        return $a_channel;
-    }
-
-    private function ensureTalking($first_channel, $second_channel, $freq = 600){
-        $first_channel->playTone($freq, 3000, 0, 5);
-        $tone = $second_channel->detectTone($freq, 20);
-        $first_channel->breakout();
-        $this->assertEquals($freq, $tone);
-    }
-
-    private function hangupChannels($hangup_channel, $other_channels){
-        $hangup_channel->hangup();
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $hangup_channel->waitDestroy(30));
-
-        if (is_array($other_channels)){
-            foreach ($other_channels as $channel){
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $channel->waitDestroy(30));
-            }
-        } else {
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $other_channels->waitDestroy(60));
-        }
-    }
 }
 

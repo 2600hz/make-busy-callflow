@@ -12,6 +12,8 @@ use \MakeBusy\Kazoo\Applications\Crossbar\Resource;
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
 
+use \MakeBusy\Common\Log;
+
 class DeviceTest extends CallflowTestCase
 {
 
@@ -42,6 +44,7 @@ class DeviceTest extends CallflowTestCase
     const RESTRICTED_NUMBER = '6845551234';
 
     public static function setUpBeforeClass() {
+//        Log::dump("DEBUG_BACKTRACE", debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
         parent::setUpBeforeClass();
 
         $test_account = self::getTestAccount();
@@ -80,6 +83,7 @@ class DeviceTest extends CallflowTestCase
             ]
         );
 
+        Log::notice("reloading sofia profiles");
         Profiles::loadFromAccounts();
         Profiles::syncGateways();
 
@@ -91,15 +95,18 @@ class DeviceTest extends CallflowTestCase
         //  at once
         self::getEsl()->flushEvents();
         self::getEsl()->api("hupall");
+        Log::info("%s - flushed events & hung up all channels for SETUP", __METHOD__);
     }
 
     public function testRegistrations() {
+        Log::notice("%s", __METHOD__);
         $gateways = Profiles::getProfile('auth')->getGateways();
         $register_device_id = self::$register_device->getId();
         $this->assertTrue($gateways->findByName($register_device_id)->register());
     }
 
     public function testCallBasic() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -109,6 +116,7 @@ class DeviceTest extends CallflowTestCase
             // TODO: This is a call to milliwatt, we are crossing
             //  Kazoo applications....DONT CROSS THE STREAMS!
             $target = self::MILLIWATT_NUMBER . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForOriginate($uuid);
@@ -118,6 +126,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testSipUsername() {
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username = self::$b_device->getSipUsername();
@@ -126,33 +135,40 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $channel = $channels->waitForInbound($b_username);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $this->ensureAnswer($uuid, $channel);
+            $b_channel = $channels->waitForInbound($b_username);
+            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
+            $this->hangupChannels($a_channel, $b_channel);
         }
     }
 
     public function testSipNPAN() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
-
         self::$b_device->setInviteFormat("npan");
 
         $uuid_base = "testSipNPAN-";
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_NUMBER .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound(self::B_NUMBER);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $this->ensureAnswer($uuid, $channel);
+            $a_channel = $this->ensureAnswer($uuid, $channel);
+            $this->ensureTwoWayAudio($a_channel, $channel);
+            $this->hangupChannels($a_channel, $channel);
         }
     }
 
     public function testSip1NPAN() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -161,32 +177,39 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_NUMBER .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound('1'. self::B_NUMBER);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $this->ensureAnswer($uuid, $channel);
+            $a_channel = $this->ensureAnswer($uuid, $channel);
+            $this->ensureTwoWayAudio($a_channel, $channel);
+            $this->hangupChannels($a_channel, $channel);
         }
     }
 
     public function testSipE164() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
-
         self::$b_device->setInviteFormat("e164");
         $uuid_base = "testSipE164-";
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_NUMBER .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound('+1' . self::B_NUMBER);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $this->ensureAnswer($uuid, $channel);
+            $a_channel = $this->ensureAnswer($uuid, $channel);
+            $this->ensureTwoWayAudio($a_channel, $channel);
+            $this->hangupChannels($a_channel, $channel);
         }
     }
 
     public function testSipRoute() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -200,11 +223,14 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT .'@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound($b_device_id);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $this->ensureAnswer($uuid, $channel);
+            $a_channel = $this->ensureAnswer($uuid, $channel);
+            $this->ensureTwoWayAudio($a_channel, $channel);
+            $this->hangupChannels($a_channel, $channel);
         }
         //reset invite format or pay a horrible price in blood!
         self::$b_device->setInviteFormat("username");
@@ -212,13 +238,16 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfEnable(){
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $b_device_id = self::$b_device->getId();
+        self::$b_device->resetCfParams(self::C_EXT);
 
         $uuid_base = "testCfEnable-";
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::CALL_FWD_ENABLE . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($b_device_id, $target, $options);
             $channel = $channels->waitForOriginate($uuid);
@@ -232,6 +261,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCfDisable(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $b_device_id = self::$b_device->getId();
 
@@ -240,6 +270,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::CALL_FWD_DISABLE . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($b_device_id, $target, $options);
             $channel = $channels->waitForOriginate($uuid);
@@ -247,13 +278,14 @@ class DeviceTest extends CallflowTestCase
             $channel->waitDestroy();
             $this->assertFalse(self::$b_device->getCfParam("enabled"));
         }
-
         self::$b_device->resetCfParams();
     }
 
     public function testCfBasic(){
+        Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
         $c_username = self::$c_device->getSipUsername();
 
         self::$b_device->resetCfParams(self::C_EXT);
@@ -261,18 +293,23 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT .'@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $c_channel = $channels->waitForInbound($c_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
-            $this->ensureAnswer($uuid, $c_channel);
+            $a_channel = $this->ensureAnswer($uuid, $c_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
+            $this->hangupChannels($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
 
     public function testCfKeyPress(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
         self::$b_device->resetCfParams(self::C_EXT);
@@ -282,6 +319,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target    = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid      = $channels->gatewayOriginate($a_device_id, $target, $options);
             $c_channel = $channels->waitForInbound($c_username);
@@ -294,17 +332,18 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $a_channel->waitAnswer(60));
             $this->assertEquals("answered", $a_channel->getAnswerState());
 
-            $this->ensureTalking($a_channel, $c_channel, 1600);
-            $this->ensureTalking($c_channel, $a_channel, 600);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
             $this->hangupChannels($a_channel, $c_channel);
-
         }
         self::$b_device->resetCfParams();
     }
 
     public function testCfSubstituteFalse(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
+        $c_device_id = self::$c_device->getId();
         $b_username  = self::$b_device->getSipUsername();
         $c_username  = self::$c_device->getSipUsername();
 
@@ -315,21 +354,26 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $b_channel = $channels->waitForInbound($b_username);
             $c_channel = $channels->waitForInbound($c_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
-            $this->ensureAnswer($uuid, $c_channel);
+            $a_channel = $this->ensureAnswer($uuid, $c_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
+            $this->hangupChannels($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
 
     public function testCfSubstituteTrue(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
+        $c_device_id = self::$c_device->getId();
         $b_username  = self::$b_device->getSipUsername();
         $c_username  = self::$c_device->getSipUsername();
 
@@ -340,21 +384,26 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $c_channel = $channels->waitForInbound($c_username);
             $b_channel = $channels->waitForInbound($b_username);
             $this->assertEmpty($b_channel);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
-            $this->ensureAnswer($uuid, $c_channel);
+            $a_channel = $this->ensureAnswer($uuid, $c_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
+            $this->hangupChannels($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
 
 
     public function testCfKeepCallerIdTrue(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
         self::$b_device->resetCfParams(self::C_EXT);
@@ -364,6 +413,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $c_channel = $channels->waitForInbound($c_username);
@@ -373,14 +423,18 @@ class DeviceTest extends CallflowTestCase
                 $c_channel->getEvent()->getHeader("Caller-Caller-ID-Number"),
                 self::$a_device->getCidParam("internal")->number
             );
-            $this->ensureAnswer($uuid, $c_channel);
+            $a_channel = $this->ensureAnswer($uuid, $c_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
+            $this->hangupChannels($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
 
     public function testCfKeepCallerIdFalse(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
         self::$b_device->resetCfParams(self::C_EXT);
@@ -390,6 +444,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $c_channel = $channels->waitForInbound($c_username);
@@ -399,14 +454,19 @@ class DeviceTest extends CallflowTestCase
                 $c_channel->getEvent()->getHeader("Caller-Caller-ID-Number"),
                 self::$b_device->getCidParam("internal")->number
             );
-            $this->ensureAnswer($uuid, $c_channel);
+            $a_channel = $this->ensureAnswer($uuid, $c_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
+            $this->hangupChannels($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
 
     public function testCfFailover(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
+        $b_device_id = self::$b_device->getId();
+        $no_device_id = self::$no_device->getId();
         $c_username  = self::$c_device->getSipUsername();
 
         $test_account = self::getTestAccount();
@@ -419,17 +479,22 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::NO_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $c_channel = $channels->waitForInbound($c_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
-            $this->ensureAnswer($uuid, $c_channel);
+            $a_channel = $this->ensureAnswer($uuid, $c_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
+            $this->hangupChannels($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
+
         self::$no_device->resetCFParams();
     }
 
     public function testCfDirectCallsOnly(){
+        Log::notice("%s", __METHOD__);
         $channels     = self::getChannels();
         $a_device_id  = self::$a_device->getId();
         $b_device_id  = self::$b_device->getId();
@@ -445,28 +510,39 @@ class DeviceTest extends CallflowTestCase
         $uuid_base = "testCfDirectCallsOnly-";
 
         foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("placing a direct call, and expecting cf device %s to ring", $c_username);
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . "bext-" . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
+            $b_channel = $channels->waitForInbound($b_username);
             $c_channel = $channels->waitForInbound($c_username);
+            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
-            $this->ensureAnswer($uuid, $c_channel);
+            $a_channel = $this->ensureAnswer($uuid, $c_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
+            $this->hangupChannels($a_channel, $c_channel);
         }
 
-       foreach (self::getSipTargets() as $sip_uri) {
+        foreach (self::getSipTargets() as $sip_uri) {
+            Log::debug("placing a call via ring-group, expecting cf device %s to not ring", $c_username);
             $target  = self::RINGGROUP_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . "rgext-" . Utils::randomString(8));
             $uuid      = $channels->gatewayOriginate($a_device_id, $target, $options);
             $c_channel = $channels->waitForInbound($c_username);
             $b_channel = $channels->waitForInbound($b_username);
             $this->assertNull($c_channel);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
-            $this->ensureAnswer($uuid, $b_channel);
+            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
+            $this->hangupChannels($a_channel, $b_channel);
         }
         self::$b_device->resetCfParams();
     }
 
     public function testCidOffnet(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id  = self::$a_device->getId();
 
@@ -474,6 +550,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = '1' . self::OFFNET_NUMBER .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $offnet_channel = $channels->waitForInbound('1' . self::OFFNET_NUMBER);
@@ -482,11 +559,14 @@ class DeviceTest extends CallflowTestCase
                 $offnet_channel->getEvent()->getHeader("Caller-Caller-ID-Number"),
                 self::$a_device->getCidParam("external")->number
             );
-            $this->ensureAnswer($uuid, $offnet_channel);
+            $a_channel = $this->ensureAnswer($uuid, $offnet_channel);
+            $this->ensureTwoWayAudio($a_channel, $offnet_channel);
+            $this->hangupChannels($a_channel, $offnet_channel);
         }
     }
 
     public function testCidOnnet(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -495,6 +575,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $b_channel = $channels->waitForInbound("$b_username");
@@ -503,11 +584,14 @@ class DeviceTest extends CallflowTestCase
                 $b_channel->getEvent()->getHeader("Caller-Caller-ID-Number"),
                 self::$a_device->getCidParam("internal")->number
             );
-            $this->ensureAnswer($uuid, $b_channel);
+            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
+            $this->hangupChannels($a_channel, $b_channel);
         }
     }
 
     public function testCidEmergency(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -515,19 +599,22 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::EMERGENCY_NUMBER .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $emergency_channel = $channels->waitForInbound(self::EMERGENCY_NUMBER);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $emergency_channel);
-            $this->assertEquals(
-                $emergency_channel->getEvent()->getHeader("Caller-Caller-ID-Number"),
-                self::$a_device->getCidParam("emergency")->number
+            $this->assertEquals(self::$a_device->getCidParam("emergency")->number,
+                                $emergency_channel->getEvent()->getHeader("Caller-Caller-ID-Number")
             );
-            $this->ensureAnswer($uuid, $emergency_channel);
+            $a_channel = $this->ensureAnswer($uuid, $emergency_channel);
+            $this->ensureTwoWayAudio($a_channel, $emergency_channel);
+            $this->hangupChannels($a_channel, $emergency_channel);
         }
     }
 
     public function testRestrictedCallAllow(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
 
@@ -535,16 +622,20 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::RESTRICTED_NUMBER .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
 
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound('+1' . self::RESTRICTED_NUMBER);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $this->ensureAnswer($uuid, $channel);
+            $a_channel = $this->ensureAnswer($uuid, $channel);
+            $this->ensureTwoWayAudio($a_channel, $channel);
+            $this->hangupChannels($a_channel, $channel);
         }
     }
 
     public function testRestrictedCallDeny(){
+        Log::notice("%s", __METHOD__);
         $channels     = self::getChannels();
         $a_device_id  = self::$a_device->getId();
 
@@ -554,6 +645,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::RESTRICTED_NUMBER .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
 
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
@@ -565,6 +657,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCalleeDisabled() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -580,6 +673,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound($b_username);
@@ -588,6 +682,7 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function testCalleeEnabled() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -603,15 +698,19 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $b_channel = $channels->waitForInbound($b_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
-            $this->ensureAnswer($uuid, $b_channel);
+            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
+            $this->hangupChannels($a_channel, $b_channel);
         }
     }
 
     public function testCallerDisabled() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -626,17 +725,21 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $b_channel = $channels->waitForInbound($b_username);
             //TODO:  DISABLED UNTIL WE FIX BUG KAZOO-3109
             //$this->assertNull($b_channel);
             //for now we do this so we dont leave a channel behind by this failing to fail.
-            //$this->ensureAnswer($uuid, $b_channel);
+            //$a_channel = $this->ensureAnswer($uuid, $b_channel);
+            //$this->ensureTwoWayAudio($a_channel, $b_channel);
+            //$this->hangupChannels($a_channel, $b_channel);
         }
     }
 
     public function testCallerEnabled() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -652,16 +755,20 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $b_channel = $channels->waitForInbound($b_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
-            $this->ensureAnswer($uuid, $b_channel);
+            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
+            $this->hangupChannels($a_channel, $b_channel);
         }
     }
 
 
     public function testUsernameChange(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -677,6 +784,7 @@ class DeviceTest extends CallflowTestCase
 
          foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound($b_username);
@@ -691,15 +799,19 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . "x2-" . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $b_channel = $channels->waitForInbound($b_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
-            $this->ensureAnswer($uuid, $b_channel);
+            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
+            $this->hangupChannels($a_channel, $b_channel);
         }
     }
 
     public function testPasswordChange(){
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_username  = self::$b_device->getSipUsername();
@@ -715,6 +827,7 @@ class DeviceTest extends CallflowTestCase
 
          foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying to call target %s with invalid credentials", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound($b_username);
@@ -724,11 +837,11 @@ class DeviceTest extends CallflowTestCase
         $gateways->findByName($a_device_id)->kill();
         Profiles::getProfile('auth')->rescan();
 
-        //TODO: Changed from assertFalse to assertTrue to bypass issue with KAZOO-1331
-        $this->assertFalse($gateways->findByName($a_device_id)->register());
+        $this->assertTrue($gateways->findByName($a_device_id)->register());
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
+            Log::debug("trying to call target %s with valid credentials", $target);
             $options = array("origination_uuid" => $uuid_base . "x2-" . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound($b_username);
@@ -738,6 +851,7 @@ class DeviceTest extends CallflowTestCase
         }
     }
     public function testDeviceBlindTransfer() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_name = self::$b_device->getSipUsername();
@@ -750,6 +864,7 @@ class DeviceTest extends CallflowTestCase
             $target_2 = self::C_EXT . '@' . $sip_uri;
 
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
+            Log::debug("trying target #1 %s", $target);
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $b_channel = $channels->waitForInbound($b_device_name);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
@@ -758,22 +873,22 @@ class DeviceTest extends CallflowTestCase
             $a_channel = $channels->waitForOriginate($uuid);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
 
-            $this->ensureTalking($a_channel, $b_channel);
-            $this->ensureTalking($b_channel, $a_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel);
 
+            Log::debug("trying target #2 %s", $target_2);
             $b_channel->deflect($target_2);
             $c_channel = $channels->waitForInbound($c_device_name);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
 
             $c_channel->answer();
 
-            $this->ensureTalking($a_channel, $c_channel);
-            $this->ensureTalking($c_channel, $a_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
             $this->hangupChannels($a_channel, $c_channel);
         }
     }
 
     public function testDeviceAttendedTransfer() {
+        Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();
@@ -785,6 +900,7 @@ class DeviceTest extends CallflowTestCase
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT . '@' . $sip_uri;
+            Log::debug("trying target %s", $target);
             $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
             $transferee = self::C_EXT . '@' . $sip_uri;
 
@@ -797,8 +913,7 @@ class DeviceTest extends CallflowTestCase
             $a_channel = $channels->waitForOriginate($uuid);
             $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $a_channel);
 
-            $this->ensureTalking($a_channel, $b_channel_1);
-            $this->ensureTalking($b_channel_1, $a_channel);
+            $this->ensureTwoWayAudio($a_channel, $b_channel_1);
 
             $this->assertEquals($b_channel_1->getChannelCallState(), "ACTIVE");
             $b_channel_1->onHold();
@@ -814,8 +929,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel_2);
             $event = $b_channel_2->waitAnswer();
 
-            $this->ensureTalking($b_channel_2, $c_channel);
-            $this->ensureTalking($c_channel, $b_channel_2);
+            $this->ensureTwoWayAudio($b_channel_2, $c_channel);
 
             $to_tag = $event->getHeader('variable_sip_to_tag');
             $from_tag = $event->getHeader('variable_sip_from_tag');
@@ -833,13 +947,13 @@ class DeviceTest extends CallflowTestCase
             $b_channel_1->deflect($refer_to);
             $b_channel_1->waitDestroy();
 
-            $this->ensureTalking($a_channel, $c_channel);
-            $this->ensureTalking($c_channel, $a_channel);
+            $this->ensureTwoWayAudio($a_channel, $c_channel);
             $this->hangupChannels($a_channel, $c_channel);
         }
     }
 
     public function testRealmChangeRegistration() {
+        Log::notice("%s", __METHOD__);
         $test_account = self::getTestAccount();
         $a_device_id = self::$a_device->getId();
         $gateways = Profiles::getProfile('auth')->getGateways();
@@ -869,43 +983,5 @@ class DeviceTest extends CallflowTestCase
         $gateways->findByName($a_device_id)->setParam('realm', self::$realm);
         $gateways->findByName($a_device_id)->setParam('from-domain', self::$realm);
         Profiles::syncGateways();
-    }
-
-
-    private function ensureAnswer($bg_uuid, $b_channel){
-        $channels = self::getChannels();
-
-        $b_channel->answer();
-
-        $a_channel = $channels->waitForOriginate($bg_uuid, 30);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
-
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $a_channel->waitAnswer(60));
-
-        $a_channel->log("we are connected!");
-
-        $this->ensureTalking($a_channel, $b_channel, 1600);
-        $this->ensureTalking($b_channel, $a_channel, 600);
-        $this->hangupChannels($b_channel, $a_channel);
-    }
-
-    private function ensureTalking($first_channel, $second_channel, $freq = 600){
-        $first_channel->playTone($freq, 3000, 0, 5);
-        $tone = $second_channel->detectTone($freq, 20);
-        $first_channel->breakout();
-        $this->assertEquals($freq, $tone);
-    }
-
-    private function hangupChannels($hangup_channel, $other_channels){
-        $hangup_channel->hangup();
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $hangup_channel->waitDestroy(30));
-
-        if (is_array($other_channels)){
-            foreach ($other_channels as $channel){
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $channel->waitDestroy(30));
-            }
-        } else {
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\ESL\\Event", $other_channels->waitDestroy(60));
-        }
     }
 }
