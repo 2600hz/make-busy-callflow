@@ -777,8 +777,7 @@ class DeviceTest extends CallflowTestCase
 
         $gateways = Profiles::getProfile('auth')->getGateways();
 
-        //TODO: changed from assertFalse to assertTrue to bypass bug KAZOO-1331
-        $this->assertTrue($gateways->findByName($a_device_id)->register());
+        $this->assertFalse($gateways->findByName($a_device_id)->register());
 
         $uuid_base = "testUsernameChange-";
 
@@ -794,7 +793,6 @@ class DeviceTest extends CallflowTestCase
         $gateways->findByName($a_device_id)->kill();
         Profiles::getProfile('auth')->rescan();
 
-        //TODO: bypass bug KAZOO-1331
         $this->assertTrue($gateways->findByName($a_device_id)->register());
 
         foreach (self::getSipTargets() as $sip_uri) {
@@ -820,8 +818,7 @@ class DeviceTest extends CallflowTestCase
 
         $gateways = Profiles::getProfile('auth')->getGateways();
 
-        //TODO: changed to assertTrue (should be assertFalse) to bypass bug KAZOO-1331
-        $this->assertTrue($gateways->findByName($a_device_id)->register());
+        $this->assertFalse($gateways->findByName($a_device_id)->register());
 
         $uuid_base = "testPasswordChange-";
 
@@ -845,9 +842,8 @@ class DeviceTest extends CallflowTestCase
             $options = array("origination_uuid" => $uuid_base . "x2-" . Utils::randomString(8));
             $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
             $channel = $channels->waitForInbound($b_username);
-            //TODO: disabled due to bug KAZOO-1331
-            //$this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            //$channel->hangup();
+            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
+            $channel->hangup();
         }
     }
     public function testDeviceBlindTransfer() {
