@@ -138,6 +138,7 @@ class UserTest extends CallflowTestCase
 
     //MKBUSY-23 - Changing owner assignmnets.
     public function testOwnerChange() {
+	$this->markTestIncomplete('Known issue, KAZOO-5115');
         Log::notice("%s", __METHOD__);
         $channels = self::getChannels();
 
@@ -402,6 +403,7 @@ class UserTest extends CallflowTestCase
     //MKBUSY-36 - test keep caller id true
     //Caller Id presented to c_devices should be A_user internal CID
     public function testCfKeepCallerIdTrue(){
+	$this->markTestIncomplete('Known issue, KAZOO-5116');
         Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
 
@@ -445,6 +447,7 @@ class UserTest extends CallflowTestCase
     //MKBUSY-36 - test keep caller id false
     //Caller Id presented to c_devices should be B_user internal CID
     public function testCfKeepCallerIdFalse(){
+	$this->markTestIncomplete('Known issue, KAZOO-5116');
         Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
 
