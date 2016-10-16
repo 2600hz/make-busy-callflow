@@ -325,8 +325,8 @@ class UserTest extends CallflowTestCase
 
         self::$b_user->enableUserCF(
             array(
-                'enabled'=>'true',
-                'substitute'=>'false',
+                'enabled'=> TRUE,
+                'substitute'=> FALSE,
                 'number'=> self::C_NUMBER
             )
         );
@@ -370,8 +370,8 @@ class UserTest extends CallflowTestCase
 
         self::$b_user->enableUserCF(
             array(
-                'enabled'=>'true',
-                'substitute'=>'true',
+                'enabled'=> TRUE,
+                'substitute'=> TRUE,
                 'number'=>self::C_NUMBER
             )
         );
@@ -667,8 +667,8 @@ class UserTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $emergency_channel);
 
             $this->assertEquals(
-                $emergency_channel->getEvent()->getHeader("Caller-Caller-ID-Number"),
-                self::$a_device_1->getCidParam("emergency")->number
+                self::$a_device_1->getCidParam("emergency")->number,
+                urldecode($emergency_channel->getEvent()->getHeader("Caller-Caller-ID-Number"))
             );
 
             $emergency_channel->hangup();
