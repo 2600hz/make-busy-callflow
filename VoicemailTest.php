@@ -287,7 +287,7 @@ class VoicemailTest extends CallflowTestCase
 
             $this->leaveMessage($a_device_id, $target, "600");
 
-            $messages = self::$b_voicemail_box->getVoicemailboxParam("messages");
+            $messages = self::$b_voicemail_box->getMessages();
             $this->assertNotNull($messages[0]->media_id);
 
             $uuid    = $channels->gatewayOriginate($b_device_id, $target);
@@ -299,7 +299,7 @@ class VoicemailTest extends CallflowTestCase
             $b_channel->sendDtmf(self::DEFAULT_PIN);
 
 
-            $this->expectPrompt($b_channel, "VM-YOU_HAVE", 10);
+            $this->expectPrompt($b_channel, "VM-YOU_HAVE", 60);
             $this->expectPrompt($b_channel, "VM-NEW_MESSAGE", 10);
             $this->expectPrompt($b_channel, "VM-MAIN_MENU", 10);
 
@@ -335,7 +335,7 @@ class VoicemailTest extends CallflowTestCase
         self::$b_user->setUserParam("vm_to_email_enabled",FALSE);
 
         self::$b_voicemail_box->getVoicemailbox();
-        $count  = count(self::$b_voicemail_box->getVoicemailboxParam("messages"));
+        $count  = count(self::$b_voicemail_box->getMessages());
 
         foreach (self::getSipTargets() as $sip_uri){
             Log::debug("trying target %s", $sip_uri);
@@ -345,11 +345,11 @@ class VoicemailTest extends CallflowTestCase
 
             $this->leaveMessage($a_device_id, $target, "600", "1600");
 
-            $messages = self::$b_voicemail_box->getVoicemailboxParam("messages");
+            $messages = self::$b_voicemail_box->getMessages();
 
             $this->assertNotNull($messages[$count]->media_id);
 
-            $messages = self::$b_voicemail_box->getVoicemailboxParam("messages");
+            $messages = self::$b_voicemail_box->getMessages();
 
             $this->assertNotNull($messages[0]->media_id);
 
@@ -362,7 +362,7 @@ class VoicemailTest extends CallflowTestCase
             $this->expectPrompt($b_channel, "VM-ENTER_PASS", 10);
             $b_channel->sendDtmf(self::DEFAULT_PIN);
 
-            $this->expectPrompt($b_channel, "VM-YOU_HAVE", 10);
+            $this->expectPrompt($b_channel, "VM-YOU_HAVE", 60);
             $this->expectPrompt($b_channel, "VM-NEW_MESSAGE", 10);
             $this->expectPrompt($b_channel, "VM-MAIN_MENU", 10);
 
@@ -391,7 +391,7 @@ class VoicemailTest extends CallflowTestCase
 
         $a_device_id = self::$a_device->getId();
         $b_user_id   = self::$b_user->getId();
-        $source = self::$b_voicemail_box->getVoicemailboxParam("messages");
+        $source = self::$b_voicemail_box->getMessages();
 
         self::$b_voicemail_box->setVoicemailBoxParam('owner_id',$b_user_id);
         self::$b_voicemail_box->setVoicemailBoxParam('delete_after_notify',TRUE);
@@ -402,7 +402,7 @@ class VoicemailTest extends CallflowTestCase
 
             $this->leaveMessage($a_device_id, $target, "600");
 
-            $this->assertEquals(self::$b_voicemail_box->getVoicemailboxParam("messages"), $source);
+            $this->assertEquals(self::$b_voicemail_box->getMessages(), $source);
 
             self::$b_voicemail_box->resetVoicemailBox();
             self::$b_voicemail_box->resetVoicemailBoxParam("media");
@@ -421,7 +421,7 @@ class VoicemailTest extends CallflowTestCase
         self::$b_user->setUserParam("vm_to_email_enabled",FALSE);
 
         self::$b_voicemail_box->getVoicemailbox();
-        $count  = count(self::$b_voicemail_box->getVoicemailboxParam("messages"));
+        $count  = count(self::$b_voicemail_box->getMessages());
 
         foreach (self::getSipTargets() as $sip_uri){
             Log::debug("trying target %s", $sip_uri);
@@ -430,13 +430,9 @@ class VoicemailTest extends CallflowTestCase
 
             $this->leaveMessage($a_device_id, $target, "600");
 
-            $messages = self::$b_voicemail_box->getVoicemailboxParam("messages");
+            $messages = self::$b_voicemail_box->getMessages();
 
-            $this->assertNotNull($messages[$count]->media_id);
-
-            $messages = self::$b_voicemail_box->getVoicemailboxParam("messages");
-
-            $this->assertNotNull($messages[0]->media_id);
+            $this->assertNotNull($messages[$count]);
 
             $uuid      = $channels->gatewayOriginate($b_device_id, $target);
             $b_channel = $channels->waitForOriginate($uuid, 10);
@@ -447,7 +443,7 @@ class VoicemailTest extends CallflowTestCase
             $this->expectPrompt($b_channel, "VM-ENTER_PASS", 10);
             $b_channel->sendDtmf(self::DEFAULT_PIN);
 
-            $this->expectPrompt($b_channel, "VM-YOU_HAVE", 10);
+            $this->expectPrompt($b_channel, "VM-YOU_HAVE", 60);
             $this->expectPrompt($b_channel, "VM-NEW_MESSAGE", 10);
             $this->expectPrompt($b_channel, "VM-MAIN_MENU", 10);
 
@@ -529,7 +525,7 @@ class VoicemailTest extends CallflowTestCase
 
         //This may be a bug in my environment, but sometimes it can take 40+ seconds to save messages
         $this->expectPrompt($channel, "VM-SAVED", 60);
-        $this->expectPrompt($channel, "VM-THANK_YOU", 10);
+        $this->expectPrompt($channel, "VM-THANK_YOU", 60);
 
         $channel->waitHangup();
     }
