@@ -52,6 +52,7 @@ class WebhookTest extends CallflowTestCase
     }
 
     public function testWebhookBasic() {
+	$this->markTestIncomplete('Known issue, KAZOO-5117');
         Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
@@ -60,16 +61,16 @@ class WebhookTest extends CallflowTestCase
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT. '@' . $sip_uri;
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_channel = $channels->waitForInbound($b_sipuser);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_leg);
+            $b_channel = $channels->waitForInbound($b_sipuser, 10);
+            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $a_channel = $this->ensureAnswer($uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
+	    $a_leg = $a_channel->getUuid();
+	    $b_leg = $b_channel->getUuid();
             $this->hangupChannels($a_channel, $b_channel);
-
         }
 
         sleep(2); // allow time for destroy to come in.
-
         $a_leg_create  = "/tmp/$a_leg" . "_inbound_create.log";
         $a_leg_answer  = "/tmp/$a_leg" . "_inbound_answer.log";
         $a_leg_destroy = "/tmp/$a_leg" . "_inbound_destroy.log";
