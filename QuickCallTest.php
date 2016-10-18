@@ -2,11 +2,9 @@
 
 namespace KazooTests\Applications\Callflow;
 
-use \Kazoo\SDK as KazooSDK;
-use \Kazoo\AuthToken\User as AuthUser;
-
 use \MakeBusy\FreeSWITCH\Sofia\Profiles;
 use \MakeBusy\FreeSWITCH\Sofia\Gateways;
+use \MakeBusy\Kazoo\SDK;
 
 use \MakeBusy\Kazoo\Applications\Crossbar\Device;
 use \MakeBusy\Kazoo\Applications\Crossbar\User;
@@ -87,26 +85,29 @@ class QuickCallTest extends CallflowTestCase
         Log::notice("%s", __METHOD__);
 
         self::$admin_device->getDevice()->quickcall(self::A_EXT);
-        $this->ensureQuickCallAnswer(self::$admin_device->getSipUsername(), self::$a_device->getSipUsername());
+
+	$a_channel = $this->waitForCall(self::$admin_device);
+        $a_channel->answer();
+
+	$b_channel = $this->waitForCall(self::$a_device);
+        $b_channel->answer();
+
+	$this->testAudioAndHangup($a_channel, $b_channel);
     }
 
     public function testDeviceAA() {
         Log::notice("%s", __METHOD__);
 
         self::$admin_device->getDevice()->quickcall(self::A_EXT, array('auto_answer' => 'true'));
+	$a_channel = $this->waitForCall(self::$admin_device);
 
-        $a_channel = self::getChannels()->waitForInbound(self::$admin_device->getSipUsername());
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
-        $auto_answer = $a_channel->getAutoAnswerDetected();
-        $this->assertEquals('true', $auto_answer);
+        $this->assertEquals('true', $a_channel->getAutoAnswerDetected());
         $a_channel->answer();
 
-        $b_channel = self::getChannels()->waitForInbound(self::$a_device->getSipUsername());
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+	$b_channel = $this->waitForCall(self::$a_device);
         $b_channel->answer();
 
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->hangupChannels($a_channel, $b_channel);
+	$this->testAudioAndHangup($a_channel, $b_channel);
     }
 
     public function testDeviceCID() {
@@ -115,27 +116,30 @@ class QuickCallTest extends CallflowTestCase
 
         self::$admin_device->getDevice()->quickcall(self::A_EXT, array('cid-number' => self::CNUM, 'cid-name' => self::CNAM));
 
-        $a_channel = self::getChannels()->waitForInbound(self::$admin_device->getSipUsername());
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
-        $auto_answer = $a_channel->getAutoAnswerDetected();
+	$a_channel = $this->waitForCall(self::$admin_device);
         $a_channel->answer();
 
-        $b_channel = self::getChannels()->waitForInbound(self::$a_device->getSipUsername());
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+	$b_channel = $this->waitForCall(self::$a_device);
         $b_channel->answer();
 
         $this->assertEquals($b_channel->getCallerIdNumber(), self::CNUM);
         $this->assertEquals($b_channel->getCallerIdName(), self::CNAM);
 
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->hangupChannels($a_channel, $b_channel);
+	$this->testAudioAndHangup($a_channel, $b_channel);
     }
 
     public function testUserCall() {
         Log::notice("%s", __METHOD__);
 
         self::$admin_user->getUser()->quickcall(self::A_EXT);
-        $this->ensureQuickCallAnswer(self::$admin_device->getSipUsername(), self::$a_device->getSipUsername());
+
+	$a_channel = $this->waitForCall(self::$admin_device);
+        $a_channel->answer();
+
+	$b_channel = $this->waitForCall(self::$a_device);
+        $b_channel->answer();
+
+	$this->testAudioAndHangup($a_channel, $b_channel);
     }
 
     public function testUserAA() {
@@ -143,54 +147,40 @@ class QuickCallTest extends CallflowTestCase
 
         self::$admin_user->getUser()->quickcall(self::A_EXT, array('auto-answer' => 'true'));
 
-        $a_channel = self::getChannels()->waitForInbound(self::$admin_device->getSipUsername());
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
-        $auto_answer = $a_channel->getAutoAnswerDetected();
-        $this->assertEquals('true', $auto_answer);
+	$a_channel = $this->waitForCall(self::$admin_device);
+        $this->assertEquals('true', $a_channel->getAutoAnswerDetected());
         $a_channel->answer();
 
-        $b_channel = self::getChannels()->waitForInbound(self::$a_device->getSipUsername());
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+	$b_channel = $this->waitForCall(self::$a_device);
         $b_channel->answer();
 
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->hangupChannels($a_channel, $b_channel);
+	$this->testAudioAndHangup($a_channel, $b_channel);
     }
-
 
     public function testAnonymous() {
         Log::notice("%s", __METHOD__);
+
 	$url = self::$anon_device->getDevice()->getUri('/quickcall/' . self::A_EXT); 
-	$this->curl($url);	
-        $this->ensureQuickCallAnswer(self::$anon_device->getSipUsername(), self::$a_device->getSipUsername());
-    }
 
-    private function curl($url) {
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	SDK::getInstance()->getHttpClient()->get($url, array(), array());	
 
-        $result = curl_exec($curl);
-        if(curl_errno($curl)) {
-            throw new Exception('QuickCall Failure', curl_errno($curl));
-        }
-        curl_close($curl);
-        $result = json_decode($result);
-        return $result;
-    }
-
-    private function ensureQuickCallAnswer($a_user, $b_user) {
-        $channels   = self::getChannels();
-
-        $a_channel = $channels->waitForInbound($a_user);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
+	$a_channel = $this->waitForCall(self::$anon_device);
         $a_channel->answer();
 
-        $b_channel = $channels->waitForInbound($b_user);
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+	$b_channel = $this->waitForCall(self::$a_device);
         $b_channel->answer();
 
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
+	$this->testAudioAndHangup($a_channel, $b_channel);
+    }
 
+    private function waitForCall($device) {
+	$channel = self::getChannels()->waitForInbound($device->getSipUsername());
+	$this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
+	return $channel;
+    }
+
+    private function testAudioAndHangup($a_channel, $b_channel) {
+        $this->ensureTwoWayAudio($a_channel, $b_channel);
         $this->hangupChannels($a_channel, $b_channel);
     }
 
