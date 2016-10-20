@@ -52,7 +52,6 @@ class WebhookTest extends CallflowTestCase
     }
 
     public function testWebhookBasic() {
-	$this->markTestIncomplete('Known issue, KAZOO-5117');
         Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
         $a_device_id = self::$a_device->getId();
