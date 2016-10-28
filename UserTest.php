@@ -132,7 +132,7 @@ class UserTest extends CallflowTestCase
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_1);
             $this->ensureTwoWayAudio($a_channel, $b_channel_1);
-            $this->hangupChannels($a_channel, $b_channel_1);
+            $this->hangupBridged($a_channel, $b_channel_1);
         }
     }
 
@@ -161,7 +161,7 @@ class UserTest extends CallflowTestCase
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_1);
             $this->ensureTwoWayAudio($a_channel, $b_channel_1);
-            $this->hangupChannels($a_channel, $b_channel_1);
+            $this->hangupBridged($a_channel, $b_channel_1);
         }
 
         // also when we call c user, b_device_2 should ring
@@ -174,7 +174,7 @@ class UserTest extends CallflowTestCase
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_2);
             $this->ensureTwoWayAudio($a_channel, $b_channel_2);
-            $this->hangupChannels($a_channel, $b_channel_2);
+            $this->hangupBridged($a_channel, $b_channel_2);
         }
 
         //reset owner assignment back to b user
@@ -261,7 +261,7 @@ class UserTest extends CallflowTestCase
 
             $a_channel = $this->ensureAnswer($uuid, $c_channel_1);
             $this->ensureTwoWayAudio($a_channel, $c_channel_1);
-            $this->hangupChannels($a_channel, $c_channel_1);
+            $this->hangupBridged($a_channel, $c_channel_1);
         }
         self::$b_user->resetCfParams();
     }
@@ -307,7 +307,7 @@ class UserTest extends CallflowTestCase
             $this->assertEquals($a_channel_1->getAnswerState(), "answered");
 
             $this->ensureTalking($a_channel_1, $c_channel_1);
-            $this->hangupChannels($a_channel_1, $c_channel_1);
+            $this->hangupBridged($a_channel_1, $c_channel_1);
         }
         self::$b_user->resetCfParams();
     }
@@ -564,7 +564,7 @@ class UserTest extends CallflowTestCase
 
             $a_channel = $this->ensureAnswer($uuid, $c_channel_1);
             $this->ensureTwoWayAudio($a_channel, $c_channel_1);
-            $this->hangupChannels($a_channel, $c_channel_1);
+            $this->hangupBridged($a_channel, $c_channel_1);
         }
 
         foreach (self::getSipTargets() as $sip_uri) {
@@ -587,7 +587,7 @@ class UserTest extends CallflowTestCase
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_1);
             $this->ensureTwoWayAudio($a_channel, $b_channel_1);
-            $this->hangupChannels($a_channel, $b_channel_1);
+            $this->hangupBridged($a_channel, $b_channel_1);
         }
         self::$b_user->resetCfParams();
     }
@@ -738,7 +738,7 @@ class UserTest extends CallflowTestCase
 
             $this->ensureTalking($a_channel, $c_channel);
             $this->ensureTalking($c_channel, $a_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
     }
      public function testUserAttendedTransfer() {
@@ -801,7 +801,7 @@ class UserTest extends CallflowTestCase
 
             $this->ensureTalking($a_channel, $c_channel);
             $this->ensureTalking($c_channel, $a_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
     }
 

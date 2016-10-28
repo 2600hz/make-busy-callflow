@@ -66,7 +66,7 @@ class WebhookTest extends CallflowTestCase
             $this->ensureTwoWayAudio($a_channel, $b_channel);
 	    $a_leg = $a_channel->getUuid();
 	    $b_leg = $b_channel->getUuid();
-            $this->hangupChannels($a_channel, $b_channel);
+            $this->hangupBridged($a_channel, $b_channel);
         }
 
         sleep(2); // allow time for destroy to come in.
