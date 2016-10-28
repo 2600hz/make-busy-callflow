@@ -174,9 +174,7 @@ class QuickCallTest extends CallflowTestCase
     }
 
     private function waitForCall($device) {
-	$channel = self::getChannels()->waitForInbound($device->getSipUsername());
-	$this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-	return $channel;
+        return $this->waitForInbound($device->getSipUsername());
     }
 
     private function testAudioAndHangup($a_channel, $b_channel) {

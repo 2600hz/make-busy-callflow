@@ -60,8 +60,7 @@ class WebhookTest extends CallflowTestCase
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT. '@' . $sip_uri;
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_channel = $channels->waitForInbound($b_sipuser, 10);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+            $b_channel = $this->waitForInbound($b_sipuser, 10);
             $a_channel = $this->ensureAnswer($uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
 	    $a_leg = $a_channel->getUuid();

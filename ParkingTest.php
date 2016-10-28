@@ -77,12 +77,10 @@ class ParkingTest extends CallflowTestCase
             $retrieve = self::RETRIEVE . '101@' . $sip_uri;
 
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_channel = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel);
+            $b_channel = $this->waitForInbound($b_device_name);
 
             $b_channel->answer();
-            $a_channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $a_channel);
+            $a_channel = $this->waitForOriginate($uuid);
 
             $this->assertEquals($b_channel->getChannelCallState(), "ACTIVE");
             $b_channel->onHold();
@@ -135,12 +133,10 @@ class ParkingTest extends CallflowTestCase
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_channel = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel);
+            $b_channel = $this->waitForInbound($b_device_name);
 
             $b_channel->answer();
-            $a_channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $a_channel);
+            $a_channel = $this->waitForOriginate($uuid);
 
             $this->assertEquals($b_channel->getChannelCallState(), "ACTIVE");
             $b_channel->onHold();
@@ -167,8 +163,7 @@ class ParkingTest extends CallflowTestCase
             $b_channel->waitDestroy();
 
             $uuid_3 = $channels->gatewayOriginate($c_device_id, $parking_spot);
-            $c_channel = $channels->waitForOriginate($uuid_3);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
+            $c_channel = $this->waitForOriginate($uuid_3);
 
             $this->ensureTalking($a_channel, $c_channel);
             $this->hangupBridged($a_channel, $c_channel);
@@ -190,18 +185,15 @@ class ParkingTest extends CallflowTestCase
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_channel = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel);
+            $b_channel = $this->waitForInbound($b_device_name);
 
             $b_channel->answer();
-            $a_channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $a_channel);
+            $a_channel = $this->waitForOriginate($uuid);
 
             $b_channel->deflect($parking_spot);
 
             $uuid_2 = $channels->gatewayOriginate($c_device_id, $parking_spot);
-            $c_channel = $channels->waitForOriginate($uuid_2);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
+            $c_channel = $this->waitForOriginate($uuid_2);
 
             $this->ensureTalking($a_channel, $c_channel);
             $this->hangupBridged($a_channel, $c_channel);
@@ -228,30 +220,25 @@ class ParkingTest extends CallflowTestCase
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
             $uuid_1 = $channels->gatewayOriginate($a_device_id, $b_ext);
-            $b_channel_1 = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_1);
+            $b_channel_1 = $this->waitForInbound($b_device_name);
 
             $b_channel_1->answer();
-            $a_channel = $channels->waitForOriginate($uuid_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
+            $a_channel = $this->waitForOriginate($uuid_1);
 
             $b_channel_1->deflect($parking_spot);
             $b_channel_1->waitDestroy();
 
             $uuid_2 = $channels->gatewayOriginate($c_device_id, $b_ext);
-            $b_channel_2 = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_2);
+            $b_channel_2 = $this->waitForInbound($b_device_name);
 
             $b_channel_2->answer();
-            $c_channel = $channels->waitForOriginate($uuid_2);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
+            $c_channel = $this->waitForOriginate($uuid_2);
 
             $b_channel_2->setVariables('sip_h_referred-by', "$b_uri");
             $b_channel_2->deflect($parking_spot);
             $b_channel_2->waitDestroy();
 
-            $b_channel_3 = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_3);
+            $b_channel_3 = $this->waitForInbound($b_device_name);
             $b_channel_3->answer();
 
             $this->ensureTalking($b_channel_3, $c_channel);
@@ -280,12 +267,10 @@ class ParkingTest extends CallflowTestCase
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_channel = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel);
+            $b_channel = $this->waitForInbound($b_device_name);
 
             $b_channel->answer();
-            $a_channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $a_channel);
+            $a_channel = $this->waitForOriginate($uuid);
 
             $this->assertEquals($b_channel->getChannelCallState(), "ACTIVE");
             $b_channel->onHold();
@@ -310,8 +295,7 @@ class ParkingTest extends CallflowTestCase
             $b_channel->deflect($refer_to);
             $b_channel->waitDestroy();
 
-            $ringback = $channels->waitForInbound($b_device_name, 30);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $ringback);
+            $ringback = $this->waitForInbound($b_device_name, 30);
 
             $ringback->answer();
             $this->ensureTalking($ringback, $a_channel);
@@ -336,12 +320,10 @@ class ParkingTest extends CallflowTestCase
             $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_channel = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel);
+            $b_channel = $this->waitForInbound($b_device_name);
 
             $b_channel->answer();
-            $a_channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $a_channel);
+            $a_channel = $this->waitForOriginate($uuid);
 
             $this->assertEquals($b_channel->getChannelCallState(), "ACTIVE");
             $b_channel->onHold();
@@ -366,15 +348,13 @@ class ParkingTest extends CallflowTestCase
             $b_channel->deflect($refer_to);
             $b_channel->waitDestroy();
 
-            $ringback = $channels->waitForInbound($b_device_name, 13);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $ringback);
+            $ringback = $this->waitForInbound($b_device_name, 13);
 
             Log::debug("Sleeping for 20 seconds...");
             sleep(20); // let it finish ringing...
 
             $uuid_2 = $channels->gatewayOriginate($c_device_id, $parking_spot);
-            $c_channel = $channels->waitForOriginate($uuid_2);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
+            $c_channel = $this->waitForOriginate($uuid_2);
 
             $this->ensureTalking($a_channel, $c_channel);
             $this->hangupBridged($a_channel, $c_channel);

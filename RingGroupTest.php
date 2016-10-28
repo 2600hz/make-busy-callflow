@@ -167,8 +167,7 @@ class RingGroupTest extends CallflowTestCase
 
             foreach (range('b', 'g') as $leg) {
                 Log::debug("trying leg %s", $leg);
-                $race[$leg] = $channels->waitForInbound($username[$leg], 30);
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $race[$leg]);
+                $race[$leg] = $this->waitForInbound($username[$leg], 30);
             }
 
             foreach (range('b', 'g') as $leg) {
@@ -231,8 +230,7 @@ class RingGroupTest extends CallflowTestCase
 
             foreach (range('b', 'c') as $leg) {
                 Log::debug("trying leg %s", $leg);
-                $race[$leg] = $channels->waitForInbound($username[$leg], 10);
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $race[$leg]);
+                $race[$leg] = $this->waitForInbound($username[$leg], 10);
             }
 
             foreach (range('b', 'c') as $leg) {
@@ -265,8 +263,7 @@ class RingGroupTest extends CallflowTestCase
 
             foreach (range('d', 'e') as $leg) {
                 Log::debug("trying leg %s", $leg);
-                $race[$leg] = $channels->waitForInbound($username[$leg], 10);
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $race[$leg]);
+                $race[$leg] = $this->waitForInbound($username[$leg], 10);
             }
 
             foreach (range('d', 'e') as $leg) {
@@ -300,8 +297,7 @@ class RingGroupTest extends CallflowTestCase
 
             foreach (range('f', 'g') as $leg) {
                 Log::debug("trying leg %s", $leg);
-                $race[$leg] = $channels->waitForInbound($username[$leg], 21);
-                $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $race[$leg]);
+                $race[$leg] = $this->waitForInbound($username[$leg], 21);
             }
 
             foreach (range('f', 'g') as $leg) {

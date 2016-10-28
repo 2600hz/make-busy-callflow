@@ -154,9 +154,8 @@ class UserTest extends CallflowTestCase
             $target = self::B_NUMBER .'@'. $sip_uri;
             Log::debug("testing cannot reach user %s on device %s", $target, $b_device_2_name);
             $uuid = $channels->gatewayOriginate($a_device_1_id, $target);
-            $b_channel_1 = $channels->waitForInbound($b_device_1_name);
+            $b_channel_1 = $this->waitForInbound($b_device_1_name);
             $b_channel_2 = $channels->waitForInbound($b_device_2_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_1);
             $this->assertEmpty($b_channel_2);
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_1);
@@ -169,8 +168,7 @@ class UserTest extends CallflowTestCase
             $target = self::C_NUMBER .'@'. $sip_uri;
             Log::debug("testing can reach user %s on device %s", $target, $b_device_2_name);
             $uuid = $channels->gatewayOriginate($a_device_1_id, $target);
-            $b_channel_2 = $channels->waitForInbound($b_device_2_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_2);
+            $b_channel_2 = $this->waitForInbound($b_device_2_name);
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_2);
             $this->ensureTwoWayAudio($a_channel, $b_channel_2);
@@ -195,9 +193,7 @@ class UserTest extends CallflowTestCase
             $target  = self::CALL_FWD_ENABLE ."@". $sip_uri;
 
             $uuid    = $channels->gatewayOriginate($b_device_1_id, $target);
-            $b_channel_1 = $channels->waitForOriginate($uuid);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_1);
+            $b_channel_1 = $this->waitForOriginate($uuid);
 
             $b_channel_1->sendDtmf(self::C_NUMBER . '#');
             $b_channel_1->waitHangUp();
@@ -225,8 +221,7 @@ class UserTest extends CallflowTestCase
             $target  = self::CALL_FWD_DISABLE .'@'. $target;
             Log::debug("trying target %s", $target);
             $uuid    = $channels->gatewayOriginate($b_device_1_id, $target);
-            $b_channel_1 = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_1);
+            $b_channel_1 = $this->waitForOriginate($uuid);
             $this->assertTrue($b_channel_1->waitHangUp());
             $this->assertFalse(self::$b_user->getCfParam("enabled"));
         }
@@ -253,11 +248,8 @@ class UserTest extends CallflowTestCase
 
             $uuid = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $c_channel_1 = $channels->waitForInbound($c_device_1_username);
-            $c_channel_2 = $channels->waitForInbound($c_device_2_username);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
+            $c_channel_1 = $this->waitForInbound($c_device_1_username);
+            $c_channel_2 = $this->waitForInbound($c_device_2_username);
 
             $a_channel = $this->ensureAnswer($uuid, $c_channel_1);
             $this->ensureTwoWayAudio($a_channel, $c_channel_1);
@@ -286,15 +278,10 @@ class UserTest extends CallflowTestCase
 
             $uuid    = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $c_channel_1 = $channels->waitForInbound($c_device_1_username);
-            $c_channel_2 = $channels->waitForInbound($c_device_2_username);
+            $c_channel_1 = $this->waitForInbound($c_device_1_username);
+            $c_channel_2 = $this->waitForInbound($c_device_2_username);
 
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
-
-            $a_channel_1 = $channels->waitForOriginate($uuid);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel_1);
+            $a_channel_1 = $this->waitForOriginate($uuid);
 
             $c_channel_1->answer();
 
@@ -337,17 +324,11 @@ class UserTest extends CallflowTestCase
 
             $uuid = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $b_channel_1 = $channels->waitForInbound($b_device_1_name);
-            $b_channel_2 = $channels->waitForInbound($b_device_2_name);
+            $b_channel_1 = $this->waitForInbound($b_device_1_name);
+            $b_channel_2 = $this->waitForInbound($b_device_2_name);
 
-            $c_channel_1 = $channels->waitForInbound($c_device_1_name);
-            $c_channel_2 = $channels->waitForInbound($c_device_2_name);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_2);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
+            $c_channel_1 = $this->waitForInbound($c_device_1_name);
+            $c_channel_2 = $this->waitForInbound($c_device_2_name);
 
             $b_channel_1->hangup();
             $b_channel_2->hangup();
@@ -385,14 +366,11 @@ class UserTest extends CallflowTestCase
             $b_channel_1 = $channels->waitForInbound($b_device_1_name);
             $b_channel_2 = $channels->waitForInbound($b_device_2_name);
 
-            $c_channel_1 = $channels->waitForInbound($c_device_1_name);
-            $c_channel_2 = $channels->waitForInbound($c_device_2_name);
+            $c_channel_1 = $this->waitForInbound($c_device_1_name);
+            $c_channel_2 = $this->waitForInbound($c_device_2_name);
 
             $this->assertNull($b_channel_1);
             $this->assertNull($b_channel_2);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
 
             $c_channel_1->hangup();
             $c_channel_2->hangup();
@@ -421,11 +399,8 @@ class UserTest extends CallflowTestCase
 
             $uuid = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $c_channel_1 = $channels->waitForInbound($c_device_1_username);
-            $c_channel_2 = $channels->waitForInbound($c_device_2_username);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
+            $c_channel_1 = $this->waitForInbound($c_device_1_username);
+            $c_channel_2 = $this->waitForInbound($c_device_2_username);
 
             $c_channel_1->answer();
 
@@ -434,9 +409,7 @@ class UserTest extends CallflowTestCase
                 self::$a_user->getCidParam("internal")->number
             );
 
-            $a_channel_1 = $channels->waitForOriginate($uuid);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel_1);
+            $a_channel_1 = $this->waitForOriginate($uuid);
 
             $c_channel_1->hangup();
             $a_channel_1->waitHangup();
@@ -465,11 +438,8 @@ class UserTest extends CallflowTestCase
 
             $uuid    = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $c_channel_1 = $channels->waitForInbound($c_device_1_username);
-            $c_channel_2 = $channels->waitForInbound($c_device_2_username);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
+            $c_channel_1 = $this->waitForInbound($c_device_1_username);
+            $c_channel_2 = $this->waitForInbound($c_device_2_username);
 
             $c_channel_1->answer();
 
@@ -515,17 +485,12 @@ class UserTest extends CallflowTestCase
             $c_channel_1 = $channels->waitForInbound($c_device_1_username);
             $c_channel_2 = $channels->waitForInbound($c_device_2_username);
 
-            $offline_channel_1 = $channels->waitForInbound($c_device_1_username);
-            $offline_channel_2 = $channels->waitForInbound($c_device_2_username);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
+            $offline_channel_1 = $this->waitForInbound($c_device_1_username);
+            $offline_channel_2 = $this->waitForInbound($c_device_2_username);
 
             $c_channel_1->answer();
 
-            $a_channel_1 = $channels->waitForOriginate($uuid);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel_1);
+            $a_channel_1 = $this->waitForOriginate($uuid);
 
             $c_channel_1->hangup();
             $a_channel_1->waitHangup();
@@ -556,11 +521,8 @@ class UserTest extends CallflowTestCase
 
             $uuid = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $c_channel_1 = $channels->waitForInbound($c_device_1_username);
-            $c_channel_2 = $channels->waitForInbound($c_device_2_username);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel_2);
+            $c_channel_1 = $this->waitForInbound($c_device_1_username);
+            $c_channel_2 = $this->waitForInbound($c_device_2_username);
 
             $a_channel = $this->ensureAnswer($uuid, $c_channel_1);
             $this->ensureTwoWayAudio($a_channel, $c_channel_1);
@@ -573,17 +535,14 @@ class UserTest extends CallflowTestCase
 
             $uuid = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $b_channel_1 = $channels->waitForInbound($b_device_1_username);
-            $b_channel_2 = $channels->waitForInbound($b_device_2_username);
+            $b_channel_1 = $this->waitForInbound($b_device_1_username);
+            $b_channel_2 = $this->waitForInbound($b_device_2_username);
 
             $c_channel_1 = $channels->waitForInbound($c_device_1_username);
             $c_channel_2 = $channels->waitForInbound($c_device_2_username);
 
             $this->assertNull($c_channel_1);
             $this->assertNull($c_channel_2);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_2);
 
             $a_channel = $this->ensureAnswer($uuid, $b_channel_1);
             $this->ensureTwoWayAudio($a_channel, $b_channel_1);
@@ -606,9 +565,8 @@ class UserTest extends CallflowTestCase
 
             $uuid = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $offnet_channel = $channels->waitForInbound("15553335678");
+            $offnet_channel = $this->waitForInbound("15553335678");
 
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $offnet_channel);
             $this->assertEquals(
                 $offnet_channel->getEvent()->getHeader("Caller-Caller-ID-Number"),
                 self::$a_user->getCidParam("external")->number
@@ -635,11 +593,8 @@ class UserTest extends CallflowTestCase
 
             $uuid    = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $b_channel_1 = $channels->waitForInbound($b_device_1_username);
-            $b_channel_2 = $channels->waitForInbound($b_device_2_username);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_1);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel_2);
+            $b_channel_1 = $this->waitForInbound($b_device_1_username);
+            $b_channel_2 = $this->waitForInbound($b_device_2_username);
 
             $this->assertEquals(
                 $b_channel_1->getEvent()->getHeader("Caller-Caller-ID-Number"),
@@ -665,9 +620,7 @@ class UserTest extends CallflowTestCase
 
             $uuid    = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $emergency_channel = $channels->waitForInbound("911");
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $emergency_channel);
+            $emergency_channel = $this->waitForInbound("911");
 
             $this->assertEquals(
                 self::$a_device_1->getCidParam("emergency")->number,
@@ -694,9 +647,7 @@ class UserTest extends CallflowTestCase
 
             $uuid    = $channels->gatewayOriginate($a_device_1_id, $target);
 
-            $emergency_channel = $channels->waitForInbound(self::EMERGENCY_NUMBER);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $emergency_channel);
+            $emergency_channel = $this->waitForInbound(self::EMERGENCY_NUMBER);
 
             $this->assertEquals(
                 $emergency_channel->getEvent()->getHeader("Caller-Caller-ID-Number"),
@@ -720,19 +671,16 @@ class UserTest extends CallflowTestCase
             Log::debug("trying target #1 %s and target #2 %s", $target, $target_2);
 
             $uuid = $channels->gatewayOriginate($a_device_id, $target);
-            $b_channel = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+            $b_channel = $this->waitForInbound($b_device_name);
 
             $b_channel->answer();
-            $a_channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
+            $a_channel = $this->waitForOriginate($uuid);
 
             $this->ensureTalking($a_channel, $b_channel);
             $this->ensureTalking($b_channel, $a_channel);
 
             $b_channel->deflect($target_2);
-            $c_channel = $channels->waitForInbound($c_device_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
+            $c_channel = $this->waitForInbound($c_device_name);
 
             $c_channel->answer();
 
@@ -772,12 +720,10 @@ class UserTest extends CallflowTestCase
             $this->assertEquals($b_channel_1->getChannelCallState(), "HELD");
 
             $uuid_2 = $channels->gatewayOriginate($b_device_id, $transferee);
-            $c_channel = $channels->waitForInbound($c_device_name);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $c_channel);
+            $c_channel = $this->waitForInbound($c_device_name);
 
             $c_channel->answer();
-            $b_channel_2 = $channels->waitForOriginate($uuid_2);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel_2);
+            $b_channel_2 = $this->waitForOriginate($uuid_2);
             $event = $b_channel_2->waitAnswer();
 
             $this->ensureTalking($b_channel_2, $c_channel);

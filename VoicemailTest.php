@@ -74,9 +74,7 @@ class VoicemailTest extends CallflowTestCase
             self::$b_voicemail_box->setVoicemailboxParam("is_setup", FALSE);
             $target  = self::B_USER_NUMBER . '@'. $sip_uri;
             $uuid    = $channels->gatewayOriginate($b_device_id, $target);
-            $channel = $channels->waitForOriginate($uuid);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
+            $channel = $this->waitForOriginate($uuid);
 
             $this->expectPrompt($channel, "VM-ENTER_PASS", 10);
 
@@ -139,9 +137,7 @@ class VoicemailTest extends CallflowTestCase
 
             $target  = self::VM_CHECK_NUMBER .'@'. $sip_uri;
             $uuid    = $channels->gatewayOriginate($a_device_id, $target);
-            $channel = $channels->waitForOriginate($uuid);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
+            $channel = $this->waitForOriginate($uuid);
 
             $this->expectPrompt($channel, "VM-ENTER_ID", 10);
 
@@ -250,9 +246,7 @@ class VoicemailTest extends CallflowTestCase
             Log::debug("trying target %s", $sip_uri);
             $target  = self::B_USER_NUMBER . '@' . $sip_uri;
             $uuid    = $channels->gatewayOriginate($a_device_id, $target);
-            $channel = $channels->waitForOriginate($uuid, 60);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
+            $channel = $this->waitForOriginate($uuid, 60);
 
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Esl\Event", $channel->waitAnswer(60));
 
@@ -291,9 +285,7 @@ class VoicemailTest extends CallflowTestCase
             $this->assertNotNull($messages[0]->media_id);
 
             $uuid    = $channels->gatewayOriginate($b_device_id, $target);
-            $b_channel = $channels->waitForOriginate($uuid);
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+            $b_channel = $this->waitForOriginate($uuid);
 
             $this->expectPrompt($b_channel, "VM-ENTER_PASS", 10);
             $b_channel->sendDtmf(self::DEFAULT_PIN);
@@ -435,10 +427,8 @@ class VoicemailTest extends CallflowTestCase
             $this->assertNotNull($messages[$count]);
 
             $uuid      = $channels->gatewayOriginate($b_device_id, $target);
-            $b_channel = $channels->waitForOriginate($uuid, 10);
+            $b_channel = $this->waitForOriginate($uuid, 10);
             $b_channel->waitAnswer();
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
 
             $this->expectPrompt($b_channel, "VM-ENTER_PASS", 10);
             $b_channel->sendDtmf(self::DEFAULT_PIN);
@@ -462,10 +452,8 @@ class VoicemailTest extends CallflowTestCase
 
             //Call Back and make sure saved vm was "saved" and can be retrieved
             $uuid      = $channels->gatewayOriginate($b_device_id, $target);
-            $b_channel = $channels->waitForOriginate($uuid, 10);
+            $b_channel = $this->waitForOriginate($uuid, 10);
             $b_channel->waitAnswer();
-
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
 
             $this->expectPrompt($b_channel, "VM-ENTER_PASS", 10);
             $b_channel->sendDtmf(self::DEFAULT_PIN);
@@ -498,11 +486,9 @@ class VoicemailTest extends CallflowTestCase
         $channels  = self::getChannels();
 
         $uuid    = $channels->gatewayOriginate($calling_device, $target);
-        $channel = $channels->waitForOriginate($uuid, 60);
+        $channel = $this->waitForOriginate($uuid, 60);
 
         $channel->waitAnswer();
-
-        $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
 
         $this->expectPrompt($channel, "VM-PERSON");
         $this->expectPrompt($channel, "VM-NOT_AVAILABLE");
