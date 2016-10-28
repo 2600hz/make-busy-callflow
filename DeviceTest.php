@@ -142,7 +142,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $a_channel = $this->ensureAnswer($uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
-            $this->hangupChannels($a_channel, $b_channel);
+            $this->hangupBridged($a_channel, $b_channel);
         }
     }
 
@@ -163,7 +163,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
             $a_channel = $this->ensureAnswer($uuid, $channel);
             $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupChannels($a_channel, $channel);
+            $this->hangupBridged($a_channel, $channel);
         }
     }
 
@@ -184,7 +184,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
             $a_channel = $this->ensureAnswer($uuid, $channel);
             $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupChannels($a_channel, $channel);
+            $this->hangupBridged($a_channel, $channel);
         }
     }
 
@@ -204,7 +204,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
             $a_channel = $this->ensureAnswer($uuid, $channel);
             $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupChannels($a_channel, $channel);
+            $this->hangupBridged($a_channel, $channel);
         }
     }
 
@@ -230,7 +230,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
             $a_channel = $this->ensureAnswer($uuid, $channel);
             $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupChannels($a_channel, $channel);
+            $this->hangupBridged($a_channel, $channel);
         }
         //reset invite format or pay a horrible price in blood!
         self::$b_device->setInviteFormat("username");
@@ -300,7 +300,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $a_channel = $this->ensureAnswer($uuid, $c_channel);
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
@@ -333,7 +333,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertEquals("answered", $a_channel->getAnswerState());
 
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
@@ -363,7 +363,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $a_channel = $this->ensureAnswer($uuid, $c_channel);
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
@@ -393,7 +393,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $a_channel = $this->ensureAnswer($uuid, $c_channel);
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
@@ -425,7 +425,7 @@ class DeviceTest extends CallflowTestCase
             );
             $a_channel = $this->ensureAnswer($uuid, $c_channel);
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
@@ -456,7 +456,7 @@ class DeviceTest extends CallflowTestCase
             );
             $a_channel = $this->ensureAnswer($uuid, $c_channel);
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
     }
@@ -486,7 +486,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $a_channel = $this->ensureAnswer($uuid, $c_channel);
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
         self::$b_device->resetCfParams();
 
@@ -521,7 +521,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
             $a_channel = $this->ensureAnswer($uuid, $c_channel);
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
 
         foreach (self::getSipTargets() as $sip_uri) {
@@ -536,7 +536,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $a_channel = $this->ensureAnswer($uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
-            $this->hangupChannels($a_channel, $b_channel);
+            $this->hangupBridged($a_channel, $b_channel);
         }
         self::$b_device->resetCfParams();
     }
@@ -561,7 +561,7 @@ class DeviceTest extends CallflowTestCase
             );
             $a_channel = $this->ensureAnswer($uuid, $offnet_channel);
             $this->ensureTwoWayAudio($a_channel, $offnet_channel);
-            $this->hangupChannels($a_channel, $offnet_channel);
+            $this->hangupBridged($a_channel, $offnet_channel);
         }
     }
 
@@ -586,7 +586,7 @@ class DeviceTest extends CallflowTestCase
             );
             $a_channel = $this->ensureAnswer($uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
-            $this->hangupChannels($a_channel, $b_channel);
+            $this->hangupBridged($a_channel, $b_channel);
         }
     }
 
@@ -609,7 +609,7 @@ class DeviceTest extends CallflowTestCase
             );
             $a_channel = $this->ensureAnswer($uuid, $emergency_channel);
             $this->ensureTwoWayAudio($a_channel, $emergency_channel);
-            $this->hangupChannels($a_channel, $emergency_channel);
+            $this->hangupBridged($a_channel, $emergency_channel);
         }
     }
 
@@ -630,7 +630,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
             $a_channel = $this->ensureAnswer($uuid, $channel);
             $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupChannels($a_channel, $channel);
+            $this->hangupBridged($a_channel, $channel);
         }
     }
 
@@ -705,7 +705,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $a_channel = $this->ensureAnswer($uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
-            $this->hangupChannels($a_channel, $b_channel);
+            $this->hangupBridged($a_channel, $b_channel);
         }
     }
 
@@ -734,7 +734,7 @@ class DeviceTest extends CallflowTestCase
             //for now we do this so we dont leave a channel behind by this failing to fail.
             //$a_channel = $this->ensureAnswer($uuid, $b_channel);
             //$this->ensureTwoWayAudio($a_channel, $b_channel);
-            //$this->hangupChannels($a_channel, $b_channel);
+            //$this->hangupBridged($a_channel, $b_channel);
         }
     }
 
@@ -762,7 +762,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $a_channel = $this->ensureAnswer($uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
-            $this->hangupChannels($a_channel, $b_channel);
+            $this->hangupBridged($a_channel, $b_channel);
         }
     }
 
@@ -804,7 +804,7 @@ class DeviceTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
             $a_channel = $this->ensureAnswer($uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
-            $this->hangupChannels($a_channel, $b_channel);
+            $this->hangupBridged($a_channel, $b_channel);
         }
     }
 
@@ -879,7 +879,7 @@ class DeviceTest extends CallflowTestCase
             $c_channel->answer();
 
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
     }
 
@@ -944,7 +944,7 @@ class DeviceTest extends CallflowTestCase
             $b_channel_1->waitDestroy();
 
             $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
     }
 

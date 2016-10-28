@@ -181,7 +181,7 @@ class QuickCallTest extends CallflowTestCase
 
     private function testAudioAndHangup($a_channel, $b_channel) {
         $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->hangupChannels($a_channel, $b_channel);
+        $this->hangupBridged($a_channel, $b_channel);
     }
 
 }

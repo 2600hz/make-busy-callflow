@@ -113,7 +113,7 @@ class ParkingTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
 
             $this->ensureTalking($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
 
         }
     }
@@ -171,7 +171,7 @@ class ParkingTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
 
             $this->ensureTalking($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
     }
 
@@ -204,7 +204,7 @@ class ParkingTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
 
             $this->ensureTalking($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
     }
 
@@ -255,7 +255,7 @@ class ParkingTest extends CallflowTestCase
             $b_channel_3->answer();
 
             $this->ensureTalking($b_channel_3, $c_channel);
-            $this->hangupChannels($b_channel_3, $c_channel);
+            $this->hangupBridged($b_channel_3, $c_channel);
 
             $a_channel->hangup();
             $a_channel->waitDestroy();
@@ -315,7 +315,7 @@ class ParkingTest extends CallflowTestCase
 
             $ringback->answer();
             $this->ensureTalking($ringback, $a_channel);
-            $this->hangupChannels($ringback, $a_channel);
+            $this->hangupBridged($ringback, $a_channel);
         }
     }
 
@@ -377,7 +377,7 @@ class ParkingTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
 
             $this->ensureTalking($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
     }
 
@@ -415,7 +415,7 @@ class ParkingTest extends CallflowTestCase
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
 
             $this->ensureTalking($a_channel, $c_channel);
-            $this->hangupChannels($a_channel, $c_channel);
+            $this->hangupBridged($a_channel, $c_channel);
         }
     }
 
