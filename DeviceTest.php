@@ -90,12 +90,10 @@ class DeviceTest extends CallflowTestCase
     }
 
     public function setUp() {
-        // NOTE: this hangs up all channels, we may not want
-        //  to do this if we plan on executing multiple tests
-        //  at once
-        self::getEsl()->flushEvents();
-        self::getEsl()->api("hupall");
         Log::info("%s - flushed events & hung up all channels for SETUP", __METHOD__);
+        self::getEsl()->api("hupall");
+        self::getEsl()->api("sofia profile auth register all");
+        self::getEsl()->flushEvents();
     }
 
     public function testRegistrations() {
