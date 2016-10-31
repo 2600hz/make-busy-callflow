@@ -8,6 +8,7 @@ use \MakeBusy\FreeSWITCH\Sofia\Gateways;
 use \MakeBusy\Kazoo\Applications\Crossbar\Device;
 use \MakeBusy\Kazoo\Applications\Crossbar\RingGroup;
 use \MakeBusy\Kazoo\Applications\Crossbar\Resource;
+use \MakeBusy\Kazoo\Applications\Crossbar\SystemConfigs;
 
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
