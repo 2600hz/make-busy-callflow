@@ -34,6 +34,12 @@ class ParkingTest extends CallflowTestCase
 
         $test_account = self::getTestAccount();
 
+        $configs = SystemConfigs::get($test_account);
+        if (! in_array("callflow.park", $configs)) {
+            SystemConfigs::createSection($test_account, "callflow.park");
+        }
+        SystemConfigs::setSectionKey($test_account, "callflow.park", "default_ringback_timeout", 5000);
+
         self::$a_device = new Device($test_account);
         self::$a_device->createCallflow(array(self::A_EXT));
 

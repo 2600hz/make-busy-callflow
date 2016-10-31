@@ -61,12 +61,12 @@ class ConferenceTest extends CallflowTestCase
             SystemConfigs::createSection($test_account, "conferences");
         }
 
-        SystemConfigs::setDefaultConfParam($test_account, "entry-sound",   "tone_stream://%(3000,0,2600);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "exit-sound",    "tone_stream://%(3000,0,3000);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "deaf-sound",    "tone_stream://%(3000,0,1000);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "undeaf-sound",  "tone_stream://%(3000,0,1550);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "muted-sound",   "tone_stream://%(3000,0,1250);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "unmuted-sound", "tone_stream://%(3000,0,1600);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "entry-sound",   "tone_stream://%(3000,0,2600);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "exit-sound",    "tone_stream://%(3000,0,3000);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "deaf-sound",    "tone_stream://%(3000,0,1000);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "undeaf-sound",  "tone_stream://%(3000,0,1550);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "muted-sound",   "tone_stream://%(3000,0,1250);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "unmuted-sound", "tone_stream://%(3000,0,1600);loops=1");
 
 
         foreach (range('a', 'f') as $letter) {
