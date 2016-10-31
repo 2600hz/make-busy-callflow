@@ -92,7 +92,7 @@ class ConferenceTest extends CallflowTestCase
     public function testCallinConference(){
         Log::notice("%s", __METHOD__);
         $a_channel = $this->loginConference(self::$devices['a']->getId(),self::CONF_EXT);
-	$this->hangupChannels($a_channel);
+        $this->hangupChannels($a_channel);
     }
 
     public function testTwoCallinConference(){
@@ -319,7 +319,7 @@ class ConferenceTest extends CallflowTestCase
         $this->ensureNotTalking($b_channel,$a_channel,600,30);
         $this->ensureNotTalking($b_channel,$c_channel,600,30);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
 
         self::$a_conference->setMemberOption("join_muted",FALSE);
     }
@@ -341,7 +341,7 @@ class ConferenceTest extends CallflowTestCase
         $this->ensureNotTalking($a_channel,$b_channel,600,30);
         $this->ensureNotTalking($c_channel,$b_channel,600,30);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
 
         self::$a_conference->setMemberOption("join_deaf",FALSE);
     }
@@ -362,7 +362,7 @@ class ConferenceTest extends CallflowTestCase
         $this->ensureNotTalking($c_channel,$a_channel,600,30);
         $this->ensureNotTalking($c_channel,$b_channel,600,30);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
 
         self::$a_conference->setModeratorOption("join_muted",FALSE);
     }
@@ -384,7 +384,7 @@ class ConferenceTest extends CallflowTestCase
         $this->ensureNotTalking($a_channel,$c_channel,600,30);
         $this->ensureNotTalking($b_channel,$c_channel,600,30);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
 
         self::$a_conference->setModeratorOption("join_deaf",FALSE);
     }
@@ -446,7 +446,7 @@ class ConferenceTest extends CallflowTestCase
         $this->ensureTalking($b_channel, $a_channel, 600);
         $this->ensureTalking($b_channel, $c_channel, 600);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
     }
 
         //MKBUSY-61
@@ -480,7 +480,7 @@ class ConferenceTest extends CallflowTestCase
         $this->ensureTalking($a_channel,$b_channel,600);
         $this->ensureTalking($c_channel,$b_channel,600);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
     }
 
     private function ensureSpeaking($speak_channel, $hear_channels){ //Speak only one other hear. First parametr speak channel. Second array of hear channels
