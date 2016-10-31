@@ -47,6 +47,7 @@ class UserTest extends CallflowTestCase
         //  to do this if we plan on executing multiple tests
         //  at once
         self::getEsl()->api("hupall");
+        self::getEsl()->api("sofia profile auth register all");
         self::getEsl()->flushEvents();
     }
 
