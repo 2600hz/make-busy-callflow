@@ -117,6 +117,7 @@ class DeviceTest extends CallflowTestCase
             Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($no_device_id, $target, $options);
+            $this->waitForOriginate($uuid);
             $this->hangupChannels($channel);
         }
     }
