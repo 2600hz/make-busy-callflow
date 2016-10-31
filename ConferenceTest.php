@@ -56,6 +56,11 @@ class ConferenceTest extends CallflowTestCase
         $media = Configuration::getSection("media");
         self::$a_media->setFile($media["welcome_prompt_path"], "audio/wav"); //need change file path in config.json
 
+        $configs = SystemConfigs::get($test_account);
+        if (! in_array("conferences", $configs)) {
+            SystemConfigs::createSection($test_account, "conferences");
+        }
+
         SystemConfigs::setDefaultConfParam($test_account, "entry-sound",   "tone_stream://%(3000,0,2600);loops=1");
         SystemConfigs::setDefaultConfParam($test_account, "exit-sound",    "tone_stream://%(3000,0,3000);loops=1");
         SystemConfigs::setDefaultConfParam($test_account, "deaf-sound",    "tone_stream://%(3000,0,1000);loops=1");
