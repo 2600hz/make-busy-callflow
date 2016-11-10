@@ -83,7 +83,7 @@ class CallflowTestCase extends TestCase
         self::getEsl()->api("hupall");
     }
 
-    public statuc function getTestAccount() {
+    public static function getTestAccount() {
         return self::$test_account;
     }
 
