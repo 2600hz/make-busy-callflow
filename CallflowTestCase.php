@@ -40,26 +40,25 @@ class CallflowTestCase extends TestCase
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
 
-        self::$test_account = new TestAccount(get_class());
-        self::$realm = self::$test_account->getAccountRealm();
+        $acc = new TestAccount(get_class());
+        self::$realm = $acc->getAccountRealm();
 
-        self::$a_device = new Device(self::$test_account);
+        self::$a_device = $acc->createDevice("auth");
         self::$a_device->createCallflow(array(self::A_EXT, self::A_NUMBER));
 
-        self::$b_device = new Device(self::$test_account);
+        self::$b_device = $acc->createDevice("auth");
         self::$b_device->createCallflow(array(self::B_EXT, self::B_NUMBER));
 
-        self::$c_device = new Device(self::$test_account);
+        self::$c_device = $acc->createDevice("auth");
         self::$c_device->createCallflow(array(self::C_EXT, self::C_NUMBER));
 
-        self::$no_device = new Device(self::$test_account, FALSE);
+        self::$no_device = $acc->createDevice("auth", FALSE);
         self::$no_device->createCallflow(array(self::NO_EXT, self::NO_NUMBER));
 
-        self::$register_device = new Device(self::$test_account);
+        self::$register_device = $acc->createDevice("auth");
 
-        self::$offnet_resource = new Resource(self::$test_account, array("^\\+1(\d{10})$"), "+1");
-
-        self::$emergency_resource = new Resource(self::$test_account, array("^(911)$"), null, TRUE);
+        self::$offnet_resource = $acc->createResource(array("^\\+1(\d{10})$"), "+1");
+        self::$emergency_resource = $acc->createResource(array("^(911)$"), null, TRUE);
 
         self::$ring_group = new RingGroup(
             self::$test_account,
