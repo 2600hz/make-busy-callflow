@@ -17,33 +17,6 @@ use \MakeBusy\Common\Log;
 class DeviceTest extends CallflowTestCase
 {
 
-    public function testRegistrations() {
-        Log::notice("%s", __METHOD__);
-        $gateways = Profiles::getProfile('auth')->getGateways();
-        $register_device_id = self::$register_device->getId();
-        $this->assertTrue($gateways->findByName($register_device_id)->register());
-    }
-
-    public function testCallBasic() {
-        Log::notice("%s", __METHOD__);
-        $channels    = self::getChannels();
-        $no_device_id = self::$no_device->getId();
-
-        $uuid_base = "testCallBasic-";
-
-        foreach (self::getSipTargets() as $sip_uri) {
-            // TODO: This is a call to milliwatt, we are crossing
-            //  Kazoo applications....DONT CROSS THE STREAMS!
-            $target = self::MILLIWATT_NUMBER . '@' . $sip_uri;
-            Log::debug("trying target %s", $target);
-            $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
-            $uuid = $channels->gatewayOriginate($no_device_id, $target, $options);
-            $channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $channel->hangup();
-        }
-    }
-
     public function testSipUsername() {
         Log::notice("%s", __METHOD__);
         $channels   = self::getChannels();
