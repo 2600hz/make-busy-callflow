@@ -80,8 +80,8 @@ class CallflowTestCase extends TestCase
     }
 
     public function setUp() {
-        self::getEsl()->flushEvents();
         self::getEsl()->api("hupall");
+        self::getEsl()->flushEvents();
     }
 
     public static function getTestAccount() {
