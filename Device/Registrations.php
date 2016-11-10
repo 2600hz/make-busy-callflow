@@ -1,5 +1,7 @@
 <?php
 namespace KazooTests\Applications\Callflow;
+use \MakeBusy\Common\Log;
+use \MakeBusy\FreeSWITCH\Esl\Connection as EslConnection;
 
 class DeviceTest extends CallflowTestCase {
 

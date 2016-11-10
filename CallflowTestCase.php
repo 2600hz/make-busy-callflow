@@ -5,7 +5,7 @@ namespace KazooTests\Applications\Callflow;
 use \KazooTests\TestCase;
 
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
-use \MakeBusy\FreeSWITCH\Kazoo\Gateways as KazooGateways;
+use \MakeBusy\Kazoo\Gateways as KazooGateways;
 
 class CallflowTestCase extends TestCase
 {
@@ -40,7 +40,7 @@ class CallflowTestCase extends TestCase
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
 
-        $acc = new TestAccount(self::getClass());
+        $acc = new TestAccount(self::className());
         self::$realm = $acc->getAccountRealm();
 
         self::$a_device = $acc->createDevice("auth");
