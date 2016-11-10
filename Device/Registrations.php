@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class DeviceTest extends CallflowTestCase {
+class RegistrationsTest extends CallflowTestCase {
 
     public function testMain() {
         $gateways = $this->getGateways("auth");
