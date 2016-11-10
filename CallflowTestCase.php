@@ -57,6 +57,8 @@ class CallflowTestCase extends TestCase
 
         self::$register_device = $acc->createDevice("auth");
 
+        self::sync_sofia_profile("auth", self::$a_device->isLoaded());
+
 /*
         self::$offnet_resource = $acc->createResource(array("^\\+1(\d{10})$"), "+1");
         self::$emergency_resource = $acc->createResource(array("^(911)$"), null, TRUE);
