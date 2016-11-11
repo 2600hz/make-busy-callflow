@@ -9,7 +9,7 @@ class CalleeTest extends CallflowTestCase {
         $this->assertFalse(self::$b_device->getGateway()->register());
 
         foreach (self::getSipTargets() as $sip_uri) {
-            $target  = self::B_EXT .'@'. $sip_uri;
+            $target = self::B_EXT .'@'. $sip_uri;
             $ch_o = self::$a_device->originate($target, $this->originate_uuid());
             $ch_i = self::$b_device->waitForInbound();
             $this->assertEmpty($ch_i);
@@ -23,7 +23,7 @@ class CalleeTest extends CallflowTestCase {
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
             $ch_a = self::$a_device->originate($target, $this->originate_uuid());
-            $ch_b = self::$b_device->ensureInbound();
+            $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
             $this->ensureAnswer($ch_a, $ch_b);
             $this->ensureTwoWayAudio($ch_i, $ch_b);
             $this->hangupBridged($ch_i, $ch_b);
