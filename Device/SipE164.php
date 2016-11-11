@@ -13,8 +13,8 @@ class SipE164Test extends CallflowTestCase {
             $ch_a = self::ensureChannel( self::$a_device->originate($target) );
             $ch_b = self::ensureChannel( self::$b_device->waitForInbound('+1' . self::B_NUMBER) );
             self::ensureAnswer($ch_a, $ch_b);
-            self::ensureTwoWayAudio($ch_a, $ch_e);
-            self::hangupBridged($ch_a, $ch_e);
+            self::ensureTwoWayAudio($ch_a, $ch_b);
+            self::hangupBridged($ch_a, $ch_b);
         }
     }
 
