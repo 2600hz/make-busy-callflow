@@ -25,8 +25,8 @@ class CalleeTest extends CallflowTestCase {
             $ch_a = self::ensureChannel( self::$a_device->originate($target, 5, $this->originate_uuid()) );
             $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
             $this->ensureAnswer($ch_a, $ch_b);
-            $this->ensureTwoWayAudio($ch_i, $ch_b);
-            $this->hangupBridged($ch_i, $ch_b);
+            $this->ensureTwoWayAudio($ch_a, $ch_b);
+            $this->hangupBridged($ch_a, $ch_b);
         }
     }
 
