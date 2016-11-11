@@ -17,27 +17,6 @@ use \MakeBusy\Common\Log;
 class DeviceTest extends CallflowTestCase
 {
 
-    public function testSipNPAN() {
-        Log::notice("%s", __METHOD__);
-        $channels    = self::getChannels();
-        $a_device_id = self::$a_device->getId();
-        self::$b_device->setInviteFormat("npan");
-
-        $uuid_base = "testSipNPAN-";
-
-        foreach (self::getSipTargets() as $sip_uri) {
-            $target = self::B_NUMBER .'@'. $sip_uri;
-            Log::debug("trying target %s", $target);
-            $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
-            $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $channel = $channels->waitForInbound(self::B_NUMBER);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $a_channel = $this->ensureAnswer($uuid, $channel);
-            $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupBridged($a_channel, $channel);
-        }
-    }
-
     public function testSip1NPAN() {
         Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
