@@ -6,7 +6,7 @@ use \MakeBusy\Common\Log;
 class BasicCallTest extends CallflowTestCase {
 
     public function testMain() {
-        $channels = self::getChannels("auth");
+        $channels = getChannels("auth");
         $no_device_id = self::$no_device->getId();
 
         $uuid_base = "testCallBasic-";
@@ -16,9 +16,8 @@ class BasicCallTest extends CallflowTestCase {
             Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($no_device_id, $target, $options);
-            $channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $channel->hangup();
+            $channel = waitForOriginate($uuid);
+            hangupChannels($channel);
         }
     }
 
