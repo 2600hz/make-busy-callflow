@@ -59,8 +59,8 @@ class CallflowTestCase extends TestCase
 
         self::sync_sofia_profile("auth", self::$a_device->isLoaded());
 
-        self::$offnet_resource = $acc->createResource(["^\\+1(\d{10})$"], "+1");
-        self::$emergency_resource = $acc->createResource(["^(911)$"], null, true);
+        self::$offnet_resource = $acc->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
+        self::$emergency_resource = $acc->createResource("carrier", ["^(911)$"], null, true);
 
 /*
         self::$ring_group = new RingGroup(
