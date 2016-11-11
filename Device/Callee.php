@@ -6,7 +6,7 @@ class CalleeTest extends CallflowTestCase {
 
     public function testDisabled() {
         self::$b_device->disableDevice();
-        $this->assertFalse($b_device->getGateway()->register());
+        $this->assertFalse(self::$b_device->getGateway()->register());
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
@@ -18,7 +18,7 @@ class CalleeTest extends CallflowTestCase {
 
     public function testEnabled() {
         self::$b_device->enableDevice();
-        $this->assertTrue($b_device->getGateway()->register());
+        $this->assertTrue(self::$b_device->getGateway()->register());
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
