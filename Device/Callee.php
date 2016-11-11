@@ -12,7 +12,7 @@ class CalleeTest extends CallflowTestCase {
             $target = self::B_EXT .'@'. $sip_uri;
             $ch_a = self::ensureChannel( self::$a_device->originate($target) );
             $ch_b = self::$b_device->waitForInbound();
-            self::assertEmpty($ch_a);
+            self::assertEmpty($ch_b);
         }
     }
 
