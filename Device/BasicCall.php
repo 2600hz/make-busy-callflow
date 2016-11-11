@@ -6,7 +6,7 @@ use \MakeBusy\Common\Log;
 class BasicCallTest extends CallflowTestCase {
 
     public function testMain() {
-        $channels = getChannels("auth");
+        $channels = $this->getChannels("auth");
         $no_device_id = self::$no_device->getId();
 
         $uuid_base = "testCallBasic-";
