@@ -22,7 +22,7 @@ class CalleeTest extends CallflowTestCase {
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
-            $ch_a = self::$a_device->originate($target, 5, $this->originate_uuid());
+            $ch_a = self::ensureChannel( self::$a_device->originate($target, 5, $this->originate_uuid()) );
             $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
             $this->ensureAnswer($ch_a, $ch_b);
             $this->ensureTwoWayAudio($ch_i, $ch_b);
