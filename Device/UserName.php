@@ -19,7 +19,7 @@ class UserNameTest extends CallflowTestCase {
             $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
             $b_channel = $channels->waitForInbound($b_username);
             $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
-            $a_channel = $this->ensureAnswer($uuid, $b_channel);
+            $a_channel = $this->ensureAnswer("auth", $uuid, $b_channel);
             $this->ensureTwoWayAudio($a_channel, $b_channel);
             $this->hangupBridged($a_channel, $b_channel);
         }
