@@ -6,7 +6,6 @@ use \MakeBusy\Common\Log;
 class CallerIdEmergencyTest extends CallflowTestCase {
 
     public function testMain() {
-
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::EMERGENCY_NUMBER .'@'. $sip_uri;
             $ch_a = self::ensureChannel( self::$a_device->originate($target) );
