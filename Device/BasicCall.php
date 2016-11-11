@@ -10,6 +10,6 @@ class BasicCallTest extends CallflowTestCase {
             $channel = self::$no_device->originate($no_device_id, $target, $this->originate_uuid());
             $this->hangupChannels($channel);
         }
-    }
+   }
 
 }
