@@ -16,7 +16,6 @@ class CallerIdEmergencyTest extends CallflowTestCase {
                 urldecode($ch_b->getEvent()->getHeader("Caller-Caller-ID-Number"))
             );
             self::ensureAnswer($ch_a, $ch_b);
-            sleep(1);
             self::ensureTwoWayAudio($ch_a, $ch_b);
             self::hangupBridged($ch_a, $ch_b);
         }
