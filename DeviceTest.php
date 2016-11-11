@@ -17,58 +17,6 @@ use \MakeBusy\Common\Log;
 class DeviceTest extends CallflowTestCase
 {
 
-    public function testSipRoute() {
-        Log::notice("%s", __METHOD__);
-        $channels    = self::getChannels();
-        $a_device_id = self::$a_device->getId();
-        $b_device_id = self::$b_device->getId();
-
-        $raw_sip_uri = Profiles::getProfile('auth')->getSipUri();
-        $route_uri   = preg_replace("/mod_sofia/", $b_device_id, $raw_sip_uri);
-
-        self::$b_device->setInviteFormat("route", $route_uri);
-
-        $uuid_base = "testSipRoute-";
-
-        foreach (self::getSipTargets() as $sip_uri) {
-            $target = self::B_EXT .'@' . $sip_uri;
-            Log::debug("trying target %s", $target);
-            $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
-            $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $channel = $channels->waitForInbound($b_device_id);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $a_channel = $this->ensureAnswer($uuid, $channel);
-            $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupBridged($a_channel, $channel);
-        }
-        //reset invite format or pay a horrible price in blood!
-        self::$b_device->setInviteFormat("username");
-
-    }
-
-    public function testCfEnable(){
-        Log::notice("%s", __METHOD__);
-        $channels   = self::getChannels();
-        $b_device_id = self::$b_device->getId();
-        self::$b_device->resetCfParams(self::C_EXT);
-
-        $uuid_base = "testCfEnable-";
-
-        foreach (self::getSipTargets() as $sip_uri) {
-            $target  = self::CALL_FWD_ENABLE . '@' . $sip_uri;
-            Log::debug("trying target %s", $target);
-            $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
-            $uuid    = $channels->gatewayOriginate($b_device_id, $target, $options);
-            $channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $channel->sendDtmf(self::C_EXT);
-            $channel->waitDestroy();
-            $this->assertTrue(self::$b_device->getCfParam("enabled"));
-            $this->assertEquals(self::$b_device->getCfParam("number"), self::C_EXT);
-        }
-        self::$b_device->resetCfParams();
-    }
-
     public function testCfDisable(){
         Log::notice("%s", __METHOD__);
         $channels    = self::getChannels();
