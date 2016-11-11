@@ -78,7 +78,6 @@ class CallflowTestCase extends TestCase
             ]
         );
 */
-        KazooGateways::loadFromAccounts();
     }
 
     public function setUp() {
