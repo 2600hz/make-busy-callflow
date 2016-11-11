@@ -40,7 +40,7 @@ class CallflowTestCase extends TestCase
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
 
-        $acc = new TestAccount(self::className());
+        $acc = new TestAccount("CallflowTestCase");
         self::$realm = $acc->getAccountRealm();
 
         self::$a_device = $acc->createDevice("auth");
