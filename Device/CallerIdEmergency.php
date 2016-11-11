@@ -10,7 +10,7 @@ class CallerIdEmergencyTest extends CallflowTestCase {
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::EMERGENCY_NUMBER .'@'. $sip_uri;
             $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-            $ch_b = self::ensureChannel( self::$emergency->waitForInbound(self::EMERGENCY_NUMBER) );
+            $ch_b = self::ensureChannel( self::$emergency_resource->waitForInbound(self::EMERGENCY_NUMBER) );
             self::assertEquals(
                 self::$a_device->getCidParam("emergency")->number,
                 urldecode($ch_b->getEvent()->getHeader("Caller-Caller-ID-Number"))
