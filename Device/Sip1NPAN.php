@@ -6,22 +6,16 @@ use \MakeBusy\Common\Log;
 class Sip1NPANTest extends CallflowTestCase {
 
     public function testMain() {
-        $channels    = self::getChannels("auth");
-        $a_device_id = self::$a_device->getId();
-
-        self::$b_device->setInviteFormat("1npan");
-        $uuid_base = "testSip1NPAN-";
+        self::$b_device->setInviteFormat("e164");
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_NUMBER .'@'. $sip_uri;
-            Log::debug("trying target %s", $target);
-            $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
-            $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $channel = $channels->waitForInbound('1'. self::B_NUMBER);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $a_channel = $this->ensureAnswer("auth", $uuid, $channel);
-            $this->ensureTwoWayAudio($a_channel, $channel);
-            $this->hangupBridged($a_channel, $channel);
+            $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+            $ch_b = self::ensureChannel( self::$b_device->waitForInbound('1' . self::B_NUMBER) );
+            self::ensureAnswer($ch_a, $ch_b);
+            self::ensureTwoWayAudio($ch_a, $ch_b);
+            self::hangupBridged($ch_a, $ch_b);
+        }
     }
 
 }
