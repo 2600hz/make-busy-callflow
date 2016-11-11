@@ -16,7 +16,7 @@ class BasicCallTest extends CallflowTestCase {
             Log::debug("trying target %s", $target);
             $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
             $uuid = $channels->gatewayOriginate($no_device_id, $target, $options);
-            $channel = $this->waitForOriginate($uuid);
+            $channel = $this->waitForOriginate("auth", $uuid);
             $this->hangupChannels($channel);
         }
     }
