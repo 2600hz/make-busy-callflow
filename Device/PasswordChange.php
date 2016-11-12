@@ -6,40 +6,28 @@ use \MakeBusy\Common\Log;
 class PasswordChangeTest extends CallflowTestCase {
 
     public function testMain() {
-        $channels    = self::getChannels("auth");
-        $a_device_id = self::$a_device->getId();
-        $b_username  = self::$b_device->getSipUsername();
 
         self::$a_device->setPassword("test_password");
 
-        $gateways = Profiles::getProfile('auth')->getGateways();
-
-        $this->assertFalse($gateways->findByName($a_device_id)->register());
-
-        $uuid_base = "testPasswordChange-";
+        $this->assertFalse( self::$b_device->getGateway()->register() );
 
          foreach (self::getSipTargets() as $sip_uri) {
-            $target  = self::B_EXT .'@'. $sip_uri;
-            Log::debug("trying to call target %s with invalid credentials", $target);
-            $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
-            $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $channel = $channels->waitForInbound($b_username);
+            $target = self::B_EXT .'@'. $sip_uri;
+            $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+            $ch_b = self::$b_device->waitForInbound();
             $this->assertNull($channel);
         }
 
-        $gateways->findByName($a_device_id)->kill();
+        $a_device->getGateway()->kill();
         Profiles::getProfile('auth')->rescan();
 
-        $this->assertTrue($gateways->findByName($a_device_id)->register());
+        $this->assertTrue( self::$b_device->getGateway()->register() );
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target  = self::B_EXT .'@'. $sip_uri;
-            Log::debug("trying to call target %s with valid credentials", $target);
-            $options = array("origination_uuid" => $uuid_base . "x2-" . Utils::randomString(8));
-            $uuid    = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $channel = $channels->waitForInbound($b_username);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $channel);
-            $channel->hangup();
+            $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+            $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
+            self::hangupChannels($ch_b);
         }
     }
 
