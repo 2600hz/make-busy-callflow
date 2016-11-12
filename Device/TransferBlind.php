@@ -10,7 +10,7 @@ class TransferBlindTest extends CallflowTestCase {
             $target_b = self::B_EXT . '@' . $sip_uri;
             $target_c = self::C_EXT . '@' . $sip_uri;
 
-            $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+            $ch_a = self::ensureChannel( self::$a_device->originate($target_b) );
             $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
             self::ensureAnswer($ch_a, $ch_b);
             self::ensureTwoWayAudio($ch_a, $ch_b);
