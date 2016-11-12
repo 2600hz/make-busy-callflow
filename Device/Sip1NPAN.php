@@ -1,6 +1,5 @@
 <?php
 namespace KazooTests\Applications\Callflow;
-use \MakeBusy\Common\Utils;
 use \MakeBusy\Common\Log;
 
 class Sip1NPANTest extends CallflowTestCase {
