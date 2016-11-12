@@ -15,9 +15,12 @@ class UsernameChangeTest extends CallflowTestCase {
             self::assertNull( $ch_a );
         }
 
-        sleep(4);
+
         self::getProfile("auth")->restart();
         self::getProfile("auth")->waitForRegister($counter);
+        sleep(4);
+        self::getProfile("auth")->restart();
+
         $this->assertTrue( self::$a_device->getGateway()->register() );
 
         foreach (self::getSipTargets() as $sip_uri) {
