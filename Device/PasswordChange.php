@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class PasswordChangeTest extends CallflowTestCase {
+class PasswordChangeTest extends DeviceTestCase {
 
     public function testMain() {
         self::$a_device->setPassword("test_password");

@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class CallerIdOffnetTest extends CallflowTestCase {
+class CallerIdOffnetTest extends DeviceTestCase {
 
     public function testMain() {
         foreach (self::getSipTargets() as $sip_uri) {

@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class SipRouteTest extends CallflowTestCase {
+class SipRouteTest extends DeviceTestCase {
 
     public function testMain() {
 

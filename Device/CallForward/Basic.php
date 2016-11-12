@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class BasicTest extends CallflowTestCase {
+class BasicTest extends DeviceTestCase {
 
     public function testMain() {
         self::$b_device->resetCfParams(self::C_EXT);

@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class RestrictedCallTest extends CallflowTestCase {
+class RestrictedCallTest extends DeviceTestCase {
 
     public function testAllow() {
         foreach (self::getSipTargets() as $sip_uri) {

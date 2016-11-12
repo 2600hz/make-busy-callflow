@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class SipE164Test extends CallflowTestCase {
+class SipE164Test extends DeviceTestCase {
 
     public function testMain() {
         self::$b_device->setInviteFormat("e164");

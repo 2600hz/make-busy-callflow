@@ -14,7 +14,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\SystemConfigs;
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Log;
 
-class ConferenceTest extends CallflowTestCase
+class ConferenceTest extends DeviceTestCase
 {
 
     private static $devices = Array();

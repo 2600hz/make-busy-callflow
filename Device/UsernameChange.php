@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class UsernameChangeTest extends CallflowTestCase {
+class UsernameChangeTest extends DeviceTestCase {
 
     public function testMain() {
         self::$a_device->setUsername("test_user");

@@ -12,7 +12,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\Voicemail;
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Log;
 
-class VoicemailTest extends CallflowTestCase
+class VoicemailTest extends DeviceTestCase
 {
     private static $a_device;
     private static $b_user;

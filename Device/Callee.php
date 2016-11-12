@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class CalleeTest extends CallflowTestCase {
+class CalleeTest extends DeviceTestCase {
 
     public function testDisabled() {
         self::$b_device->disableDevice();

@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class TransferAttendedTest extends CallflowTestCase {
+class TransferAttendedTest extends DeviceTestCase {
 
     public function testMain() {
         foreach (self::getSipTargets() as $sip_uri) {

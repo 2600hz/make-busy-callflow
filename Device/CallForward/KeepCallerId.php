@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class CallForwardKeepCallerIdTest extends CallflowTestCase {
+class CallForwardKeepCallerIdTest extends DeviceTestCase {
 
     public function testTrue() {
         self::$b_device->resetCfParams(self::C_EXT);

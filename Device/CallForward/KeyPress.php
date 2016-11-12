@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class CallForwardKeyPressTest extends CallflowTestCase {
+class CallForwardKeyPressTest extends DeviceTestCase {
 
     public function testMain() {
         self::$b_device->resetCfParams(self::C_EXT);

@@ -14,7 +14,7 @@ use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
 use \MakeBusy\Common\Log;
 
-class UserTest extends CallflowTestCase
+class UserTest extends DeviceTestCase
 {
 
     private static $test_account;

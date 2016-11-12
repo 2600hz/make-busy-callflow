@@ -16,7 +16,7 @@ use \MakeBusy\Common\Log;
 
 use Exception;
 
-class QuickCallTest extends CallflowTestCase
+class QuickCallTest extends DeviceTestCase
 {
 
     private static $test_account;

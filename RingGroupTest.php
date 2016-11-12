@@ -15,7 +15,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\RingGroup;
 
 use \MakeBusy\Common\Log;
 
-class RingGroupTest extends CallflowTestCase
+class RingGroupTest extends DeviceTestCase
 {
 
     private static $user = array();

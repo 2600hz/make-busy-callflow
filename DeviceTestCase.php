@@ -7,7 +7,7 @@ use \KazooTests\TestCase;
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 use \MakeBusy\Kazoo\Gateways as KazooGateways;
 
-class CallflowTestCase extends TestCase
+class DeviceTestCase extends TestCase
 {
     protected static $test_account;
 
@@ -40,7 +40,7 @@ class CallflowTestCase extends TestCase
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
 
-        $acc = new TestAccount("CallflowTestCase");
+        $acc = new TestAccount("DeviceTestCase");
         self::$realm = $acc->getAccountRealm();
 
         self::$a_device = $acc->createDevice("auth");
@@ -65,14 +65,8 @@ class CallflowTestCase extends TestCase
         self::$ring_group = $acc->createRingGroup(
             [ self::RINGGROUP_EXT ],
             [
-                [
-                    "id" => self::$b_device->getId(),
-                    "type" => "device"
-                ],
-                [
-                    "id" => self::$no_device->getId(),
-                    "type" => "device"
-                ]
+                ["id" => self::$b_device->getId(), "type" => "device"],
+                ["id" => self::$no_device->getId(),"type" => "device"]
             ]
         );
     }

@@ -3,7 +3,7 @@ namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Utils;
 use \MakeBusy\Common\Log;
 
-class RealmChangeRegistrationTest extends CallflowTestCase {
+class RealmChangeRegistrationTest extends DeviceTestCase {
 
     public function testMain() {
 

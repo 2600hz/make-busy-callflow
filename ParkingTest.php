@@ -13,7 +13,7 @@ use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Utils;
 use \MakeBusy\Common\Log;
 
-class ParkingTest extends CallflowTestCase
+class ParkingTest extends DeviceTestCase
 {
 
     private static $a_device;

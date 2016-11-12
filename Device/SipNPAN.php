@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class SipNPANTest extends CallflowTestCase {
+class SipNPANTest extends DeviceTestCase {
 
     public function testMain() {
         self::$b_device->setInviteFormat("npan");

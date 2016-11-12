@@ -10,7 +10,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\Webhook;
 use \MakeBusy\Kazoo\Applications\Crossbar\Device;
 use \MakeBusy\Common\Log;
 
-class WebhookTest extends CallflowTestCase
+class WebhookTest extends DeviceTestCase
 {
 
     private static $a_device;
