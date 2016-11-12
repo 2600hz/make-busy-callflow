@@ -7,7 +7,7 @@ class UsernameChangeTest extends CallflowTestCase {
 
     public function testMain() {
         self::$a_device->setUsername("test_user");
-        $this->assertFalse( $a_device->getGateway()->register() );
+        $this->assertFalse( self::$a_device->getGateway()->register() );
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT .'@'. $sip_uri;
@@ -18,7 +18,8 @@ class UsernameChangeTest extends CallflowTestCase {
 
         $a_device->getGateway()->kill();
         self::getProfile("auth")->rescan();
-        $this->assertTrue( $a_device->getGateway()->register() );
+        
+        $this->assertTrue( self::$a_device->getGateway()->register() );
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT .'@'. $sip_uri;
