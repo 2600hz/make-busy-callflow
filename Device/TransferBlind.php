@@ -17,8 +17,7 @@ class TransferBlindTest extends CallflowTestCase {
 
             $ch_b->deflect($target_c);
             $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
-
-            self::ensureAnswer($ch_a, $ch_c);
+            $ch_c->answer();
             $this->ensureTwoWayAudio($ch_a, $ch_c);
             $this->hangupBridged($ch_a, $ch_c);
         }
