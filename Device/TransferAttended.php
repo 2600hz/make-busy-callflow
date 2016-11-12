@@ -1,6 +1,5 @@
 <?php
 namespace KazooTests\Applications\Callflow;
-use \MakeBusy\FreeSWITCH\Esl\Connection as EslConnection;
 use \MakeBusy\Common\Log;
 
 class TransferAttendedTest extends CallflowTestCase {
@@ -8,7 +7,7 @@ class TransferAttendedTest extends CallflowTestCase {
     public function testMain() {
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT . '@' . $sip_uri;
-            $referred_by = sprintf("<sip:%s@%s:5060;transport=udp>", self::$b_device->getSipUsername(), EslConnection::getInstance("auth")->getIpAddress());
+            $referred_by = sprintf("<sip:%s@%s:5060;transport=udp>", self::$b_device->getSipUsername(), self::getEsl("auth")->getIpAddress());
             $transferee = self::C_EXT . '@' . $sip_uri;
 
             $ch_a = self::ensureChannel( self::$a_device->originate($target) );
