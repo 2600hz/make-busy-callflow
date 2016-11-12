@@ -16,6 +16,8 @@ class Sip1NPANTest extends CallflowTestCase {
             self::ensureTwoWayAudio($ch_a, $ch_b);
             self::hangupBridged($ch_a, $ch_b);
         }
+
+        self::$b_device->setInviteFormat("username");
     }
 
 }
