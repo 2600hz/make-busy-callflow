@@ -8,7 +8,7 @@ class PasswordChangeTest extends CallflowTestCase {
     public function testMain() {
 
         self::$a_device->setPassword("test_password");
-        $this->assertFalse( self::$b_device->getGateway()->register() );
+        $this->assertTrue( self::$b_device->getGateway()->register() );
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT .'@'. $sip_uri;
