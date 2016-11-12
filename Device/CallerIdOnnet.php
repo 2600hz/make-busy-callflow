@@ -9,7 +9,7 @@ class CallerIdOnnetTest extends CallflowTestCase {
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT .'@'. $sip_uri;
             $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-            $ch_b = self::ensureChannel( self::$offnet_resource->waitForInbound() );
+            $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
             self::assertEquals(
                 self::$a_device->getCidParam("internal")->number,
                 urldecode($ch_b->getEvent()->getHeader("Caller-Caller-ID-Number"))
