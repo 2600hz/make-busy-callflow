@@ -24,7 +24,9 @@ class TransferAttendedTest extends CallflowTestCase {
             $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
 
             $ch_c->answer();
+            $ch_c->waitAnswer();
             $event = $ch_b_2->waitAnswer();
+            sleep(1);
             self::ensureTwoWayAudio($ch_b_2, $ch_c);
 
             $to_tag = $event->getHeader('variable_sip_to_tag');
