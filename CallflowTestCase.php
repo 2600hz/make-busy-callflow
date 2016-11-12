@@ -62,9 +62,7 @@ class CallflowTestCase extends TestCase
         self::$offnet_resource = $acc->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
         self::$emergency_resource = $acc->createResource("carrier", ["^(911)$"], null, true);
 
-/*
-        self::$ring_group = new RingGroup(
-            self::$test_account,
+        self::$ring_group = $acc->createRingGroup(
             [ self::RINGGROUP_EXT ],
             [
                 [
@@ -77,7 +75,6 @@ class CallflowTestCase extends TestCase
                 ]
             ]
         );
-*/
     }
 
     public function setUp() {
