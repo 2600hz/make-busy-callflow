@@ -6,15 +6,6 @@ use \MakeBusy\Common\Log;
 class TransferAttendedTest extends CallflowTestCase {
 
     public function testMain() {
-        $channels    = self::getChannels("auth");
-        $a_device_id = self::$a_device->getId();
-        $b_device_id = self::$b_device->getId();
-        $c_device_id = self::$c_device->getId();
-        $b_device_name = self::$b_device->getSipUsername();
-        $c_device_name = self::$c_device->getSipUsername();
-
-        $uuid_base = "testDeviceAttendedTransfer-";
-
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT . '@' . $sip_uri;
             $referred_by = sprintf("<sip:%s@%s:5060;transport=udp>", self::$b_device->getSipUsername(), EslConnection::getInstance("auth")->getIpAddress());
