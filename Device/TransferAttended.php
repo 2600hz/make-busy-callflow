@@ -1,6 +1,6 @@
 <?php
 namespace KazooTests\Applications\Callflow;
-use \MakeBusy\Common\Utils;
+use \MakeBusy\FreeSWITCH\Esl\Connection as EslConnection;
 use \MakeBusy\Common\Log;
 
 class TransferAttendedTest extends CallflowTestCase {
