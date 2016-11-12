@@ -1,6 +1,5 @@
 <?php
 namespace KazooTests\Applications\Callflow;
-use \MakeBusy\Common\Utils;
 use \MakeBusy\Common\Log;
 
 class PasswordChangeTest extends CallflowTestCase {
@@ -18,7 +17,7 @@ class PasswordChangeTest extends CallflowTestCase {
         }
 
         self::$a_device->getGateway()->kill();
-        Profiles::getProfile('auth')->rescan();
+        self::getProfile('auth')->rescan();
 
         $this->assertTrue( self::$b_device->getGateway()->register() );
 
