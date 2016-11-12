@@ -15,11 +15,9 @@ class UsernameChangeTest extends CallflowTestCase {
             self::assertNull( $ch_a );
         }
 
-
-        self::getProfile("auth")->restart();
+        self::$a_device->getGateway()->kill();
+        self::getProfile("auth")->rescan();
         self::getProfile("auth")->waitForRegister($counter);
-        sleep(4);
-        self::getProfile("auth")->restart();
 
         $this->assertTrue( self::$a_device->getGateway()->register() );
 
