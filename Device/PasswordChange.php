@@ -5,7 +5,6 @@ use \MakeBusy\Common\Log;
 class PasswordChangeTest extends CallflowTestCase {
 
     public function testMain() {
-
         self::$a_device->setPassword("test_password");
         $this->assertTrue( self::$b_device->getGateway()->register() );
 

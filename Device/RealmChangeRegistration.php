@@ -6,34 +6,26 @@ use \MakeBusy\Common\Log;
 class RealmChangeRegistrationTest extends CallflowTestCase {
 
     public function testMain() {
-        $test_account = self::getTestAccount();
-        $a_device_id = self::$a_device->getId();
-        $gateways = Profiles::getProfile('auth')->getGateways();
 
-        // test basic registration
-        $this->assertTrue($gateways->findByName($a_device_id)->register());
+        self::assertTrue( $a_device->getGateway()->register() );
+        self::assertTrue( $a_device->getGateway()->unregister() );
 
-        // unregister
-        $this->assertTrue($gateways->findByName($a_device_id)->unregister());
+        self::$test_account->setAccountRealm('blah.com');
 
-        // change realm
-        $test_account->setAccountRealm('blah.com');
+        $this->assertFalse( $a_device->getGateway()->register() );
 
-        // ensure fail registration
-        $this->assertFalse($gateways->findByName($a_device_id)->register());
+        $a_device->getGateway()->setParam('realm', 'blah.com');
+        $a_device->getGateway()->setParam('from-domain', 'blah.com');
 
-        // update gateway with new realm
-        $gateways->findByName($a_device_id)->setParam('realm', 'blah.com');
-        $gateways->findByName($a_device_id)->setParam('from-domain', 'blah.com');
-        // sync freeswitch with new gateway information
+        // it will not work: gateways parameters are loaded from kazoo by gateway.php
         Profiles::syncGateways();
-        // re-register
-        $this->assertTrue($gateways->findByName($a_device_id)->register());
 
-        // change realm back and re-sync for non-existent future device test failures.
+        $this->assertTrue( $a_device->getGateway()->register() );
+
         $test_account->setAccountRealm(self::$realm);
-        $gateways->findByName($a_device_id)->setParam('realm', self::$realm);
-        $gateways->findByName($a_device_id)->setParam('from-domain', self::$realm);
+        $a_device->getGateway()->setParam('realm', self::$realm);
+        $a_device->getGateway()->setParam('from-domain', self::$realm);
+
         Profiles::syncGateways();
     }
 
