@@ -6,38 +6,21 @@ use \MakeBusy\Common\Log;
 class TransferBlindTest extends CallflowTestCase {
 
     public function testMain() {
-        $channels    = self::getChannels("auth");
-        $a_device_id = self::$a_device->getId();
-        $b_device_name = self::$b_device->getSipUsername();
-        $c_device_name = self::$c_device->getSipUsername();
-
-        $uuid_base = "testDeviceBlindTransfer-";
-
         foreach (self::getSipTargets() as $sip_uri) {
-            $target = self::B_EXT . '@' . $sip_uri;
-            $target_2 = self::C_EXT . '@' . $sip_uri;
+            $target_b = self::B_EXT . '@' . $sip_uri;
+            $target_c = self::C_EXT . '@' . $sip_uri;
 
-            $options = array("origination_uuid" => $uuid_base . Utils::randomString(8));
-            Log::debug("trying target #1 %s", $target);
-            $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $b_channel = $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
+            $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+            $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
+            self::ensureAnswer($ch_a, $ch_b);
+            self::ensureTwoWayAudio($ch_a, $ch_b);
 
-            $b_channel->answer();
-            $a_channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $a_channel);
+            $ch_b->deflect($target_c);
+            $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
 
-            $this->ensureTwoWayAudio($a_channel, $b_channel);
-
-            Log::debug("trying target #2 %s", $target_2);
-            $b_channel->deflect($target_2);
-            $c_channel = $channels->waitForInbound($c_device_name);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $c_channel);
-
-            $c_channel->answer();
-
-            $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupBridged($a_channel, $c_channel);
+            self::ensureAnswer($ch_a, $ch_c);
+            $this->ensureTwoWayAudio($ch_a, $ch_c);
+            $this->hangupBridged($ch_a, $ch_c);
         }
     }
 
