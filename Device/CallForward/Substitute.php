@@ -3,7 +3,7 @@ namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Utils;
 use \MakeBusy\Common\Log;
 
-class CallForwardSubstituteTest extends CallflowTestCase {
+class SubstituteTest extends CallflowTestCase {
 
     public function testFalse() {
         self::$b_device->resetCfParams(self::C_EXT);
