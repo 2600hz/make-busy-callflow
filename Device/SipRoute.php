@@ -10,8 +10,8 @@ class SipRouteTest extends CallflowTestCase {
         $b_device_id = self::$b_device->getId();
         $raw_sip_uri = self::getProfile("auth")->getSipUri();
         $route_uri   = preg_replace("/mod_sofia/", self::$b_device->getId(), $raw_sip_uri);
-        
-        self::$b_device->setInviteFormat("route");
+
+        self::$b_device->setInviteFormat("route", $route_uri);
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_NUMBER .'@'. $sip_uri;
