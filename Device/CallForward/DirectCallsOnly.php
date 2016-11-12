@@ -1,6 +1,5 @@
 <?php
 namespace KazooTests\Applications\Callflow;
-use \MakeBusy\Common\Utils;
 use \MakeBusy\Common\Log;
 
 class DirectCallsOnlyTest extends CallflowTestCase {
@@ -23,7 +22,7 @@ class DirectCallsOnlyTest extends CallflowTestCase {
         foreach (self::getSipTargets() as $sip_uri) {
             Log::debug("placing a call via ring-group, expecting cf device %s to not ring", $c_username);
             $target  = self::RINGGROUP_EXT .'@'. $sip_uri;
-            
+
             $ch_a = self::ensureChannel( self::$a_device->originate($target) );
             $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
             self::assertNull( self::$c_device->waitForInbound() );
