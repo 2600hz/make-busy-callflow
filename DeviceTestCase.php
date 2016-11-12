@@ -44,16 +44,16 @@ class DeviceTestCase extends TestCase
         self::$realm = $acc->getAccountRealm();
 
         self::$a_device = $acc->createDevice("auth");
-        self::$a_device->createCallflow(array(self::A_EXT, self::A_NUMBER));
+        self::$a_device->createCallflow([self::A_EXT, self::A_NUMBER]);
 
         self::$b_device = $acc->createDevice("auth");
-        self::$b_device->createCallflow(array(self::B_EXT, self::B_NUMBER));
+        self::$b_device->createCallflow([self::B_EXT, self::B_NUMBER]);
 
         self::$c_device = $acc->createDevice("auth");
-        self::$c_device->createCallflow(array(self::C_EXT, self::C_NUMBER));
+        self::$c_device->createCallflow([self::C_EXT, self::C_NUMBER]);
 
         self::$no_device = $acc->createDevice("auth", FALSE);
-        self::$no_device->createCallflow(array(self::NO_EXT, self::NO_NUMBER));
+        self::$no_device->createCallflow([self::NO_EXT, self::NO_NUMBER]);
 
         self::$register_device = $acc->createDevice("auth");
 
