@@ -6,7 +6,7 @@ use \MakeBusy\Common\Log;
 class CallForwardTest extends CallflowTestCase {
 
     public function testMain() {
-        $channels   = self::getChannels("auth");
+        $channels = self::getChannels("auth");
 
         $a_device_id = self::$a_device->getId();
         $b_device_id = self::$b_device->getId();

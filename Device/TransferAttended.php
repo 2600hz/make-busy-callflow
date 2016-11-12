@@ -17,36 +17,25 @@ class TransferAttendedTest extends CallflowTestCase {
 
         foreach (self::getSipTargets() as $sip_uri) {
             $target = self::B_EXT . '@' . $sip_uri;
-            Log::debug("trying target %s", $target);
-            $referred_by = '<sip:' . $b_device_name . '@' . Configuration::getSipGateway('auth') . ':5060;transport=udp>';
+            $referred_by = sprintf("<sip:%s@%s:5060;transport=udp>", self::$b_device->getSipUsername(), EslConnection::getInstance("auth")->getIpAddress());
             $transferee = self::C_EXT . '@' . $sip_uri;
 
-            $options = array("origination_uuid" => $uuid_base . "aleg-" . Utils::randomString(8));
-            $uuid = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $b_channel_1= $channels->waitForInbound($b_device_name);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel_1);
+            $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+            $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
 
-            $b_channel_1->answer();
-            $a_channel = $channels->waitForOriginate($uuid);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $a_channel);
+            self::ensureAnswer($ch_a, $ch_b);
+            self::ensureTwoWayAudio($ch_a, $ch_b);
 
-            $this->ensureTwoWayAudio($a_channel, $b_channel_1);
+            self::assertEquals($ch_b->getChannelCallState(), "ACTIVE");
+            $ch_b->onHold();
+            self::assertEquals($ch_b->getChannelCallState(), "HELD");
 
-            $this->assertEquals($b_channel_1->getChannelCallState(), "ACTIVE");
-            $b_channel_1->onHold();
-            $this->assertEquals($b_channel_1->getChannelCallState(), "HELD");
+            $ch_b_2 = self::ensureChannel( self::$b_device->originate($transferee) );
+            $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
 
-            $options = array("origination_uuid" => $uuid_base . "transferee-" . Utils::randomString(8));
-            $uuid_2 = $channels->gatewayOriginate($b_device_id, $transferee, $options);
-            $c_channel = $channels->waitForInbound($c_device_name);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $c_channel);
-
-            $c_channel->answer();
-            $b_channel_2 = $channels->waitForOriginate($uuid_2);
-            $this->assertInstanceOf('\\MakeBusy\\FreeSWITCH\\Channels\\Channel', $b_channel_2);
-            $event = $b_channel_2->waitAnswer();
-
-            $this->ensureTwoWayAudio($b_channel_2, $c_channel);
+            $ch_c->answer();
+            $event = $ch_b_2->waitAnswer();
+            self::ensureTwoWayAudio($ch_b_2, $ch_c);
 
             $to_tag = $event->getHeader('variable_sip_to_tag');
             $from_tag = $event->getHeader('variable_sip_from_tag');
@@ -59,14 +48,13 @@ class TransferAttendedTest extends CallflowTestCase {
                  . '%3Bfrom-tag%3D' . $from_tag
                  . '>';
 
-            $b_channel_1->setVariables('sip_h_refer-to', $refer_to);
-            $b_channel_1->setVariables('sip_h_referred-by', $referred_by);
-            $b_channel_1->deflect($refer_to);
-            $b_channel_1->waitDestroy();
+            $ch_b->setVariables('sip_h_refer-to', $refer_to);
+            $ch_b->setVariables('sip_h_referred-by', $referred_by);
+            $ch_b->deflect($refer_to);
+            $ch_b->waitDestroy();
 
-            $this->ensureTwoWayAudio($a_channel, $c_channel);
-            $this->hangupBridged($a_channel, $c_channel);
+            self::ensureTwoWayAudio($ch_a, $ch_c);
+            self::hangupBridged($ch_a, $ch_c);
         }
     }
-
 }
