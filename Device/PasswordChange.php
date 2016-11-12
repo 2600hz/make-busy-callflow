@@ -17,7 +17,7 @@ class PasswordChangeTest extends CallflowTestCase {
             $this->assertNull($channel);
         }
 
-        $a_device->getGateway()->kill();
+        self::$a_device->getGateway()->kill();
         Profiles::getProfile('auth')->rescan();
 
         $this->assertTrue( self::$b_device->getGateway()->register() );
