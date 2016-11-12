@@ -23,16 +23,14 @@ class DirectCallsOnlyTest extends CallflowTestCase {
         foreach (self::getSipTargets() as $sip_uri) {
             Log::debug("placing a call via ring-group, expecting cf device %s to not ring", $c_username);
             $target  = self::RINGGROUP_EXT .'@'. $sip_uri;
-            Log::debug("trying target %s", $target);
-            $options = array("origination_uuid" => $uuid_base . "rgext-" . Utils::randomString(8));
-            $uuid      = $channels->gatewayOriginate($a_device_id, $target, $options);
-            $c_channel = $channels->waitForInbound($c_username);
-            $b_channel = $channels->waitForInbound($b_username);
-            $this->assertNull($c_channel);
-            $this->assertInstanceOf("\\MakeBusy\\FreeSWITCH\\Channels\\Channel", $b_channel);
-            $a_channel = $this->ensureAnswer("auth", $uuid, $b_channel);
-            $this->ensureTwoWayAudio($a_channel, $b_channel);
-            $this->hangupBridged($a_channel, $b_channel);
+            
+            $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+            $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
+            self::assertNull( self::$c_device->waitForInbound() );
+
+            self::ensureAnswer($ch_a, $ch_b);
+            self::ensureTwoWayAudio($ch_a, $ch_b);
+            self::hangupBridged($ch_a, $ch_b);
         }
     }
 
