@@ -57,7 +57,7 @@ class DeviceTestCase extends TestCase
 
         self::$register_device = $acc->createDevice("auth");
 
-        self::sync_sofia_profile("auth", self::$a_device->isLoaded());
+        self::sync_sofia_profile("auth", self::$a_device->isLoaded(), 4);
 
         self::$offnet_resource = $acc->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
         self::$emergency_resource = $acc->createResource("carrier", ["^(911)$"], null, true);

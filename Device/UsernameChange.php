@@ -6,17 +6,21 @@ class UsernameChange extends DeviceTestCase {
 
     public function setUp() {
         self::$a_device->setUsername("test_user");
-        $this->assertFalse( self::$a_device->getGateway()->register() );
+        self::assertFalse( self::$a_device->getGateway()->register() );
+    }
+
+    public function tearDown() {
+        self::$a_device->setUsername("device_1");
     }
 
     public function main($sip_uri) {
         $target = self::B_EXT .'@'. $sip_uri;
         $ch_a = self::$a_device->originate($target);
-        self::assertNull( $ch_a );
+        $ch_b = self::$b_device->waitForInbound();
+        self::assertNull( $ch_b );
 
-        self::$a_device->getGateway()->kill();
-        self::getProfile("auth")->rescan();
-        self::getProfile("auth")->waitForRegister($counter);
+        self::getProfile("auth")->restart(); // forces sofia profile to load xml config
+        self::getProfile("auth")->waitForRegister(4);
 
         $this->assertTrue( self::$a_device->getGateway()->register() );
 
