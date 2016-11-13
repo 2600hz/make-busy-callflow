@@ -6,7 +6,6 @@ use \MakeBusy\Common\Log;
 class RealmChangeRegistrationTest extends DeviceTestCase {
 
     public function testMain() {
-
         self::assertTrue( $a_device->getGateway()->register() );
         self::assertTrue( $a_device->getGateway()->unregister() );
 

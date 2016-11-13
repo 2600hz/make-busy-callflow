@@ -13,13 +13,11 @@ class Disable extends DeviceTestCase {
         self::$b_device->enableDevice();
     }
 
-    public function test() {
-        foreach (self::getSipTargets() as $sip_uri) {
-            $target = self::B_EXT .'@'. $sip_uri;
-            $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-            $ch_b = self::$b_device->waitForInbound();
-            self::assertEmpty($ch_b);
-        }
+    public function main($sip_uri) {
+        $target = self::B_EXT .'@'. $sip_uri;
+        $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+        $ch_b = self::$b_device->waitForInbound();
+        self::assertEmpty($ch_b);
     }
 
 }
