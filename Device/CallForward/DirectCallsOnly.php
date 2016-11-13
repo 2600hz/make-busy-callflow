@@ -20,7 +20,6 @@ class DirectCallsOnly extends DeviceTestCase {
         $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
 
         self::ensureAnswer($ch_a, $ch_c);
-        self::ensureTwoWayAudio($ch_a, $ch_c);
         self::hangupBridged($ch_a, $ch_c);
 
         Log::debug("placing a call via ring-group, expecting cf device %s to not ring", $c_username);
@@ -31,7 +30,6 @@ class DirectCallsOnly extends DeviceTestCase {
         self::assertNull( self::$c_device->waitForInbound() );
 
         self::ensureAnswer($ch_a, $ch_b);
-        self::ensureTwoWayAudio($ch_a, $ch_b);
         self::hangupBridged($ch_a, $ch_b);
     }
 

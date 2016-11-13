@@ -24,8 +24,6 @@ class CallForwardKeyPressTest extends DeviceTestCase {
         $ch_c->sendDtmf('1');
         self::ensureEvent( $ch_a->waitAnswer(5) );
         self::assertEquals("answered", $ch_a->getAnswerState());
-
-        self::ensureTwoWayAudio($ch_a, $ch_c);
         self::hangupBridged($ch_a, $ch_c);
     }
 

@@ -21,7 +21,6 @@ class SubstituteTest extends DeviceTestCase {
         $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
 
         self::ensureAnswer($ch_a, $ch_c);
-        self::ensureTwoWayAudio($ch_a, $ch_c);
         self::hangupBridged($ch_a, $ch_c);
     }
 

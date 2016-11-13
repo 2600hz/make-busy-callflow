@@ -13,7 +13,6 @@ class CallerIdEmergency extends DeviceTestCase {
             urldecode($ch_b->getEvent()->getHeader("Caller-Caller-ID-Number"))
         );
         self::ensureAnswer($ch_a, $ch_b);
-        self::ensureTwoWayAudio($ch_a, $ch_b);
         self::hangupBridged($ch_a, $ch_b);
     }
 

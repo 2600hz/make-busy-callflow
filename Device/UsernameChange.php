@@ -25,7 +25,6 @@ class UsernameChange extends DeviceTestCase {
         $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
 
         self::ensureAnswer($ch_a, $ch_b);
-        self::ensureTwoWayAudio($ch_a, $ch_b);
         self::hangupBridged($ch_a, $ch_b);
     }
 

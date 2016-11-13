@@ -22,9 +22,8 @@ class KeepCallerId extends DeviceTestCase {
             self::$a_device->getCidParam("internal")->number
         );
         self::ensureAnswer($ch_a, $ch_c);
-        self::ensureTwoWayAudio($ch_a, $ch_c);
+
         self::hangupBridged($ch_a, $ch_c);
-        }
     }
 
 }
