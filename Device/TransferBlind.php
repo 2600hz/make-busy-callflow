@@ -10,7 +10,9 @@ class TransferBlind extends DeviceTestCase {
 
         $ch_a = self::ensureChannel( self::$a_device->originate($target_b) );
         $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
+        
         self::ensureAnswer($ch_a, $ch_b);
+        self::ensureEvent($ch_a->waitPark());
         self::ensureTwoWayAudio($ch_a, $ch_b);
 
         $ch_b->deflect($target_c);

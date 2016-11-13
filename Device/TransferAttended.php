@@ -13,6 +13,7 @@ class TransferAttended extends DeviceTestCase {
         $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
 
         self::ensureAnswer($ch_a, $ch_b);
+        self::ensureEvent($ch_a->waitPark());
         self::ensureTwoWayAudio($ch_a, $ch_b);
 
         self::assertEquals($ch_b->getChannelCallState(), "ACTIVE");
