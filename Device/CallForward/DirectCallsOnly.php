@@ -22,7 +22,6 @@ class DirectCallsOnly extends DeviceTestCase {
         self::ensureAnswer($ch_a, $ch_c);
         self::hangupBridged($ch_a, $ch_c);
 
-        Log::debug("placing a call via ring-group, expecting cf device %s to not ring", $c_username);
         $target  = self::RINGGROUP_EXT .'@'. $sip_uri;
 
         $ch_a = self::ensureChannel( self::$a_device->originate($target) );
