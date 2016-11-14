@@ -5,15 +5,21 @@ use \MakeBusy\Common\Log;
 class PasswordChange extends DeviceTestCase {
 
     public function setUp() {
+        $this->password = self::$a_device->getPassword();
         self::$a_device->setPassword("test_password");
-        $this->assertTrue( self::$b_device->getGateway()->register() );
+        self::assertFalse( self::$a_device->getGateway()->register() );
+    }
+
+    public function tearDown() {
+        self::$a_device->setPassword($this->password);
+        self::$a_device->getGateway()->kill();
+        self::getProfile('auth')->rescan();
     }
 
     public function main($sip_uri) {
         $target = self::B_EXT .'@'. $sip_uri;
-        $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-        $ch_b = self::$b_device->waitForInbound();
-        $this->assertNull($channel);
+        $ch_a = self::$a_device->originate($target);
+        $this->assertEmpty($ch_a);
 
         self::$a_device->getGateway()->kill();
         self::getProfile('auth')->rescan();

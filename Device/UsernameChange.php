@@ -18,7 +18,7 @@ class UsernameChange extends DeviceTestCase {
     public function main($sip_uri) {
         $target = self::B_EXT .'@'. $sip_uri;
         $ch_a = self::$a_device->originate($target);
-        self::assertNull( $ch_a );
+        self::assertEmpty( $ch_a );
 
         self::$a_device->getGateway()->kill();
         self::getProfile("auth")->rescan(); 
