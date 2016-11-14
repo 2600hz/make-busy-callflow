@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class CallForwardKeyPressTest extends DeviceTestCase {
+class KeyPress extends DeviceTestCase {
 
     public function setUp() {
         self::$b_device->resetCfParams(self::C_EXT);
@@ -22,7 +22,7 @@ class CallForwardKeyPressTest extends DeviceTestCase {
         $ch_c->answer();
         self::assertFalse( $ch_a->getAnswerState() == "answered" );
         $ch_c->sendDtmf('1');
-        self::ensureEvent( $ch_a->waitAnswer(5) );
+        self::ensureEvent( $ch_a->waitAnswer() );
         self::assertEquals("answered", $ch_a->getAnswerState());
         self::hangupBridged($ch_a, $ch_c);
     }

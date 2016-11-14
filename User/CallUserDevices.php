@@ -2,7 +2,8 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-//MKBUSY-23 - call to devices assigned to owner should ring both devices.
+// MKBUSY-23
+// call to devices assigned to owner should ring both devices.
 class CallUserDevices extends UserTestCase {
 
     public function main($sip_uri) {

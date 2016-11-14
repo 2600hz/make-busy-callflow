@@ -32,6 +32,7 @@ class UserTestCase extends TestCase
     const RINGGROUP_NUMBER  = '2111';
     const CALL_FWD_ENABLE  = '*72';
     const CALL_FWD_DISABLE = '*73';
+    const OFFNET_NUMBER = "15553335678";
 
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
