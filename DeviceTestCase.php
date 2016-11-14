@@ -41,6 +41,7 @@ class DeviceTestCase extends TestCase
         parent::setUpBeforeClass();
 
         $acc = new TestAccount("DeviceTestCase");
+        self::$test_account = $acc;
         self::$realm = $acc->getAccountRealm();
 
         self::$a_device = $acc->createDevice("auth");
