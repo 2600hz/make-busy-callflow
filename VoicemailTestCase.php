@@ -43,4 +43,35 @@ class VoicemailTestCase extends TestCase
         self::sync_sofia_profile("auth", self::$a_device->isLoaded(), 1);
     }
 
+    static function leaveMessage($device, $target, $freq, $refreq = null){
+        $ch = self::ensureChannel( $device->originate($target) );
+        $ch->waitAnswer();
+
+        // TODO: speed-up redirect call to voicemail
+        self::expectPrompt($ch, "VM-PERSON", 30);
+        self::expectPrompt($ch, "VM-NOT_AVAILABLE");
+        self::expectPrompt($ch, "VM-RECORD_MESSAGE");
+
+        $ch->playTone($freq);
+
+        $ch->sendDtmf("1");
+
+        self::expectPrompt($ch, "VM-REVIEW_RECORDING", 20);
+
+        if ($refreq){
+            $ch->sendDtmf("3");
+            $ch->playTone($refreq, 2000);
+            $ch->sendDtmf("1");
+            self::expectPrompt($ch, "VM-REVIEW_RECORDING", 20);
+        }
+
+        $ch->sendDtmf("1");
+
+        // TODO: sync with Kazoo Event
+        self::expectPrompt($ch, "VM-SAVED", 60);
+        self::expectPrompt($ch, "VM-THANK_YOU", 60);
+
+        $ch->waitHangup();
+    }
+
 }
