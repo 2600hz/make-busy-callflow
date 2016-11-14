@@ -3,9 +3,7 @@
 namespace KazooTests\Applications\Callflow;
 
 use \KazooTests\TestCase;
-
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
-use \MakeBusy\Kazoo\Gateways as KazooGateways;
 
 class DeviceTestCase extends TestCase
 {
