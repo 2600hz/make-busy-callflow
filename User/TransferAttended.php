@@ -6,7 +6,7 @@ class TransferAttended extends UserTestCase {
 
     public function main($sip_uri) {
         $target = self::B_NUMBER . '@' . $sip_uri;
-        $referred_by = sprintf("<sip:%s@%s:5060;transport=udp>", self::$b_device_1->getSipUsername(), self::getEsl("auth")->getIpAddress());
+        $referred_by = self::$b_device_1->makeReferredByUri();
         $transferee = self::C_NUMBER . '@' . $sip_uri;
 
         $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
@@ -25,23 +25,11 @@ class TransferAttended extends UserTestCase {
 
         $ch_c->answer();
         $ch_c->waitAnswer();
-        $event = $ch_b_2->waitAnswer();
+        self::ensureEvent( $ch_b_2->waitAnswer() );
+        self::ensureEvent( $ch_b_2->waitPark() );
         self::ensureTwoWayAudio($ch_b_2, $ch_c);
 
-        $to_tag = $event->getHeader('variable_sip_to_tag');
-        $from_tag = $event->getHeader('variable_sip_from_tag');
-        $sip_uri = urldecode($event->getHeader('variable_sip_req_uri'));
-        $call_uuid = $event->getHeader('variable_call_uuid');
-
-        $refer_to =     '<sip:' . $sip_uri
-                 . '?Replaces=' . $call_uuid
-               . '%3Bto-tag%3D' . $to_tag
-             . '%3Bfrom-tag%3D' . $from_tag
-             . '>';
-
-        $ch_b->setVariables('sip_h_refer-to', $refer_to);
-        $ch_b->setVariables('sip_h_referred-by', $referred_by);
-        $ch_b->deflect($refer_to);
+        $ch_b->deflectChannel($ch_b_2, $referred_by);
         $ch_b->waitDestroy();
 
         self::ensureTwoWayAudio($ch_a, $ch_c);
