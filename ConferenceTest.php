@@ -14,7 +14,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\SystemConfigs;
 use \MakeBusy\Common\Configuration;
 use \MakeBusy\Common\Log;
 
-class ConferenceTest extends DeviceTestCase
+class ConferenceTest extends CallflowTestCase
 {
 
     private static $devices = Array();
@@ -56,12 +56,17 @@ class ConferenceTest extends DeviceTestCase
         $media = Configuration::getSection("media");
         self::$a_media->setFile($media["welcome_prompt_path"], "audio/wav"); //need change file path in config.json
 
-        SystemConfigs::setDefaultConfParam($test_account, "entry-sound",   "tone_stream://%(3000,0,2600);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "exit-sound",    "tone_stream://%(3000,0,3000);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "deaf-sound",    "tone_stream://%(3000,0,1000);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "undeaf-sound",  "tone_stream://%(3000,0,1550);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "muted-sound",   "tone_stream://%(3000,0,1250);loops=1");
-        SystemConfigs::setDefaultConfParam($test_account, "unmuted-sound", "tone_stream://%(3000,0,1600);loops=1");
+        $configs = SystemConfigs::get($test_account);
+        if (! in_array("conferences", $configs)) {
+            SystemConfigs::createSection($test_account, "conferences");
+        }
+
+        SystemConfigs::setSectionKey($test_account, "conferences", "entry-sound",   "tone_stream://%(3000,0,2600);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "exit-sound",    "tone_stream://%(3000,0,3000);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "deaf-sound",    "tone_stream://%(3000,0,1000);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "undeaf-sound",  "tone_stream://%(3000,0,1550);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "muted-sound",   "tone_stream://%(3000,0,1250);loops=1");
+        SystemConfigs::setSectionKey($test_account, "conferences", "unmuted-sound", "tone_stream://%(3000,0,1600);loops=1");
 
 
         foreach (range('a', 'f') as $letter) {
@@ -83,84 +88,7 @@ class ConferenceTest extends DeviceTestCase
         self::$a_conference->clearPins();
     }
 
-    //MKBUSY-44
-    public function testCallinConference(){
-        Log::notice("%s", __METHOD__);
-        $a_channel = $this->loginConference(self::$devices['a']->getId(),self::CONF_EXT);
-	$this->hangupChannels($a_channel);
-    }
 
-    public function testTwoCallinConference(){
-        Log::notice("%s", __METHOD__);
-        $a_channel = $this->loginConference(self::$devices['a']->getId(),self::CONF_EXT);
-        $b_channel = $this->loginConference(self::$devices['b']->getId(),self::CONF_EXT);
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->hangupChannels($a_channel, $b_channel);
-    }
-
-    public function testMassCallinConference(){
-        Log::notice("%s", __METHOD__);
-        $channels = Array();
-
-        foreach (range('a', 'f') as $letter) {
-            $channels[$letter] = $this->loginConference(self::$devices[$letter]->getId(),self::CONF_EXT);
-        }
-
-        foreach (range('a', 'f') as $tone_letter) {
-            $this->ensureSpeaking($channels[$letter],$channels);
-        }
-
-        foreach (range('a', 'f') as $letter) {
-            $channels[$letter]->hangup();
-        }
-    }
-
-    //MKBUSY-45
-    public function testAuthCallinConference(){
-        Log::notice("%s", __METHOD__);
-        self::$a_conference->setMemberPin(array((string)self::MEMBERPIN1,(string)self::MEMBERPIN2));
-        $a_channel = $this->loginConference(self::$devices['a']->getId(),self::CONF_EXT,TRUE,self::MEMBERPIN1);
-        $a_channel->hangup();
-    }
-
-    public function testAuthTwoCallinConference(){
-        Log::notice("%s", __METHOD__);
-        self::$a_conference->setMemberPin(array((string)self::MEMBERPIN1,(string)self::MEMBERPIN2));
-
-        $a_channel=$this->loginConference(self::$devices['a']->getId(),self::CONF_EXT,TRUE,self::MEMBERPIN1);
-        $b_channel=$this->loginConference(self::$devices['b']->getId(),self::CONF_EXT,TRUE,self::MEMBERPIN2);
-
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->hangupChannels($a_channel, $b_channel);
-    }
-
-    public function testAuthMassCallinConference(){
-        Log::notice("%s", __METHOD__);
-        self::$a_conference->setMemberPin(array((string)self::MEMBERPIN1,(string)self::MEMBERPIN2));
-        $channels = Array();
-
-        foreach (range('a', 'f') as $letter) {
-            $channels[$letter] = $this->loginConference(self::$devices[$letter]->getId(),self::CONF_EXT,TRUE,self::MEMBERPIN1);
-        }
-
-        foreach (range('a', 'f') as $letter) {
-            $this->ensureSpeaking($channels[$letter],$channels);
-        }
-
-        foreach (range('a', 'f') as $letter) {
-            $channels[$letter]->hangup();
-        }
-    }
-
-    //MKBUSY-46
-    public function testSpecificConference(){
-        Log::notice("%s", __METHOD__);
-        $a_channel=$this->loginConference(self::$devices['a']->getId(),self::CONF_EXT);
-        $b_channel=$this->loginConference(self::$devices['b']->getId(),self::CONF_EXT);
-
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->hangupChannels($a_channel, $b_channel);
-    }
 
     //MBUSY-47
     public function testConferenceWelcomePrompt(){
@@ -203,32 +131,6 @@ class ConferenceTest extends DeviceTestCase
         $this->hangupChannels($a_channel, $b_channel);
     }
 
-    //MKBUSY-50
-    public function testMemberPin(){
-        Log::notice("%s", __METHOD__);
-        self::$a_conference->setMemberPin(array((string)self::MEMBERPIN1,(string)self::MEMBERPIN2));
-
-        $a_channel=$this->loginConference(self::$devices['a']->getId(),self::CONF_EXT,TRUE,SELF::MEMBERPIN1);
-        $b_channel=$this->loginConference(self::$devices['b']->getId(),self::CONF_EXT,TRUE,SELF::MEMBERPIN2);
-        $c_channel=$this->loginConference(self::$devices['c']->getId(),self::CONF_EXT,TRUE,SELF::WRONGPIN,FALSE);
-
-        $this->expectPrompt($c_channel, "CONF-BAD_PIN", 60);
-
-        for ($i=0; $i<2; $i++) {
-            $c_channel->sendDtmf(SELF::WRONGPIN); //enter wrong confernce number
-            $c_channel->sendDtmf('#');
-            $this->expectPrompt($c_channel, "CONF-BAD_PIN", 60);
-        }
-
-        $this->expectPrompt($c_channel, "CONF-TOO_MANY_ATTEMPTS", 60);
-        $this->assertTrue($c_channel->waitHangup());
-
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->ensureNotTalking($a_channel,$c_channel,600,30);
-        $this->ensureNotTalking($b_channel,$c_channel,600,30);
-
-        $this->hangupChannels($a_channel, $b_channel);
-    }
 
     //MKBUSY-51
     public function testModeratorPin(){
@@ -314,7 +216,7 @@ class ConferenceTest extends DeviceTestCase
         $this->ensureNotTalking($b_channel,$a_channel,600,30);
         $this->ensureNotTalking($b_channel,$c_channel,600,30);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
 
         self::$a_conference->setMemberOption("join_muted",FALSE);
     }
@@ -336,7 +238,7 @@ class ConferenceTest extends DeviceTestCase
         $this->ensureNotTalking($a_channel,$b_channel,600,30);
         $this->ensureNotTalking($c_channel,$b_channel,600,30);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
 
         self::$a_conference->setMemberOption("join_deaf",FALSE);
     }
@@ -357,7 +259,7 @@ class ConferenceTest extends DeviceTestCase
         $this->ensureNotTalking($c_channel,$a_channel,600,30);
         $this->ensureNotTalking($c_channel,$b_channel,600,30);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
 
         self::$a_conference->setModeratorOption("join_muted",FALSE);
     }
@@ -379,7 +281,7 @@ class ConferenceTest extends DeviceTestCase
         $this->ensureNotTalking($a_channel,$c_channel,600,30);
         $this->ensureNotTalking($b_channel,$c_channel,600,30);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
 
         self::$a_conference->setModeratorOption("join_deaf",FALSE);
     }
@@ -441,7 +343,7 @@ class ConferenceTest extends DeviceTestCase
         $this->ensureTalking($b_channel, $a_channel, 600);
         $this->ensureTalking($b_channel, $c_channel, 600);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
     }
 
         //MKBUSY-61
@@ -475,7 +377,7 @@ class ConferenceTest extends DeviceTestCase
         $this->ensureTalking($a_channel,$b_channel,600);
         $this->ensureTalking($c_channel,$b_channel,600);
 
-        $this->hangupChannels($a_channel, array($b_channel, $c_channel));
+        $this->hangupChannels($a_channel, $b_channel, $c_channel);
     }
 
     private function ensureSpeaking($speak_channel, $hear_channels){ //Speak only one other hear. First parametr speak channel. Second array of hear channels

@@ -17,12 +17,12 @@ class ConferenceTestCase extends TestCase {
     const CONF_SERVICE_EXT = '2102';
     const CONF_NUMBER1 = '3215';
     const CONF_NUMBER2 = '3214';
-    const TONE_FREQ = 1600;
-    const MEMBERPIN1 = 2851;
-    const MEMBERPIN2 = 1543;
-    const MODERATORPIN1 = 6665;
-    const MODERATORPIN2 = 4576;
-    const WRONGPIN = 1221;
+    const TONE_FREQ = '1600';
+    const MEMBERPIN1 = '2851';
+    const MEMBERPIN2 = '1543';
+    const MODERATORPIN1 = '6665';
+    const MODERATORPIN2 = '4576';
+    const WRONGPIN = '1221';
     const ASTERISK1 = "*1";
     const ASTERISK2 = "*2";
     const ASTERISK3 = "*3";
@@ -54,5 +54,14 @@ class ConferenceTestCase extends TestCase {
             self::$devices[$letter] = $acc->createDevice("auth", true);
         }
         self::sync_sofia_profile("auth", self::$devices["a"]->isLoaded(), 4);
+    }
+
+    public function loginWithPin($device, $target, $pin) {
+        $ch_a = self::ensureChannel( $device->originate($target) );
+        self::ensureEvent( $ch_a->waitPark() );
+        self::expectPrompt($ch_a, "CONF-WELCOME");
+        self::expectPrompt($ch_a, "CONF-ENTER_CONF_PIN");
+        $ch_a->sendDtmf($pin . '#');
+        return $ch_a;
     }
 }
