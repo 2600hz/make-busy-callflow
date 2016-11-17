@@ -43,7 +43,7 @@ class ConferenceTestCase extends TestCase {
         $media = Configuration::getSection("media");
         self::$a_media->setFile($media["welcome_prompt_path"], "audio/wav");
 
-        SystemConfigs::setDefaultConfParam($acc, "entry-sound",   "tone_stream://%(3000,0,2600);loops=1");
+        SystemConfigs::setDefaultConfParam($acc, "enter-sound",   "tone_stream://%(3000,0,2600);loops=1");
         SystemConfigs::setDefaultConfParam($acc, "exit-sound",    "tone_stream://%(3000,0,3000);loops=1");
         SystemConfigs::setDefaultConfParam($acc, "deaf-sound",    "tone_stream://%(3000,0,1000);loops=1");
         SystemConfigs::setDefaultConfParam($acc, "undeaf-sound",  "tone_stream://%(3000,0,1550);loops=1");
