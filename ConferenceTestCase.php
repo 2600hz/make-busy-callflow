@@ -4,6 +4,8 @@ namespace KazooTests\Applications\Callflow;
 
 use \KazooTests\TestCase;
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
+use \MakeBusy\Common\Configuration;
+use \MakeBusy\Kazoo\Applications\Crossbar\SystemConfigs;
 
 class ConferenceTestCase extends TestCase {
     public static $devices = Array();
@@ -13,8 +15,8 @@ class ConferenceTestCase extends TestCase {
 
     const CONF_EXT = '2100';
     const CONF_SERVICE_EXT = '2102';
-    const CONF_NUMBER1 = 3215;
-    const CONF_NUMBER2 = 3214;
+    const CONF_NUMBER1 = '3215';
+    const CONF_NUMBER2 = '3214';
     const TONE_FREQ = 1600;
     const MEMBERPIN1 = 2851;
     const MEMBERPIN2 = 1543;
@@ -35,7 +37,7 @@ class ConferenceTestCase extends TestCase {
         self::$a_conference = $acc->createConference();
         self::$a_conference->createCallflow([self::CONF_EXT]);
         self::$a_conference->CreateServiceCallflow([self::CONF_SERVICE_EXT]);
-        self::$a_conference->setConferenceNumbers([(string) self::CONF_NUMBER1, (string) self::CONF_NUMBER2)]);
+        self::$a_conference->setConferenceNumbers([self::CONF_NUMBER1, self::CONF_NUMBER2]);
 
         self::$a_media = $acc->createMedia();
         $media = Configuration::getSection("media");
@@ -49,8 +51,8 @@ class ConferenceTestCase extends TestCase {
         SystemConfigs::setDefaultConfParam($acc, "unmuted-sound", "tone_stream://%(3000,0,1600);loops=1");
 
         foreach (range('a', 'f') as $letter) {
-            self::$devices[$letter] = $acc->createDevice();
+            self::$devices[$letter] = $acc->createDevice("auth", true);
         }
-        self::sync_sofia_profile("auth", self::$a_device->isLoaded(), 4);
+        self::sync_sofia_profile("auth", self::$devices["a"]->isLoaded(), 4);
     }
 }
