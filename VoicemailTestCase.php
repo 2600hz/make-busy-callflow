@@ -67,7 +67,7 @@ class VoicemailTestCase extends TestCase
 
         $ch->sendDtmf("1");
 
-        // TODO: sync with Kazoo Event
+        // TODO: sync with Kazoo Event, it takes some time between message being recorded and being available
         self::expectPrompt($ch, "VM-SAVED", 60);
         self::expectPrompt($ch, "VM-THANK_YOU", 60);
 
