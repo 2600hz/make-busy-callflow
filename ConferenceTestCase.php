@@ -57,11 +57,17 @@ class ConferenceTestCase extends TestCase {
     }
 
     public function loginWithPin($device, $target, $pin) {
-        $ch_a = self::ensureChannel( $device->originate($target) );
-        self::ensureEvent( $ch_a->waitPark() );
-        self::expectPrompt($ch_a, "CONF-WELCOME");
+        $ch_a = self::login($device, $target);
         self::expectPrompt($ch_a, "CONF-ENTER_CONF_PIN");
         $ch_a->sendDtmf($pin . '#');
         return $ch_a;
     }
+
+    public function login($device, $target) {
+        $ch_a = self::ensureChannel( $device->originate($target) );
+        self::ensureEvent( $ch_a->waitPark() );
+        self::expectPrompt($ch_a, "CONF-WELCOME");
+        return $ch_a;
+    }
+
 }

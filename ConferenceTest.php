@@ -131,36 +131,6 @@ class ConferenceTest extends CallflowTestCase
         $this->hangupChannels($a_channel, $b_channel);
     }
 
-
-    //MKBUSY-51
-    public function testModeratorPin(){
-        Log::notice("%s", __METHOD__);
-        self::$a_conference->setModeratorPin(array((string)self::MODERATORPIN1,(string)self::MODERATORPIN2));
-
-        $a_channel = $this->loginConference(self::$devices['a']->getId(),self::CONF_EXT,TRUE,SELF::MODERATORPIN1,TRUE,FALSE,0,TRUE);
-        $b_channel = $this->loginConference(self::$devices['b']->getId(),self::CONF_EXT,TRUE,SELF::MODERATORPIN2,TRUE,FALSE,0,TRUE);
-        $c_channel = $this->loginConference(self::$devices['c']->getId(),self::CONF_EXT,TRUE,SELF::WRONGPIN,FALSE);
-
-        $this->expectPrompt($c_channel, "CONF-BAD_PIN", 60);
-
-        for ($i=0; $i<2; $i++) {
-            $c_channel->sendDtmf(SELF::WRONGPIN); //enter wrong confernce number
-            $c_channel->sendDtmf('#');
-            $this->expectPrompt($c_channel, "CONF-BAD_PIN", 60);
-        }
-
-        $this->expectPrompt($c_channel, "CONF-TOO_MANY_ATTEMPTS", 60);
-        $this->assertTrue($c_channel->waitHangup());
-
-        $this->ensureTwoWayAudio($a_channel, $b_channel);
-        $this->ensureNotTalking($a_channel,$c_channel,600,30);
-        $this->ensureNotTalking($b_channel,$c_channel,600,30);
-
-        $this->hangupChannels($a_channel, $b_channel);
-
-        self::$a_conference->setModeratorPin(array());
-    }
-
     //MKBUSY-52
     public function testMaxParticipants(){
         Log::notice("%s", __METHOD__);
