@@ -9,7 +9,8 @@ class DeafParticipant extends ConferenceTestCase {
         $ch_a = self::login(self::$devices["a"], $target);
         $ch_b = self::login(self::$devices["b"], $target);
         $ch_c = self::login(self::$devices["c"], $target);
-        sleep(5); // conference prompt && entry tone
+
+        $ch_c->detectTone("2600");  // wait for conference prompt && entry tone
 
         $ch_b->sendDtmf(SELF::ASTERISK5);
         self::expectPrompt($ch_b, "CONF-DEAF");
