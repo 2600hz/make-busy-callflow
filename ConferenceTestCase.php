@@ -43,12 +43,12 @@ class ConferenceTestCase extends TestCase {
         $media = Configuration::getSection("media");
         self::$a_media->setFile($media["welcome_prompt_path"], "audio/wav");
 
-        SystemConfigs::setDefaultConfParam($acc, "enter-sound",   "tone_stream://%(3000,0,2600);loops=1");
-        SystemConfigs::setDefaultConfParam($acc, "exit-sound",    "tone_stream://%(3000,0,3000);loops=1");
-        SystemConfigs::setDefaultConfParam($acc, "deaf-sound",    "tone_stream://%(3000,0,1000);loops=1");
-        SystemConfigs::setDefaultConfParam($acc, "undeaf-sound",  "tone_stream://%(3000,0,1550);loops=1");
-        SystemConfigs::setDefaultConfParam($acc, "muted-sound",   "tone_stream://%(3000,0,1250);loops=1");
-        SystemConfigs::setDefaultConfParam($acc, "unmuted-sound", "tone_stream://%(3000,0,1600);loops=1");
+        SystemConfigs::setDefaultConfParam($acc, "enter-sound",   "tone_stream://%(1000,0,2600)");
+        SystemConfigs::setDefaultConfParam($acc, "exit-sound",    "tone_stream://%(1000,0,3000)");
+        SystemConfigs::setDefaultConfParam($acc, "deaf-sound",    "tone_stream://%(1000,0,1000)");
+        SystemConfigs::setDefaultConfParam($acc, "undeaf-sound",  "tone_stream://%(1000,0,1550)");
+        SystemConfigs::setDefaultConfParam($acc, "muted-sound",   "tone_stream://%(1000,0,1250)");
+        SystemConfigs::setDefaultConfParam($acc, "unmuted-sound", "tone_stream://%(1000,0,1600)");
 
         foreach (range('a', 'f') as $letter) {
             self::$devices[$letter] = $acc->createDevice("auth", true);
