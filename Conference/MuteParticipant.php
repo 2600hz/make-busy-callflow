@@ -10,8 +10,7 @@ class MuteParticipant extends ConferenceTestCase {
         $ch_b = self::login(self::$devices["b"], $target);
         $ch_c = self::login(self::$devices["c"], $target);
 
-        $ch_c->detectTone("2600");
-//        sleep(5); // conference prompt && entry tone
+        $ch_c->detectTone("2600");  // wait for conference prompt && entry tone
 
         $ch_b->sendDtmf(SELF::ASTERISK2);
         self::expectPrompt($ch_b, "CONF-MUTED");
