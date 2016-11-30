@@ -66,7 +66,7 @@ class RingGroupTestCase extends TestCase {
             "single"
         );
 
-        self::sync_sofia_profile("auth", self::$device["a"]->isLoaded(), 6);
+        self::syncSofiaProfile("auth", self::$device["a"]->isLoaded(), 6);
     }
 
 }

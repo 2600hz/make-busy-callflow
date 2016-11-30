@@ -40,7 +40,7 @@ class VoicemailTestCase extends TestCase
         self::$b_voicemail_box->setVoicemailboxParam('owner_id', self::$b_user->getId());
         self::$b_voicemail_box->setVoicemailboxParam('is_setup', TRUE);
 
-        self::sync_sofia_profile("auth", self::$a_device->isLoaded(), 1);
+        self::syncSofiaProfile("auth", self::$a_device->isLoaded(), 1);
     }
 
     static function leaveMessage($device, $target, $freq, $refreq = null){

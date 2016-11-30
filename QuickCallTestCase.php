@@ -51,6 +51,6 @@ class QuickCallTestCase extends TestCase {
         self::$b_dev_2 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$b_user->getId()]);
         self::$b_dev_3 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$b_user->getId()]);
 
-        self::sync_sofia_profile("auth", self::$admin_device->isLoaded(), 5);
+        self::syncSofiaProfile("auth", self::$admin_device->isLoaded(), 5);
     }
 }

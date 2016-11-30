@@ -32,7 +32,7 @@ class ParkingTestCase extends TestCase {
         self::$c_device = $acc->createDevice("auth", true);
         self::$c_device->createCallflow([self::C_EXT]);
 
-        self::sync_sofia_profile("auth", self::$a_device->isLoaded(), 3);
+        self::syncSofiaProfile("auth", self::$a_device->isLoaded(), 3);
     }
 
 }

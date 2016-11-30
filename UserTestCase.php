@@ -66,7 +66,7 @@ class UserTestCase extends TestCase
         self::$offnet_resource  = $acc->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
         self::$emergency_resource = $acc->createResource("carrier", ["^(911)$"], null, TRUE);
 
-        self::sync_sofia_profile("auth", self::$a_device_1->isLoaded(), 6);
+        self::syncSofiaProfile("auth", self::$a_device_1->isLoaded(), 6);
 
         $b_user_id = self::$b_user->getId();
         $offline_user_id = self::$offline_user->getId();
