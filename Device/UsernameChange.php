@@ -4,14 +4,17 @@ use \MakeBusy\Common\Log;
 
 class UsernameChange extends DeviceTestCase {
 
+    private $username;
+
     public function setUp() {
+        $this->username = self::$a_device->getUsername();
         self::$a_device->setUsername("test_user");
         self::assertFalse( self::$a_device->getGateway()->register() );
     }
 
     public function tearDown() {
-        self::$a_device->setUsername("device_1");
-        self::getProfile("auth")->restart(); 
+        self::$a_device->setUsername($this->username);
+        self::assertTrue( self::$a_device->getGateway()->register() );
     }
 
     public function main($sip_uri) {
