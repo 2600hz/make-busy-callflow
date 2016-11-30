@@ -14,6 +14,8 @@ class UsernameChange extends DeviceTestCase {
 
     public function tearDown() {
         self::$a_device->setUsername($this->username);
+        self::$a_device->getGateway()->kill();
+        self::getProfile('auth')->rescan();
         self::assertTrue( self::$a_device->getGateway()->register() );
     }
 
