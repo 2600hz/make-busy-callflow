@@ -33,6 +33,6 @@ class BlindParkToOccupied extends ParkingTestCase {
         $ch_b->waitAnswer();
 
         self::ensureTalking($ch_b, $ch_c);
-        self::hangupBridged($ch_b, $ch_c);
+        self::hangupChannels($ch_a, $ch_b, $ch_c);
     }
 }
