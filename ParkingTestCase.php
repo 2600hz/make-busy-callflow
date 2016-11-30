@@ -21,7 +21,7 @@ class ParkingTestCase extends TestCase {
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
 
-        $acc = new TestAccount("ParkingTestCase");
+        $acc = new TestAccount("ParkingTest");
 
         self::$a_device = $acc->createDevice("auth", true);
         self::$a_device->createCallflow([self::A_EXT]);

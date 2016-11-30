@@ -25,7 +25,7 @@ class VoicemailTestCase extends TestCase
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
 
-        $acc = new TestAccount("VoicemailTestCase");
+        $acc = new TestAccount("VoicemailTest");
 
         self::$b_voicemail_box = $acc->createVm(self::VM_BOX_ID);
         self::$b_user          = $acc->createUser();

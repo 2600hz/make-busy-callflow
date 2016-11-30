@@ -36,7 +36,7 @@ class UserTestCase extends TestCase
 
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
-        $acc = new TestAccount("UserTestCase");
+        $acc = new TestAccount("UserTest");
         self::$test_account = $acc;
 
         self::$a_user= $acc->createUser();

@@ -38,7 +38,7 @@ class DeviceTestCase extends TestCase
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
 
-        $acc = new TestAccount("DeviceTestCase");
+        $acc = new TestAccount("DeviceTest");
         self::$test_account = $acc;
         self::$realm = $acc->getAccountRealm();
 
