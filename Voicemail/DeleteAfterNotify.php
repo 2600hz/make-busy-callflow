@@ -13,7 +13,6 @@ class DeleteAfterNotify extends VoicemailTestCase {
 
     public function tearDown() {
         self::$b_voicemail_box->resetVoicemailBox();
-        self::$b_voicemail_box->resetVoicemailBoxParam("media");
         self::$b_voicemail_box->setVoicemailBoxParam('delete_after_notify',FALSE);
     }
 

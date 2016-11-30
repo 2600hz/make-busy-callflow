@@ -70,11 +70,6 @@ class DeviceTestCase extends TestCase
         );
     }
 
-    public function setUp() {
-        self::getEsl()->api("hupall");
-        self::getEsl()->flushEvents();
-    }
-
     public static function getTestAccount() {
         return self::$test_account;
     }

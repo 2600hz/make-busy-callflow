@@ -4,7 +4,7 @@ use \MakeBusy\Common\Log;
 
 class RegistrationsTest extends DeviceTestCase {
 
-    public function testMain() {
+    public function testMain($sip_uri = null) {
         $this->assertTrue(self::$register_device->getGateway()->register());
     }
 

@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class CallerIdOffnetTest extends DeviceTestCase {
+class CallerIdOffnet extends DeviceTestCase {
 
     public function main($sip_uri) {
         $target  = '1' . self::OFFNET_NUMBER .'@'. $sip_uri;
@@ -12,8 +12,6 @@ class CallerIdOffnetTest extends DeviceTestCase {
             self::$a_device->getCidParam("external")->number,
             urldecode($ch_b->getEvent()->getHeader("Caller-Caller-ID-Number"))
         );
-        self::ensureAnswer($ch_a, $ch_b);
-        self::ensureTwoWayAudio($ch_a, $ch_b);
         self::hangupBridged($ch_a, $ch_b);
     }
 

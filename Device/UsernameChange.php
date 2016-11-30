@@ -11,8 +11,7 @@ class UsernameChange extends DeviceTestCase {
 
     public function tearDown() {
         self::$a_device->setUsername("device_1");
-        self::$a_device->getGateway()->kill();
-        self::getProfile("auth")->rescan(); 
+        self::getProfile("auth")->restart(); 
     }
 
     public function main($sip_uri) {

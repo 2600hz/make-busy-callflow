@@ -13,7 +13,7 @@ class RealmChangeRegistration extends DeviceTestCase {
         self::getProfile("auth")->rescan(); 
     }
 
-    public function testMain() {
+    public function testMain($sip_uri = null) {
         $this->markTestIncomplete('Known issue: see comments');
         self::getTestAccount()->setAccountRealm('blah.com');
 

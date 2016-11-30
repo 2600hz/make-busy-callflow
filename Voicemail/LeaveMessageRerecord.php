@@ -6,15 +6,12 @@ use \MakeBusy\Common\Log;
 class LeaveMessageRerecord extends VoicemailTestCase {
 
     public function setUp() {
-        self::$b_user->setUserParam("vm_to_email_enabled",FALSE);
         self::$b_voicemail_box->getVoicemailbox();
         $this->count  = count(self::$b_voicemail_box->getMessages());
-        self::$b_user->setUserParam("vm_to_email_enabled",TRUE);
     }
 
     public function tearDown() {
         self::$b_voicemail_box->resetVoicemailBox();
-        self::$b_voicemail_box->resetVoicemailBoxParam("media");
     }
 
     public function main($sip_uri) {

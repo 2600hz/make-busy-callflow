@@ -12,7 +12,6 @@ class SaveMessage extends VoicemailTestCase {
     public function tearDown() {
         self::$b_voicemail_box->resetVoicemailBox();
         self::$b_user->setUserParam("vm_to_email_enabled", TRUE);
-        self::$b_voicemail_box->resetVoicemailBoxParam("media");
     }
 
     public function main($sip_uri) {
