@@ -16,7 +16,7 @@ class CallForwardEnable extends UserTestCase {
         $b_ch->waitAnswer();
         $b_ch->sendDtmf(self::C_NUMBER . '#');
         $b_ch->waitHangup();
-        sleep(5); // TODO: need some? time for Kazoo to react
+        sleep(10); // TODO: need some? time for Kazoo to react
         self::assertNull(self::$b_device_1->getDeviceParam("call_forward"));
         self::assertTrue(self::$b_user->getCfParam("enabled"));
         self::assertEquals(self::$b_user->getCfParam("number"), self::C_NUMBER);

@@ -13,6 +13,7 @@ class DirectCallsOnly extends UserTestCase {
 
     public function tearDown() {
         self::$b_user->resetCfParams();
+        self::$b_user->setCfParam("direct_calls_only", FALSE);
     }
 
     public function main($sip_uri) {

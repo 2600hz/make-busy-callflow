@@ -15,7 +15,6 @@ class CallerIdOffnet extends UserTestCase {
             self::$a_user->getCidParam("external")->number
         );
         self::ensureAnswer($ch_a, $ch_b);
-        self::ensureTwoWayAudio($ch_a, $ch_b);
         self::hangupBridged($ch_a, $ch_b);
     }
 
