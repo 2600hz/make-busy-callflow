@@ -30,7 +30,7 @@ class VoicemailTestCase extends TestCase
         self::$b_voicemail_box = $acc->createVm(self::VM_BOX_ID);
         self::$b_user          = $acc->createUser();
         self::$a_device        = $acc->createDevice("auth");
-        self::$b_device        = $acc->createDevice("auth", TRUE, ['owner_id' => self::$b_user->getId()]);
+        self::$b_device        = self::$b_user->createDevice("auth", TRUE);
 
         self::$b_voicemail_box->createCallflow([self::VM_ACCESS_NUMBER]);
         self::$b_voicemail_box->createUserVmCallflow([self::B_USER_NUMBER], self::$b_user->getId());
@@ -40,7 +40,7 @@ class VoicemailTestCase extends TestCase
         self::$b_voicemail_box->setVoicemailboxParam('owner_id', self::$b_user->getId());
         self::$b_voicemail_box->setVoicemailboxParam('is_setup', TRUE);
 
-        self::syncSofiaProfile("auth", self::$a_device->isLoaded(), 1);
+        self::syncSofiaProfile("auth", $acc->isLoaded(), 1);
     }
 
     static function leaveMessage($device, $target, $freq, $refreq = null){

@@ -51,22 +51,22 @@ class UserTestCase extends TestCase
         self::$offline_user= $acc->createUser();
         self::$offline_user->createUserCallFlow([self::OFFLINE_NUMBER]);
 
-        self::$a_device_1 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$a_user->getId()]);
-        self::$a_device_2 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$a_user->getId()]);
+        self::$a_device_1 = self::$a_user->createDevice("auth", TRUE);
+        self::$a_device_2 = self::$a_user->createDevice("auth", TRUE);
 
-        self::$b_device_1 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$b_user->getId()]);
-        self::$b_device_2 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$b_user->getId()]);
+        self::$b_device_1 = self::$b_user->createDevice("auth", TRUE);
+        self::$b_device_2 = self::$b_user->createDevice("auth", TRUE);
 
-        self::$c_device_1 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$c_user->getId()]);
-        self::$c_device_2 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$c_user->getId()]);
+        self::$c_device_1 = self::$c_user->createDevice("auth", TRUE);
+        self::$c_device_2 = self::$c_user->createDevice("auth", TRUE);
 
-        self::$offline_device_1 = $acc->createDevice("auth", FALSE, ['owner_id' => self::$offline_user->getId()]);
-        self::$offline_device_2 = $acc->createDevice("auth", FALSE, ['owner_id' => self::$offline_user->getId()]);
+        self::$offline_device_1 = self::$offline_user->createDevice("auth", FALSE);
+        self::$offline_device_2 = self::$offline_user->createDevice("auth", FALSE);
 
         self::$offnet_resource  = $acc->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
         self::$emergency_resource = $acc->createResource("carrier", ["^(911)$"], null, TRUE);
 
-        self::syncSofiaProfile("auth", self::$a_device_1->isLoaded(), 6);
+        self::syncSofiaProfile("auth", $acc->isLoaded(), 6);
 
         $b_user_id = self::$b_user->getId();
         $offline_user_id = self::$offline_user->getId();

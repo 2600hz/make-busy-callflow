@@ -32,14 +32,12 @@ class QuickCallTestCase extends TestCase {
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
         $acc = new TestAccount("QuickCallTest");
-        
+
         self::$admin_user = $acc->createUser(['password' => self::PASSWORD, 'allow_anonymous_quickcall' => FALSE]);
-        $admin_user_id = self::$admin_user->getId();
-        self::$admin_device = $acc->createDevice("auth", TRUE, ['owner_id' => $admin_user_id, 'allow_anonymous_quickcalls' => FALSE]);
+        self::$admin_device = self::$admin_user->createDevice("auth", TRUE, ['allow_anonymous_quickcalls' => FALSE]);
 
         self::$anon_user = $acc->createUser(['priv_level' => 'user', 'password' => self::PASSWORD, 'allow_anonymous_quickcalls' => TRUE]);
-        $anon_user_id = self::$anon_user->getId();
-        self::$anon_device = $acc->createDevice("auth", TRUE, ['owner_id' => $anon_user_id,'allow_anonymous_quickcalls' => TRUE]);
+        self::$anon_device = self::$anon_user->createDevice("auth", TRUE, ['allow_anonymous_quickcalls' => TRUE]);
 
         self::$a_user = $acc->createUser();
 
@@ -47,10 +45,10 @@ class QuickCallTestCase extends TestCase {
         self::$a_device->createCallflow([self::A_EXT]);
 
         self::$b_user = $acc->createUser(['password' => self::PASSWORD, 'allow_anoymous_quickcall' =>FALSE]);
-        self::$b_dev_1 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$b_user->getId()]);
-        self::$b_dev_2 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$b_user->getId()]);
-        self::$b_dev_3 = $acc->createDevice("auth", TRUE, ['owner_id' => self::$b_user->getId()]);
+        self::$b_dev_1 = self::$b_user->createDevice("auth", TRUE);
+        self::$b_dev_2 = self::$b_user->createDevice("auth", TRUE);
+        self::$b_dev_3 = self::$b_user->createDevice("auth", TRUE);
 
-        self::syncSofiaProfile("auth", self::$admin_device->isLoaded(), 5);
+        self::syncSofiaProfile("auth", $acc->isLoaded(), 5);
     }
 }

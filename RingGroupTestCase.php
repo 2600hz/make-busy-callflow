@@ -29,7 +29,7 @@ class RingGroupTestCase extends TestCase {
         }
 
         foreach (range('a','g') as $letter) {
-            self::$device[$letter] = $acc->createDevice("auth", true, ["owner_id" => self::$user[$letter]->getID()]);
+            self::$device[$letter] = self::$user[$letter]->createDevice("auth", true);
         }
 
         self::$ring_group_1 = $acc->createRingGroup([self::RG_EXT_1],
@@ -66,7 +66,7 @@ class RingGroupTestCase extends TestCase {
             "single"
         );
 
-        self::syncSofiaProfile("auth", self::$device["a"]->isLoaded(), 6);
+        self::syncSofiaProfile("auth", $acc->isLoaded(), 6);
     }
 
 }
