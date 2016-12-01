@@ -17,13 +17,13 @@ class NoSubstitute extends UserTestCase {
     public function main($sip_uri) {
         $target  = self::B_NUMBER .'@'. $sip_uri;
 
-        $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
-        $ch_b_1 = self::ensureChannel( self::$b_device_1->waitForInbound() );
-        $ch_b_2 = self::ensureChannel( self::$b_device_2->waitForInbound() );
-        $ch_c_1 = self::ensureChannel( self::$c_device_1->waitForInbound() );
-        $ch_c_2 = self::ensureChannel( self::$c_device_2->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
+        $channel_b_1 = self::ensureChannel( self::$b_device_1->waitForInbound() );
+        $channel_b_2 = self::ensureChannel( self::$b_device_2->waitForInbound() );
+        $channel_c_1 = self::ensureChannel( self::$c_device_1->waitForInbound() );
+        $channel_c_2 = self::ensureChannel( self::$c_device_2->waitForInbound() );
 
-        self::hangupChannels($ch_b_1, $ch_b_2, $ch_c_1, $ch_c_2);
+        self::hangupChannels($channel_b_1, $channel_b_2, $channel_c_1, $channel_c_2);
     }
 
 }

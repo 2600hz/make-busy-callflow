@@ -16,15 +16,15 @@ class KeyPress extends DeviceTestCase {
     public function main($sip_uri) {
         $target = self::B_EXT .'@'. $sip_uri;
 
-        $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-        $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device->originate($target) );
+        $channel_c = self::ensureChannel( self::$c_device->waitForInbound() );
 
-        $ch_c->answer();
-        self::assertFalse( $ch_a->getAnswerState() == "answered" );
-        $ch_c->sendDtmf('1');
-        self::ensureEvent( $ch_a->waitAnswer() );
-        self::assertEquals("answered", $ch_a->getAnswerState());
-        self::hangupBridged($ch_a, $ch_c);
+        $channel_c->answer();
+        self::assertFalse( $channel_a->getAnswerState() == "answered" );
+        $channel_c->sendDtmf('1');
+        self::ensureEvent( $channel_a->waitAnswer() );
+        self::assertEquals("answered", $channel_a->getAnswerState());
+        self::hangupBridged($channel_a, $channel_c);
     }
 
 }

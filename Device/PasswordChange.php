@@ -18,8 +18,8 @@ class PasswordChange extends DeviceTestCase {
 
     public function main($sip_uri) {
         $target = self::B_EXT .'@'. $sip_uri;
-        $ch_a = self::$a_device->originate($target);
-        $this->assertEmpty($ch_a);
+        $channel_a = self::$a_device->originate($target);
+        $this->assertEmpty($channel_a);
 
         self::$a_device->getGateway()->kill();
         self::getProfile('auth')->rescan();
@@ -27,9 +27,9 @@ class PasswordChange extends DeviceTestCase {
         $this->assertTrue( self::$b_device->getGateway()->register() );
 
         $target  = self::B_EXT .'@'. $sip_uri;
-        $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-        $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
-        self::hangupChannels($ch_b);
+        $channel_a = self::ensureChannel( self::$a_device->originate($target) );
+        $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
+        self::hangupChannels($channel_b);
     }
 
 }

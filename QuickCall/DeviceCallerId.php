@@ -7,17 +7,17 @@ class DeviceCallerId extends QuickCallTestCase {
         self::markTestIncomplete('Known issue: KAZOO-5118');
 
         self::$admin_device->getDevice()->quickcall(self::A_EXT, ['cid-number' => self::CNUM, 'cid-name' => self::CNAM]);
-        $ch_a = self::ensureChannel( self::$admin_device->waitForInbound() );
-        $ch_a->answer();
-        self::ensureEvent($ch_a->waitAnswer());
+        $channel_a = self::ensureChannel( self::$admin_device->waitForInbound() );
+        $channel_a->answer();
+        self::ensureEvent($channel_a->waitAnswer());
 
-        $ch_b = self::ensureChannel( self::$a_device->waitForInbound() );
-        $ch_b->answer();
-        self::ensureEvent($ch_b->waitAnswer());
+        $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
+        $channel_b->answer();
+        self::ensureEvent($channel_b->waitAnswer());
 
-        $this->assertEquals($ch_b->getCallerIdNumber(), self::CNUM);
-        $this->assertEquals($ch_b->getCallerIdName(), self::CNAM);
+        $this->assertEquals($channel_b->getCallerIdNumber(), self::CNUM);
+        $this->assertEquals($channel_b->getCallerIdName(), self::CNAM);
 
-        self::hangupBridged($ch_a, $ch_b);
+        self::hangupBridged($channel_a, $channel_b);
     }
 }

@@ -8,14 +8,14 @@ class CallerIdOnnet extends UserTestCase {
 
     public function main($sip_uri) {
         $target = self::B_NUMBER .'@'. $sip_uri;
-        $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
-        $ch_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
+        $channel_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
         self::assertEquals(
-            urldecode($ch_b->getEvent()->getHeader("Caller-Caller-ID-Number")),
+            urldecode($channel_b->getEvent()->getHeader("Caller-Caller-ID-Number")),
             self::$a_user->getCidParam("internal")->number
         );
-        self::ensureAnswer($ch_a, $ch_b);
-        self::hangupBridged($ch_a, $ch_b);
+        self::ensureAnswer($channel_a, $channel_b);
+        self::hangupBridged($channel_a, $channel_b);
     }
 
 }

@@ -9,30 +9,30 @@ class BlindParkToOccupied extends ParkingTestCase {
         $referred_by = self::$b_device->makeReferredByUri();
         $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
 
-        $ch_a = self::ensureChannel( self::$a_device->originate($target) );
+        $channel_a = self::ensureChannel( self::$a_device->originate($target) );
 
-        $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
-        $ch_b->answer();
-        $ch_b->waitAnswer();
+        $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
+        $channel_b->answer();
+        $channel_b->waitAnswer();
 
-        $ch_b->deflect($parking_spot);
-        $ch_b->waitDestroy();
+        $channel_b->deflect($parking_spot);
+        $channel_b->waitDestroy();
 
-        $ch_c = self::ensureChannel( self::$c_device->originate($target) );
+        $channel_c = self::ensureChannel( self::$c_device->originate($target) );
 
-        $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
-        $ch_b->answer();
-        $ch_b->waitAnswer();
+        $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
+        $channel_b->answer();
+        $channel_b->waitAnswer();
 
-        $ch_b->setVariables('sip_h_referred-by', $referred_by);
-        $ch_b->deflect($parking_spot);
-        $ch_b->waitDestroy();
+        $channel_b->setVariables('sip_h_referred-by', $referred_by);
+        $channel_b->deflect($parking_spot);
+        $channel_b->waitDestroy();
 
-        $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
-        $ch_b->answer();
-        $ch_b->waitAnswer();
+        $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
+        $channel_b->answer();
+        $channel_b->waitAnswer();
 
-        self::ensureTalking($ch_b, $ch_c);
-        self::hangupChannels($ch_a, $ch_b, $ch_c);
+        self::ensureTalking($channel_b, $channel_c);
+        self::hangupChannels($channel_a, $channel_b, $channel_c);
     }
 }
