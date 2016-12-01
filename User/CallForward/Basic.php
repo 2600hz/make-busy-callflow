@@ -17,12 +17,12 @@ class BasicTest extends UserTestCase {
     public function main($sip_uri) {
         $target = self::B_NUMBER .'@' . $sip_uri;
 
-        $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
-        $ch_c_1 = self::ensureChannel( self::$c_device_1->waitForInbound() );
-        $ch_c_2 = self::ensureChannel( self::$c_device_2->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
+        $channel_c_1 = self::ensureChannel( self::$c_device_1->waitForInbound() );
+        $channel_c_2 = self::ensureChannel( self::$c_device_2->waitForInbound() );
 
-        self::ensureAnswer($ch_a, $ch_c_1);
-        self::hangupBridged($ch_a, $ch_c_1);
+        self::ensureAnswer($channel_a, $channel_c_1);
+        self::hangupBridged($channel_a, $channel_c_1);
     }
 
 }

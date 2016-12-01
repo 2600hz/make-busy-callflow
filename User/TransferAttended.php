@@ -9,30 +9,30 @@ class TransferAttended extends UserTestCase {
         $referred_by = self::$b_device_1->makeReferredByUri();
         $transferee = self::C_NUMBER . '@' . $sip_uri;
 
-        $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
-        $ch_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
+        $channel_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
 
-        self::ensureAnswer($ch_a, $ch_b);
-        self::ensureEvent($ch_a->waitPark());
-        self::ensureTwoWayAudio($ch_a, $ch_b);
+        self::ensureAnswer($channel_a, $channel_b);
+        self::ensureEvent($channel_a->waitPark());
+        self::ensureTwoWayAudio($channel_a, $channel_b);
 
-        self::assertEquals($ch_b->getChannelCallState(), "ACTIVE");
-        $ch_b->onHold();
-        self::assertEquals($ch_b->getChannelCallState(), "HELD");
+        self::assertEquals($channel_b->getChannelCallState(), "ACTIVE");
+        $channel_b->onHold();
+        self::assertEquals($channel_b->getChannelCallState(), "HELD");
 
-        $ch_b_2 = self::ensureChannel( self::$b_device_1->originate($transferee) );
-        $ch_c = self::ensureChannel( self::$c_device_1->waitForInbound() );
+        $channel_b_2 = self::ensureChannel( self::$b_device_1->originate($transferee) );
+        $channel_c = self::ensureChannel( self::$c_device_1->waitForInbound() );
 
-        $ch_c->answer();
-        $ch_c->waitAnswer();
-        self::ensureEvent( $ch_b_2->waitAnswer() );
-        self::ensureEvent( $ch_b_2->waitPark() );
-        self::ensureTwoWayAudio($ch_b_2, $ch_c);
+        $channel_c->answer();
+        $channel_c->waitAnswer();
+        self::ensureEvent( $channel_b_2->waitAnswer() );
+        self::ensureEvent( $channel_b_2->waitPark() );
+        self::ensureTwoWayAudio($channel_b_2, $channel_c);
 
-        $ch_b->deflectChannel($ch_b_2, $referred_by);
-        $ch_b->waitDestroy();
+        $channel_b->deflectChannel($channel_b_2, $referred_by);
+        $channel_b->waitDestroy();
 
-        self::ensureTwoWayAudio($ch_a, $ch_c);
-        self::hangupBridged($ch_a, $ch_c);
+        self::ensureTwoWayAudio($channel_a, $channel_c);
+        self::hangupBridged($channel_a, $channel_c);
     }
 }

@@ -5,16 +5,16 @@ use \MakeBusy\Common\Log;
 class UserCall extends QuickCallTestCase {
     public function main($sip_uri) {
         self::$admin_user->getUser()->quickcall(self::A_EXT, ['auto-answer' => 'true']);
-        $ch_a = self::ensureChannel( self::$admin_device->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$admin_device->waitForInbound() );
 
-        $this->assertEquals('true', $ch_a->getAutoAnswerDetected());
-        $ch_a->answer();
-        self::ensureEvent($ch_a->waitAnswer());
+        $this->assertEquals('true', $channel_a->getAutoAnswerDetected());
+        $channel_a->answer();
+        self::ensureEvent($channel_a->waitAnswer());
 
-        $ch_b = self::ensureChannel( self::$a_device->waitForInbound() );
-        $ch_b->answer();
-        self::ensureEvent($ch_b->waitAnswer());
+        $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
+        $channel_b->answer();
+        self::ensureEvent($channel_b->waitAnswer());
 
-        self::hangupBridged($ch_a, $ch_b);
+        self::hangupBridged($channel_a, $channel_b);
     }
 }

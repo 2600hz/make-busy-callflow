@@ -18,16 +18,16 @@ class KeyPress extends UserTestCase {
     public function main($sip_uri) {
         $target = self::B_NUMBER .'@'. $sip_uri;
 
-        $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
-        $ch_c_1 = self::ensureChannel( self::$c_device_1->waitForInbound() );
-        $ch_c_2 = self::ensureChannel( self::$c_device_2->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
+        $channel_c_1 = self::ensureChannel( self::$c_device_1->waitForInbound() );
+        $channel_c_2 = self::ensureChannel( self::$c_device_2->waitForInbound() );
 
-        $ch_c_1->answer();
-        self::assertFalse( $ch_a->getAnswerState() == "answered" );
-        $ch_c_1->sendDtmf('1');
-        self::ensureEvent( $ch_a->waitAnswer() );
-        self::assertEquals("answered", $ch_a->getAnswerState());
-        self::hangupChannels($ch_a, $ch_c_1, $ch_c_2);
+        $channel_c_1->answer();
+        self::assertFalse( $channel_a->getAnswerState() == "answered" );
+        $channel_c_1->sendDtmf('1');
+        self::ensureEvent( $channel_a->waitAnswer() );
+        self::assertEquals("answered", $channel_a->getAnswerState());
+        self::hangupChannels($channel_a, $channel_c_1, $channel_c_2);
     }
 
 }

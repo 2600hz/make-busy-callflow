@@ -8,19 +8,19 @@ class TransferBlind extends UserTestCase {
         $target = self::B_NUMBER . '@' . $sip_uri;
         $target_2 = self::C_NUMBER . '@' . $sip_uri;
 
-        $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
-        $ch_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
+        $channel_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
 
-        self::ensureAnswer($ch_a, $ch_b);
-        self::ensureEvent($ch_a->waitPark());
-        self::ensureTwoWayAudio($ch_a, $ch_b);
+        self::ensureAnswer($channel_a, $channel_b);
+        self::ensureEvent($channel_a->waitPark());
+        self::ensureTwoWayAudio($channel_a, $channel_b);
 
-        $ch_b->deflect($target_2);
-        $ch_c = self::ensureChannel( self::$c_device_1->waitForInbound() );
+        $channel_b->deflect($target_2);
+        $channel_c = self::ensureChannel( self::$c_device_1->waitForInbound() );
 
-        $ch_c->answer();
-        $this->ensureTwoWayAudio($ch_a, $ch_c);
-        $this->hangupBridged($ch_a, $ch_c);
+        $channel_c->answer();
+        $this->ensureTwoWayAudio($channel_a, $channel_c);
+        $this->hangupBridged($channel_a, $channel_c);
     }
 
 }

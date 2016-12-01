@@ -14,9 +14,9 @@ class RestrictedCall extends DeviceTestCase {
 
     public function main($sip_uri) {
         $target  = self::RESTRICTED_NUMBER .'@'. $sip_uri;
-        $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-        $ch_b = self::$offnet_resource->waitForInbound('+1' . self::RESTRICTED_NUMBER);
-        self::assertEmpty($ch_b);
+        $channel_a = self::ensureChannel( self::$a_device->originate($target) );
+        $channel_b = self::$offnet_resource->waitForInbound('+1' . self::RESTRICTED_NUMBER);
+        self::assertEmpty($channel_b);
     }
 
 }

@@ -15,15 +15,15 @@ class KeepCallerId extends DeviceTestCase {
 
     public function main($sip_uri) {
         $target  = self::B_EXT .'@'. $sip_uri;
-        $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-        $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device->originate($target) );
+        $channel_c = self::ensureChannel( self::$c_device->waitForInbound() );
         $this->assertEquals(
-            $ch_c->getEvent()->getHeader("Caller-Caller-ID-Number"),
+            $channel_c->getEvent()->getHeader("Caller-Caller-ID-Number"),
             self::$a_device->getCidParam("internal")->number
         );
-        self::ensureAnswer($ch_a, $ch_c);
+        self::ensureAnswer($channel_a, $channel_c);
 
-        self::hangupBridged($ch_a, $ch_c);
+        self::hangupBridged($channel_a, $channel_c);
     }
 
 }

@@ -18,14 +18,14 @@ class KeepCallerId extends UserTestCase {
     public function main($sip_uri) {
         $this->markTestIncomplete('Known issue, KAZOO-5116');
         $target  = self::B_NUMBER .'@'. $sip_uri;
-        $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
-        $ch_c = self::ensureChannel( self::$c_device_1->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
+        $channel_c = self::ensureChannel( self::$c_device_1->waitForInbound() );
         $this->assertEquals(
-            $ch_c->getEvent()->getHeader("Caller-Caller-ID-Number"),
+            $channel_c->getEvent()->getHeader("Caller-Caller-ID-Number"),
             self::$b_user->getCidParam("internal")->number
         );
-        self::ensureAnswer($ch_a, $ch_c);
-        self::hangupBridged($ch_a, $ch_c);
+        self::ensureAnswer($channel_a, $channel_c);
+        self::hangupBridged($channel_a, $channel_c);
     }
 
 }

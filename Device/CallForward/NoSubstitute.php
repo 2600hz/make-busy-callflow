@@ -16,12 +16,12 @@ class NoSubstitute extends DeviceTestCase {
     public function main($sip_uri) {
         $target  = self::B_EXT .'@'. $sip_uri;
 
-        $ch_a = self::ensureChannel( self::$a_device->originate($target) );
-        $ch_b = self::ensureChannel( self::$b_device->waitForInbound() );
-        $ch_c = self::ensureChannel( self::$c_device->waitForInbound() );
+        $channel_a = self::ensureChannel( self::$a_device->originate($target) );
+        $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
+        $channel_c = self::ensureChannel( self::$c_device->waitForInbound() );
         
-        self::ensureAnswer($ch_a, $ch_c);
-        self::hangupBridged($ch_a, $ch_c);
+        self::ensureAnswer($channel_a, $channel_c);
+        self::hangupBridged($channel_a, $channel_c);
     }
 
 }
