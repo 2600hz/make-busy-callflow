@@ -7,7 +7,7 @@ class UserCall extends QuickCallTestCase {
         self::$admin_user->getUser()->quickcall(self::A_EXT, ['auto-answer' => 'true']);
         $ch_a = self::ensureChannel( self::$admin_device->waitForInbound() );
 
-        $this->assertEquals('true', $a_channel->getAutoAnswerDetected());
+        $this->assertEquals('true', $ch_a->getAutoAnswerDetected());
         $ch_a->answer();
         self::ensureEvent($ch_a->waitAnswer());
 

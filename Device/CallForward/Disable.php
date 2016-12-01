@@ -15,8 +15,9 @@ class CallForwardDisable extends DeviceTestCase {
     public function main($sip_uri) {
         $target = self::CALL_FWD_DISABLE . '@' . $sip_uri;
         $b_ch = self::ensureChannel( self::$b_device->originate($target) );
-        $b_ch->waitDestroy();
-        $this->assertFalse( self::$b_device->getCfParam("enabled") );
+        $b_ch->waitAnswer();
+        self::ensureEvent($b_ch->waitDestroy(30));
+        self::assertFalse( self::$b_device->getCfParam("enabled") );
     }
 
 }

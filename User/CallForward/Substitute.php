@@ -23,7 +23,7 @@ class SubstituteTest extends UserTestCase {
         $ch_c_1 = self::ensureChannel( self::$c_device_1->waitForInbound() );
         $ch_c_2 = self::ensureChannel( self::$c_device_2->waitForInbound() );
 
-        self::hangupChannels($ch_c_1, $ch_c_2);
+        self::hangupChannels($ch_a, $ch_c_1, $ch_c_2);
     }
 
 }

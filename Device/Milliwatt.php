@@ -2,7 +2,7 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class BasicCall extends DeviceTestCase {
+class Milliwatt extends DeviceTestCase {
 
     public function main($sip_uri) {
         $target = self::MILLIWATT_NUMBER . '@' . $sip_uri;

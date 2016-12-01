@@ -22,14 +22,16 @@ class DirectCallsOnly extends UserTestCase {
         $ch_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
         $ch_c = self::ensureChannel( self::$c_device_1->waitForInbound() );
 
-        self::hangupChannels($ch_b, $ch_c);
+        self::hangupChannels($ch_a, $ch_b, $ch_c);
 
         $target  = self::RINGGROUP_NUMBER .'@'. $sip_uri;
 
         $ch_a = self::ensureChannel( self::$a_device_1->originate($target) );
-        $ch_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
+        $ch_b_1 = self::ensureChannel( self::$b_device_1->waitForInbound() );
+        $ch_b_2 = self::ensureChannel( self::$b_device_2->waitForInbound() );
+
         self::assertNull( self::$c_device_1->waitForInbound() );
-        self::hangupChannels($ch_b);
+        self::hangupChannels($ch_a, $ch_b_1, $ch_b_2);
     }
 
 }

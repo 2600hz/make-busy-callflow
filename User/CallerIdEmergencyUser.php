@@ -6,8 +6,17 @@ use \MakeBusy\Common\Log;
 // If device has no CID for emergency, use user CID
 class CallerIdEmergencySet extends UserTestCase {
 
+    private $name;
+    private $number;
+
     public function setUp() {
+        $this->name = self::$a_device_1->getCidParam("emergency")->name;
+        $this->number = self::$a_device_1->getCidParam("emergency")->number;
         self::$a_device_1->unsetCid("emergency");
+    }
+
+    public function tearDown() {
+        self::$a_device_1->setCid($this->number, $this->name, "emergency");
     }
 
     public function main($sip_uri) {

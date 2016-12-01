@@ -22,7 +22,7 @@ class RingGroupTestCase extends TestCase {
 
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
-        $acc = new TestAccount("RingGroupTest");
+        $acc = new TestAccount(get_called_class());
 
         foreach (range('a','g') as $letter) {
             self::$user[$letter] = $acc->createUser();

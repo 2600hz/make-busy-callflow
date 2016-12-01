@@ -17,7 +17,7 @@ class CallForwardDisable extends UserTestCase {
     public function main($sip_uri) {
         $target = self::CALL_FWD_DISABLE . '@' . $sip_uri;
         $b_ch = self::ensureChannel( self::$b_device_1->originate($target) );
-        $b_ch->waitDestroy();
+        self::ensureEvent( $b_ch->waitDestroy(30) ); // TODO: wait till Kazoo completes?
         $this->assertFalse( self::$b_user->getCfParam("enabled") );
     }
 

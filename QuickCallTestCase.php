@@ -31,7 +31,7 @@ class QuickCallTestCase extends TestCase {
 
     public static function setUpBeforeClass() {
         parent::setUpBeforeClass();
-        $acc = new TestAccount("QuickCall");
+        $acc = new TestAccount(get_called_class());
 
         self::$admin_user = $acc->createUser(['password' => self::PASSWORD, 'allow_anonymous_quickcall' => FALSE]);
         self::$admin_device = self::$admin_user->createDevice("auth", TRUE, ['allow_anonymous_quickcalls' => FALSE]);
