@@ -42,9 +42,9 @@ class SetupOwner extends VoicemailTestCase {
         $ch->hangup();
         $ch->waitHangup();
 
-        $this->assertEquals(self::$b_voicemail_box->getVoicemailboxParam("pin"), self::CHANGE_PIN);
-        $this->assertTrue(self::$b_voicemail_box->getVoicemailboxParam("is_setup"));
-        $this->assertNotEmpty(self::$b_voicemail_box->getVoicemailboxParam("media")->unavailable);
+        self::assertEquals(self::$b_voicemail_box->getVoicemailboxParam("pin"), self::CHANGE_PIN);
+        self::assertTrue(self::$b_voicemail_box->getVoicemailboxParam("is_setup"));
+        self::assertNotEmpty(self::$b_voicemail_box->getVoicemailboxParam("media")->unavailable);
     }
 
 }

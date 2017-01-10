@@ -4,8 +4,6 @@ use \MakeBusy\Common\Log;
 
 class DeviceCallerId extends QuickCallTestCase {
     public function main($sip_uri) {
-        self::markTestIncomplete('Known issue: KAZOO-5118');
-
         self::$admin_device->getDevice()->quickcall(self::A_EXT, ['cid-number' => self::CNUM, 'cid-name' => self::CNAM]);
         $channel_a = self::ensureChannel( self::$admin_device->waitForInbound() );
         $channel_a->answer();
