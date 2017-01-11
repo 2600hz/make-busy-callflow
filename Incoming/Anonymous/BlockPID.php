@@ -16,7 +16,11 @@ class BlockPID extends IncomingTestCase {
         $number = self::$carrier_number->toNpan();
         $target = self::CARRIER_NUMBER .'@'. $sip_uri;
 
-        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_privacy' => 'hide_name:hide_number:screen', 'sip_cid_type' => 'pid']) );
+        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, [
+            'origination_privacy' => 'hide_name:hide_number:screen',
+            'sip_cid_type' => 'pid',
+            'origination_caller_id_number' => '12345'
+        ]) );
         $channel_b = self::$a_device->waitForInbound();
         self::assertEmpty($channel_b);
     }
