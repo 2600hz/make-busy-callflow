@@ -1,10 +1,16 @@
 <?php
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
+use \MakeBusy\Common\Utils;
+use \MakeBusy\Kazoo\Applications\Crossbar\SystemConfigs;
 
-class Call extends IncomingTestCase {
+class PassCall extends IncomingTestCase {
 
     public function setUp() {
+        self::setConfig("block_anonymous_caller_id", false);
+    }
+
+    public function tearDown() {
         self::setConfig("block_anonymous_caller_id", false);
     }
 
@@ -12,7 +18,7 @@ class Call extends IncomingTestCase {
         $number = self::$carrier_number->toNpan();
         $target = self::CARRIER_NUMBER .'@'. $sip_uri;
 
-        $channel_a = self::ensureChannel( self::$offnet->originate($target) );
+        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_privacy' => 'hide_name:hide_number:screen', 'sip_cid_type' => 'pid']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
 
         self::ensureAnswer($channel_a, $channel_b);

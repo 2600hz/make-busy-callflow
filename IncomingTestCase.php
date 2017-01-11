@@ -7,6 +7,7 @@ use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
 class IncomingTestCase extends TestCase
 {
+    protected static $account;
     protected static $test_account;
     protected static $carrier;
     protected static $carrier_number;
@@ -22,6 +23,7 @@ class IncomingTestCase extends TestCase
         parent::setUpBeforeClass();
 
         $acc = new TestAccount(get_called_class());
+        self::$account = $acc;
 
         self::$offnet = $acc->createResource("carrier", ["^\\+1(\d{10})$"], "+1", false, false);
 
@@ -38,6 +40,12 @@ class IncomingTestCase extends TestCase
 
     public static function getGateway($id) {
         return self::$connectivity->getGateway($id);
+    }
+
+    public static function setConfig($name, $value) {
+        $cfg = self::$account->getAccount()->SystemConfig("stepswitch");
+        $cfg->default->$name = $value;
+        $cfg->save();
     }
 
 }
