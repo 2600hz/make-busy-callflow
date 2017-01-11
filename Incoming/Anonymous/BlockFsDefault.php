@@ -2,9 +2,13 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
-class Call extends IncomingTestCase {
+class BlockFsDefault extends IncomingTestCase {
 
     public function setUp() {
+        self::setConfig("block_anonymous_caller_id", true);
+    }
+
+    public function tearDown() {
         self::setConfig("block_anonymous_caller_id", false);
     }
 
@@ -13,12 +17,8 @@ class Call extends IncomingTestCase {
         $target = self::CARRIER_NUMBER .'@'. $sip_uri;
 
         $channel_a = self::ensureChannel( self::$offnet->originate($target) );
-        $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
-
-        self::ensureAnswer($channel_a, $channel_b);
-        self::ensureEvent($channel_a->waitPark());
-        self::ensureTwoWayAudio($channel_a, $channel_b);
-        self::hangupBridged($channel_a, $channel_b);
+        $channel_b = self::$a_device->waitForInbound();
+        self::assertEmpty($channel_b);
     }
 
 }
