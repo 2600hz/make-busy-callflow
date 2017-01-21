@@ -43,7 +43,7 @@ class IncomingTestCase extends TestCase
         self::$carrier_number = $acc->createPhoneNumber(self::$number, ['cnam' => 'CNAM', 'change_lookup' => true]);
         self::$carrier = self::$connectivity->addGateway("carrier", 'IP', self::getProfile("carrier")->getSipIp());
 
-        self::syncSofiaProfile("auth", $acc->isLoaded(), 1);
+        self::syncSofiaProfile("auth", $acc->isLoaded());
         self::syncSofiaProfile("carrier", $acc->isLoaded());
     }
 
