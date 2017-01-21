@@ -16,7 +16,7 @@ class PassCallWithCallerId extends IncomingTestCase {
 
     public function main($sip_uri) {
         $number = self::$carrier_number->toNpan();
-        $target = self::CARRIER_NUMBER .'@'. $sip_uri;
+        $target = self::$number .'@'. $sip_uri;
 
         $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_number' => '12345']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );

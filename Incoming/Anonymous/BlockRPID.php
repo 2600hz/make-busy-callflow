@@ -14,7 +14,7 @@ class BlockRPID extends IncomingTestCase {
 
     public function main($sip_uri) {
         $number = self::$carrier_number->toNpan();
-        $target = self::CARRIER_NUMBER .'@'. $sip_uri;
+        $target = self::$number .'@'. $sip_uri;
 
         $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, [
             'origination_privacy' => 'hide_name:hide_number:screen',
