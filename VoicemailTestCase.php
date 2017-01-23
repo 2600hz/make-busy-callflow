@@ -22,13 +22,10 @@ class VoicemailTestCase extends TestCase
     const DEFAULT_PIN = '0000';
     const CHANGE_PIN  = '1111';
 
-    public static function setUpBeforeClass() {
-        parent::setUpBeforeClass();
-        $acc = new TestAccount(get_called_class());
-
-        self::$b_voicemail_box = $acc->createVm(self::VM_BOX_ID);
-        self::$b_user          = $acc->createUser();
-        self::$a_device        = $acc->createDevice("auth");
+    public static function setUpCase() {
+        self::$b_voicemail_box = self::$account->createVm(self::VM_BOX_ID);
+        self::$b_user          = self::$account->createUser();
+        self::$a_device        = self::$account->createDevice("auth");
         self::$b_device        = self::$b_user->createDevice("auth", TRUE);
 
         self::$b_voicemail_box->createCallflow([self::VM_ACCESS_NUMBER]);
@@ -38,8 +35,6 @@ class VoicemailTestCase extends TestCase
         //set defaults, box should be setup when entering a test, we can force setup by setting is_setup=FALSE later.
         self::$b_voicemail_box->setVoicemailboxParam('owner_id', self::$b_user->getId());
         self::$b_voicemail_box->setVoicemailboxParam('is_setup', TRUE);
-
-        self::syncSofiaProfile("auth", $acc->isLoaded());
     }
 
     static function leaveMessage($device, $target, $freq, $refreq = null){

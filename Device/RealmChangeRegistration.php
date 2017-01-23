@@ -4,7 +4,7 @@ use \MakeBusy\Common\Log;
 
 class RealmChangeRegistration extends DeviceTestCase {
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::getTestAccount()->setAccountRealm(self::$realm);
         self::$a_device->getGateway()->setParam('realm', self::$realm);
         self::$a_device->getGateway()->setParam('from-domain', self::$realm);

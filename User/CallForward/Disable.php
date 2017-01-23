@@ -6,11 +6,11 @@ use \MakeBusy\Common\Log;
 // b_user should have no cf enabled after activating feature code
 class CallForwardDisable extends UserTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_user->resetCfParams(self::C_NUMBER);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_user->resetCfParams();
     }
 

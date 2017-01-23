@@ -4,11 +4,11 @@ use \MakeBusy\Common\Log;
 
 class Sip1NPAN extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_device->setInviteFormat("1npan");
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_device->setInviteFormat("username");
     }
 

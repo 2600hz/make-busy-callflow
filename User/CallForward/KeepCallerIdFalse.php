@@ -6,12 +6,12 @@ use \MakeBusy\Common\Log;
 // Caller Id presented to c_devices should be B_user internal CID
 class KeepCallerId extends UserTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_user->resetCfParams(self::C_NUMBER);
         self::$b_user->setCfParam("keep_caller_id", false);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_user->resetCfParams();
     }
 

@@ -5,7 +5,7 @@ use \MakeBusy\Common\Log;
 //MKBUSY-26
 class OwnerChangePin extends VoicemailTestCase {
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_voicemail_box->resetVoicemailBox();
     }
 

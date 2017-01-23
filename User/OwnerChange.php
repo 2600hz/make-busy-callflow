@@ -6,11 +6,11 @@ use \MakeBusy\Common\Log;
 // Changing owner assignmnets.
 class OwnerChange extends UserTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_device_2->setDeviceParam('owner_id', self::$c_user->getId());
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_device_2->setDeviceParam('owner_id', self::$b_user->getId());
     }
 

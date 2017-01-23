@@ -18,20 +18,15 @@ class ParkingTestCase extends TestCase {
     const VALET             = '*4';
     const RETRIEVE          = '*5';
 
-    public static function setUpBeforeClass() {
-        parent::setUpBeforeClass();
-        $acc = new TestAccount(get_called_class());
-
-        self::$a_device = $acc->createDevice("auth", true);
+    public static function setUpCase() {
+        self::$a_device = self::$account->createDevice("auth", true);
         self::$a_device->createCallflow([self::A_EXT]);
 
-        self::$b_device = $acc->createDevice("auth", true);
+        self::$b_device = self::$account->createDevice("auth", true);
         self::$b_device->createCallflow([self::B_EXT]);
 
-        self::$c_device = $acc->createDevice("auth", true);
+        self::$c_device = self::$account->createDevice("auth", true);
         self::$c_device->createCallflow([self::C_EXT]);
-
-        self::syncSofiaProfile("auth", $acc->isLoaded());
     }
 
 }

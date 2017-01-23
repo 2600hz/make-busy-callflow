@@ -20,19 +20,16 @@ class RingGroupTestCase extends TestCase {
     const RG_EXT_4 = '8004';
     const DURATION = '30';
 
-    public static function setUpBeforeClass() {
-        parent::setUpBeforeClass();
-        $acc = new TestAccount(get_called_class());
-
+    public static function setUpCase() {
         foreach (range('a','g') as $letter) {
-            self::$user[$letter] = $acc->createUser();
+            self::$user[$letter] = self::$account->createUser();
         }
 
         foreach (range('a','g') as $letter) {
             self::$device[$letter] = self::$user[$letter]->createDevice("auth", true);
         }
 
-        self::$ring_group_1 = $acc->createRingGroup([self::RG_EXT_1],
+        self::$ring_group_1 = self::$account->createRingGroup([self::RG_EXT_1],
             [
                 ["id" => self::$device['b']->getId(), "type" => "device", "timeout" => "30", "delay" => "0"],
                 ["id" => self::$device['c']->getId(), "type" => "device", "timeout" => "25", "delay" => "5"],
@@ -43,14 +40,14 @@ class RingGroupTestCase extends TestCase {
             ]
         );
 
-        self::$ring_group_2 = $acc->createRingGroup([self::RG_EXT_2],
+        self::$ring_group_2 = self::$account->createRingGroup([self::RG_EXT_2],
             [
                 ["id" => self::$device['b']->getId(), "type" => "device", "timeout" => "10"],
                 ["id" => self::$device['c']->getId(), "type" => "device", "timeout" => "10"]
             ]
         );
 
-        self::$ring_group_3 = $acc->createRingGroup([self::RG_EXT_3],
+        self::$ring_group_3 = self::$account->createRingGroup([self::RG_EXT_3],
             [
                 ["id" => self::$device['d']->getId(), "type" => "device", "timeout" => "10"],
                 ["id" => self::$device['e']->getId(), "type" => "device", "timeout" => "10"]
@@ -58,15 +55,13 @@ class RingGroupTestCase extends TestCase {
             "simultaneous"
         );
 
-        self::$ring_group_4 = $acc->createRingGroup([self::RG_EXT_4],
+        self::$ring_group_4 = self::$account->createRingGroup([self::RG_EXT_4],
             [
                 ["id" => self::$device['f']->getId(), "type" => "device", "timeout" => "10"],
                 ["id" => self::$device['g']->getId(), "type" => "device", "timeout" => "10"]
             ],
             "single"
         );
-
-        self::syncSofiaProfile("auth", $acc->isLoaded());
     }
 
 }

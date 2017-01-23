@@ -6,11 +6,11 @@ use \MakeBusy\Common\Log;
 // should result in only FWD destination numbers ringing.
 class SubstituteTest extends UserTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_user->enableUserCF(['enabled'=> TRUE, 'substitute'=> TRUE, 'number'=>self::C_NUMBER]);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_user->resetCfParams();
     }
 

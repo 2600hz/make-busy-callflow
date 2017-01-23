@@ -4,12 +4,12 @@ use \MakeBusy\Common\Log;
 
 class NoSubstitute extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_device->resetCfParams(self::C_EXT);
         self::$b_device->setCfParam("substitute", FALSE);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_device->resetCfParams();
     }
 

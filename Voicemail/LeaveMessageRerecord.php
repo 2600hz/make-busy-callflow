@@ -5,12 +5,12 @@ use \MakeBusy\Common\Log;
 //MKBUSY-27
 class LeaveMessageRerecord extends VoicemailTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_voicemail_box->getVoicemailbox();
         $this->count  = count(self::$b_voicemail_box->getMessages());
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_voicemail_box->resetVoicemailBox();
     }
 

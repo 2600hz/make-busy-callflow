@@ -5,11 +5,11 @@ use \MakeBusy\Common\Log;
 //MKBUSY-25
 class SetupOwner extends VoicemailTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_voicemail_box->setVoicemailboxParam("is_setup", FALSE);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_voicemail_box->resetVoicemailBox();
     }
 

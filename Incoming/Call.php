@@ -4,7 +4,7 @@ use \MakeBusy\Common\Log;
 
 class Call extends IncomingTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::setConfig("block_anonymous_caller_id", false);
     }
 

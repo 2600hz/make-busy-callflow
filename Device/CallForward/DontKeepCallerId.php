@@ -4,12 +4,12 @@ use \MakeBusy\Common\Log;
 
 class DontKeepCallerId extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_device->resetCfParams(self::C_EXT);
         self::$b_device->setCfParam("keep_caller_id", FALSE);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_device->resetCfParams();
     }
 

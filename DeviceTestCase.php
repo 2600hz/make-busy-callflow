@@ -7,8 +7,6 @@ use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
 class DeviceTestCase extends TestCase
 {
-    protected static $test_account;
-
     protected static $a_device;
     protected static $b_device;
     protected static $c_device;
@@ -35,33 +33,27 @@ class DeviceTestCase extends TestCase
     const EMERGENCY_NUMBER  = '911';
     const RESTRICTED_NUMBER = '6845551234';
 
-    public static function setUpBeforeClass() {
-        parent::setUpBeforeClass();
+    public static function setUpCase() {
+        self::$realm = self::$account->getAccountRealm();
 
-        $acc = new TestAccount(get_called_class());
-        self::$test_account = $acc;
-        self::$realm = $acc->getAccountRealm();
-
-        self::$a_device = $acc->createDevice("auth");
+        self::$a_device = self::$account->createDevice("auth");
         self::$a_device->createCallflow([self::A_EXT, self::A_NUMBER]);
 
-        self::$b_device = $acc->createDevice("auth");
+        self::$b_device = self::$account->createDevice("auth");
         self::$b_device->createCallflow([self::B_EXT, self::B_NUMBER]);
 
-        self::$c_device = $acc->createDevice("auth");
+        self::$c_device = self::$account->createDevice("auth");
         self::$c_device->createCallflow([self::C_EXT, self::C_NUMBER]);
 
-        self::$no_device = $acc->createDevice("auth", FALSE);
+        self::$no_device = self::$account->createDevice("auth", FALSE);
         self::$no_device->createCallflow([self::NO_EXT, self::NO_NUMBER]);
 
-        self::$register_device = $acc->createDevice("auth");
+        self::$register_device = self::$account->createDevice("auth");
 
-        self::syncSofiaProfile("auth", $acc->isLoaded());
+        self::$offnet_resource = self::$account->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
+        self::$emergency_resource = self::$account->createResource("carrier", ["^(911)$"], null, true);
 
-        self::$offnet_resource = $acc->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
-        self::$emergency_resource = $acc->createResource("carrier", ["^(911)$"], null, true);
-
-        self::$ring_group = $acc->createRingGroup(
+        self::$ring_group = self::$account->createRingGroup(
             [ self::RINGGROUP_EXT ],
             [
                 ["id" => self::$b_device->getId(), "type" => "device"],
@@ -71,7 +63,7 @@ class DeviceTestCase extends TestCase
     }
 
     public static function getTestAccount() {
-        return self::$test_account;
+        return self::$account;
     }
 
 }

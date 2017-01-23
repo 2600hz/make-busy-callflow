@@ -6,11 +6,11 @@ use \MakeBusy\Common\Log;
 // both devices on C should ring.
 class BasicTest extends UserTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_user->resetCfParams(self::C_NUMBER);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_user->resetCfParams();
     }
 

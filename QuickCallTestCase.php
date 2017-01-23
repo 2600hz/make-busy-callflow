@@ -7,8 +7,6 @@ use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
 class QuickCallTestCase extends TestCase {
 
-    public static $test_account;
-
     public static $admin_user;
     public static $admin_device;
 
@@ -29,26 +27,21 @@ class QuickCallTestCase extends TestCase {
     const CNAM      = 'Administrator';
     const CNUM      = '6288888888';
 
-    public static function setUpBeforeClass() {
-        parent::setUpBeforeClass();
-        $acc = new TestAccount(get_called_class());
-
-        self::$admin_user = $acc->createUser(['password' => self::PASSWORD, 'allow_anonymous_quickcall' => FALSE]);
+    public static function setUpCase() {
+        self::$admin_user = self::$account->createUser(['password' => self::PASSWORD, 'allow_anonymous_quickcall' => FALSE]);
         self::$admin_device = self::$admin_user->createDevice("auth", TRUE, ['allow_anonymous_quickcalls' => FALSE]);
 
-        self::$anon_user = $acc->createUser(['priv_level' => 'user', 'password' => self::PASSWORD, 'allow_anonymous_quickcalls' => TRUE]);
+        self::$anon_user = self::$account->createUser(['priv_level' => 'user', 'password' => self::PASSWORD, 'allow_anonymous_quickcalls' => TRUE]);
         self::$anon_device = self::$anon_user->createDevice("auth", TRUE, ['allow_anonymous_quickcalls' => TRUE]);
 
-        self::$a_user = $acc->createUser();
+        self::$a_user = self::$account->createUser();
 
-        self::$a_device = $acc->createDevice("auth");
+        self::$a_device = self::$account->createDevice("auth");
         self::$a_device->createCallflow([self::A_EXT]);
 
-        self::$b_user = $acc->createUser(['password' => self::PASSWORD, 'allow_anoymous_quickcall' =>FALSE]);
+        self::$b_user = self::$account->createUser(['password' => self::PASSWORD, 'allow_anoymous_quickcall' =>FALSE]);
         self::$b_dev_1 = self::$b_user->createDevice("auth", TRUE);
         self::$b_dev_2 = self::$b_user->createDevice("auth", TRUE);
         self::$b_dev_3 = self::$b_user->createDevice("auth", TRUE);
-
-        self::syncSofiaProfile("auth", $acc->isLoaded());
     }
 }

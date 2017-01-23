@@ -6,12 +6,12 @@ use \MakeBusy\Common\Log;
 // Call should not be answered until answered AND a key is pressed by c_device_1
 class KeyPress extends UserTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_user->resetCfParams(self::C_NUMBER);
         self::$b_user->setCfParam("require_keypress", TRUE);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_user->resetCfParams();
     }
 

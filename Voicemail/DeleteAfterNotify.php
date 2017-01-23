@@ -5,13 +5,13 @@ use \MakeBusy\Common\Log;
 //MKBUSY-26
 class DeleteAfterNotify extends VoicemailTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_voicemail_box->setVoicemailBoxParam('owner_id', self::$b_user->getId());
         self::$b_voicemail_box->setVoicemailBoxParam('delete_after_notify',TRUE);
         $this->source = self::$b_voicemail_box->getMessages();
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_voicemail_box->resetVoicemailBox();
         self::$b_voicemail_box->setVoicemailBoxParam('delete_after_notify',FALSE);
     }

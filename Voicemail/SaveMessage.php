@@ -5,11 +5,11 @@ use \MakeBusy\Common\Log;
 // MKBUSY-34
 class SaveMessage extends VoicemailTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_user->setUserParam("vm_to_email_enabled",FALSE);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_voicemail_box->resetVoicemailBox();
         self::$b_user->setUserParam("vm_to_email_enabled", TRUE);
     }

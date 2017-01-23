@@ -6,11 +6,11 @@ use \MakeBusy\Kazoo\Applications\Crossbar\SystemConfigs;
 
 class PassCallWithCallerId extends IncomingTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::setConfig("block_anonymous_caller_id", true);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::setConfig("block_anonymous_caller_id", false);
     }
 

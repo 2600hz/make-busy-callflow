@@ -7,7 +7,6 @@ use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
 class UserTestCase extends TestCase
 {
-    public static $test_account;
     public static $a_user;
     public static $a_device_1;
     public static $a_device_2;
@@ -34,21 +33,17 @@ class UserTestCase extends TestCase
     const CALL_FWD_DISABLE = '*73';
     const OFFNET_NUMBER = "15553335678";
 
-    public static function setUpBeforeClass() {
-        parent::setUpBeforeClass();
-        $acc = new TestAccount(get_called_class());
-        self::$test_account = $acc;
-
-        self::$a_user= $acc->createUser();
+    public static function setUpCase() {
+        self::$a_user= self::$account->createUser();
         self::$a_user->createUserCallFlow([self::A_NUMBER]);
 
-        self::$b_user= $acc->createUser();
+        self::$b_user= self::$account->createUser();
         self::$b_user->createUserCallFlow([self::B_NUMBER]);
 
-        self::$c_user= $acc->createUser();
+        self::$c_user= self::$account->createUser();
         self::$c_user->createUserCallFlow([self::C_NUMBER]);
 
-        self::$offline_user= $acc->createUser();
+        self::$offline_user= self::$account->createUser();
         self::$offline_user->createUserCallFlow([self::OFFLINE_NUMBER]);
 
         self::$a_device_1 = self::$a_user->createDevice("auth", TRUE);
@@ -63,14 +58,12 @@ class UserTestCase extends TestCase
         self::$offline_device_1 = self::$offline_user->createDevice("auth", FALSE);
         self::$offline_device_2 = self::$offline_user->createDevice("auth", FALSE);
 
-        self::$offnet_resource  = $acc->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
-        self::$emergency_resource = $acc->createResource("carrier", ["^(911)$"], null, TRUE);
-
-        self::syncSofiaProfile("auth", $acc->isLoaded());
+        self::$offnet_resource  = self::$account->createResource("carrier", ["^\\+1(\d{10})$"], "+1");
+        self::$emergency_resource = self::$account->createResource("carrier", ["^(911)$"], null, TRUE);
 
         $b_user_id = self::$b_user->getId();
         $offline_user_id = self::$offline_user->getId();
-        self::$ring_group = $acc->createRingGroup(
+        self::$ring_group = self::$account->createRingGroup(
             [ self::RINGGROUP_NUMBER ],
             [
                 ["id" => $b_user_id, "type" => "user"],

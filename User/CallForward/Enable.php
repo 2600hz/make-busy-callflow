@@ -6,7 +6,7 @@ use \MakeBusy\Common\Log;
 // b_device_1 should not have forwarding enabled, b_user should have forwarding enabled to C
 class CallForwardEnable extends UserTestCase {
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_user->resetCfParams();
     }
 

@@ -6,13 +6,13 @@ class UsernameChange extends DeviceTestCase {
 
     private $username;
 
-    public function setUp() {
+    public function setUpTest() {
         $this->username = self::$a_device->getUsername();
         self::$a_device->setUsername("test_user");
         self::assertFalse( self::$a_device->getGateway()->register() );
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$a_device->setUsername($this->username);
         self::$a_device->getGateway()->kill();
         self::getProfile('auth')->rescan();

@@ -6,12 +6,12 @@ use \MakeBusy\Common\Log;
 // Ensurue direct calls get forwarded and group calls do not
 class DirectCallsOnly extends UserTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_user->resetCfParams(self::C_NUMBER);
         self::$b_user->setCfParam("direct_calls_only", TRUE);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_user->resetCfParams();
         self::$b_user->setCfParam("direct_calls_only", FALSE);
     }

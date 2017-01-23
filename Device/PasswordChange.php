@@ -4,13 +4,13 @@ use \MakeBusy\Common\Log;
 
 class PasswordChange extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         $this->password = self::$a_device->getPassword();
         self::$a_device->setPassword("test_password");
         self::assertFalse( self::$a_device->getGateway()->register() );
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$a_device->setPassword($this->password);
         self::$a_device->getGateway()->kill();
         self::getProfile('auth')->rescan();

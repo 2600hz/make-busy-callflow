@@ -9,13 +9,13 @@ class CallerIdEmergencySet extends UserTestCase {
     private $name;
     private $number;
 
-    public function setUp() {
+    public function setUpTest() {
         $this->name = self::$a_device_1->getCidParam("emergency")->name;
         $this->number = self::$a_device_1->getCidParam("emergency")->number;
         self::$a_device_1->unsetCid("emergency");
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$a_device_1->setCid($this->number, $this->name, "emergency");
     }
 

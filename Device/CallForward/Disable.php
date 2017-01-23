@@ -4,11 +4,11 @@ use \MakeBusy\Common\Log;
 
 class CallForwardDisable extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_device->resetCfParams(self::C_EXT);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_device->resetCfParams();
     }
 

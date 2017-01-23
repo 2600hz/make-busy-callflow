@@ -4,13 +4,13 @@ use \MakeBusy\Common\Log;
 
 class FailoverTest extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$no_device->resetCfParams(self::C_EXT);
         self::$no_device->setCfParam("failover", TRUE);
         self::$no_device->setCfParam("enabled", FALSE);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$no_device->resetCfParams();
     }
 

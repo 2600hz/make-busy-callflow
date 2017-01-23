@@ -4,11 +4,11 @@ use \MakeBusy\Common\Log;
 
 class RestrictedCall extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$a_device->setRestriction("caribbean");
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$a_device->resetRestrictions();
     }
 

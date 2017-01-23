@@ -4,11 +4,11 @@ use \MakeBusy\Common\Log;
 
 class SipE164 extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_device->setInviteFormat("e164");
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_device->setInviteFormat("username");
     }
 

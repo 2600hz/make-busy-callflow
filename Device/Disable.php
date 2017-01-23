@@ -4,12 +4,12 @@ use \MakeBusy\Common\Log;
 
 class Disable extends DeviceTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$b_device->disableDevice();
         self::assertFalse(self::$b_device->getGateway()->register());
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$b_device->enableDevice();
     }
 

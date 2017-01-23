@@ -6,13 +6,13 @@ use \MakeBusy\Common\Log;
 // With call fowarding disabled, and failover true, Calls to offline devices should be forwarded.
 class FailoverTest extends UserTestCase {
 
-    public function setUp() {
+    public function setUpTest() {
         self::$offline_user->resetCfParams(self::C_NUMBER);
         self::$offline_user->setCfParam("failover", TRUE);
         self::$offline_user->setCfParam("enabled", FALSE);
     }
 
-    public function tearDown() {
+    public function tearDownTest() {
         self::$offline_user->resetCfParams();
     }
 
