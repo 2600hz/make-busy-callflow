@@ -49,7 +49,7 @@ class IncomingTestCase extends TestCase
     }
 
     public static function setConfig($name, $value) {
-        $cfg = self::$account->getAccount()->SystemConfig("stepswitch");
+        $cfg = self::$account->getAccount()->SystemConfig("privacy");
         $cfg->default->$name = $value;
         $cfg->save();
     }
