@@ -15,7 +15,7 @@ class StrategyNone extends RingGroupTestCase {
 
     public function main($sip_uri) {
         $target = self::RG_EXT_2 . '@' . $sip_uri;
-        self::ensureChannel( self::$device["a"]->originate($target) );
+        $channel_a = self::ensureChannel( self::$device["a"]->originate($target) );
 
         foreach (range('b', 'c') as $leg) {
             $race[$leg] = self::ensureChannel(self::$device[$leg]->waitForInbound(self::$device[$leg]->getSipUsername(), 10));

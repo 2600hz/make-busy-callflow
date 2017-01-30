@@ -19,6 +19,8 @@ class ParkingTestCase extends TestCase {
     const RETRIEVE          = '*5';
 
     public static function setUpCase() {
+        parent::setUpCase();
+
         self::$a_device = self::$account->createDevice("auth", true);
         self::$a_device->createCallflow([self::A_EXT]);
 

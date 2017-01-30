@@ -27,7 +27,6 @@ class KeyPress extends UserTestCase {
         $channel_c_1->sendDtmf('1');
         self::ensureEvent( $channel_a->waitAnswer() );
         self::assertEquals("answered", $channel_a->getAnswerState());
-        self::hangupChannels($channel_a, $channel_c_1, $channel_c_2);
     }
 
 }

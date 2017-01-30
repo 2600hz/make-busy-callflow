@@ -15,7 +15,7 @@ class StrategySimultanous extends RingGroupTestCase {
 
     public function main($sip_uri) {
         $target = self::RG_EXT_3 . '@' . $sip_uri;
-        self::ensureChannel( self::$device["a"]->originate($target) );
+        $channel_a = self::ensureChannel( self::$device["a"]->originate($target) );
 
         foreach (range('d', 'e') as $leg) {
             $race[$leg] = self::ensureChannel(self::$device[$leg]->waitForInbound(self::$device[$leg]->getSipUsername(), 10));

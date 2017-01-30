@@ -34,6 +34,7 @@ class UserTestCase extends TestCase
     const OFFNET_NUMBER = "15553335678";
 
     public static function setUpCase() {
+        parent::setUpCase();
         self::$a_user= self::$account->createUser();
         self::$a_user->createUserCallFlow([self::A_NUMBER]);
 

@@ -34,6 +34,7 @@ class DeviceTestCase extends TestCase
     const RESTRICTED_NUMBER = '6845551234';
 
     public static function setUpCase() {
+        parent::setUpCase();
         self::$realm = self::$account->getAccountRealm();
 
         self::$a_device = self::$account->createDevice("auth");

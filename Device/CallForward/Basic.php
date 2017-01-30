@@ -1,6 +1,5 @@
 <?php
 namespace KazooTests\Applications\Callflow;
-use \MakeBusy\Common\Log;
 
 class BasicTest extends DeviceTestCase {
 
