@@ -28,6 +28,8 @@ class AttendedValetRetrieve extends ParkingTestCase {
         $channel_b->deflectChannel($channel_b_2, $referred_by);
 
         $channel_c = self::ensureChannel( self::$c_device->originate($retrieve) );
+        $channel_c->waitAnswer();
+
         self::ensureTalking($channel_a, $channel_c);
         self::hangupBridged($channel_a, $channel_c);
     }
