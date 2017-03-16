@@ -16,6 +16,7 @@ class BlindPark extends ParkingTestCase {
         $channel_b->waitAnswer();
 
         $channel_b->deflect($parking_spot);
+        $channel_b->waitDestroy();
 
         $channel_c = self::ensureChannel( self::$c_device->originate($parking_spot) );
         $channel_c->waitPark();
