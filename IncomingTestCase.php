@@ -49,8 +49,8 @@ class IncomingTestCase extends TestCase
     }
 
     public static function setConfig($name, $value) {
-        $cfg = self::$account->getAccount()->SystemConfig("privacy");
-        $cfg->default->$name = $value;
+        $cfg = self::$account->system_config("privacy/default");
+        $cfg->$name = $value;
         $cfg->save();
     }
 
