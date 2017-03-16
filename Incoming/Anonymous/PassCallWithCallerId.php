@@ -2,7 +2,6 @@
 namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 use \MakeBusy\Common\Utils;
-use \MakeBusy\Kazoo\Applications\Crossbar\SystemConfigs;
 
 class PassCallWithCallerId extends IncomingTestCase {
 
