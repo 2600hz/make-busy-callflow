@@ -6,7 +6,6 @@ use \MakeBusy\Common\Log;
 //Test answering parked call ring back via attended transfer.
 class AttendedParkRingback extends ParkingTestCase {
     public function main($sip_uri) {
-$this->markTestIncomplete('Unknown issue');
         $target = self::B_EXT . '@' . $sip_uri;
         $referred_by = self::$b_device->makeReferredByUri();
         $parking_spot = self::PARKING_SPOT_1 . '@' . $sip_uri;
@@ -16,6 +15,7 @@ $this->markTestIncomplete('Unknown issue');
 
         $channel_b->answer();
         $channel_b->waitAnswer();
+        $channel_a->waitAnswer();
 
         $this->assertEquals($channel_b->getChannelCallState(), "ACTIVE");
         $channel_b->onHold();

@@ -14,6 +14,7 @@ class AttendedPark extends ParkingTestCase {
 
         $channel_b->answer();
         $channel_b->waitAnswer();
+        $channel_a->waitAnswer();
 
         $this->assertEquals($channel_b->getChannelCallState(), "ACTIVE");
         $channel_b->onHold();

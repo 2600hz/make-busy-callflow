@@ -13,7 +13,9 @@ class BlindParkToOccupied extends ParkingTestCase {
 
         $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
         $channel_b->answer();
+
         $channel_b->waitAnswer();
+        $channel_a->waitAnswer();
 
         $channel_b->deflect($parking_spot);
         $channel_b->waitDestroy();

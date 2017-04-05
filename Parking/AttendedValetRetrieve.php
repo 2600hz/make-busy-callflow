@@ -17,6 +17,9 @@ class AttendedValetRetrieve extends ParkingTestCase {
         $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
 
         $channel_b->answer();
+        $channel_a->waitAnswer();
+        $channel_b->waitAnswer();
+
         self::assertEquals($channel_b->getChannelCallState(), "ACTIVE");
         $channel_b->onHold();
         $this->assertEquals($channel_b->getChannelCallState(), "HELD");
