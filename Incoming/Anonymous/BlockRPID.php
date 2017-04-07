@@ -8,10 +8,6 @@ class BlockRPID extends IncomingTestCase {
         self::setConfig("block_anonymous_caller_id", true);
     }
 
-    public function tearDownTest() {
-        self::setConfig("block_anonymous_caller_id", false);
-    }
-
     public function main($sip_uri) {
         $number = self::$carrier_number->toNpan();
         $target = self::$number .'@'. $sip_uri;

@@ -19,7 +19,13 @@ class IncomingTestCase extends TestCase
 
     const A_EXT = '1001';
 
+    protected static function system_configs() {
+        return ["privacy", "number_manager"];
+    }
+
     public static function setUpCase() {
+        self::$account->system_config("number_manager/default")->fetch()->patch(["local_feature_override"], true);
+
         self::$number = self::getCarrierNumber(self::$account->getBaseType());
         if (is_null(self::$number)) {
             Log::warning("Carrier number is not defined for test case: " . self::$account->getBaseType() . ", skip setup");

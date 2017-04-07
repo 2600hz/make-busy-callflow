@@ -18,8 +18,13 @@ class ParkingTestCase extends TestCase {
     const VALET             = '*4';
     const RETRIEVE          = '*5';
 
+    protected static function system_configs() {
+        return ["callflow.park"];
+    }
+
     public static function setUpCase() {
         parent::setUpCase();
+        self::$account->system_config("callflow.park/default")->fetch()->patch(["default_ringback_timeout"], 5000);
 
         self::$a_device = self::$account->createDevice("auth", true);
         self::$a_device->createCallflow([self::A_EXT]);
