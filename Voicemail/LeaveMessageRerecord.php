@@ -41,7 +41,7 @@ class LeaveMessageRerecord extends VoicemailTestCase {
         self::expectPrompt($channel_b, "VM-MESSAGE_NUMBER");
         self::expectPrompt($channel_b, "1600");
         self::expectPrompt($channel_b, "VM-RECEIVED");
-        self::expectPrompt($channel_b, "VM-MESSAGE_MENU");
+        self::expectPrompt($channel_b, "VM-MESSAGE_MENU", 20);
 
         $channel_b->sendDtmf('7');
         self::expectPrompt($channel_b, "VM-DELETED");

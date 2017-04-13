@@ -32,7 +32,7 @@ class LeaveMessage extends VoicemailTestCase {
         self::expectPrompt($channel_b, "600", 60);
 
         self::expectPrompt($channel_b, "VM-RECEIVED");
-        self::expectPrompt($channel_b, "VM-MESSAGE_MENU");
+        self::expectPrompt($channel_b, "VM-MESSAGE_MENU", 20);
 
         $channel_b->sendDtmf('7');
 
