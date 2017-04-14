@@ -19,6 +19,9 @@ class BlindPark extends ParkingTestCase {
         $channel_b->deflect($parking_spot);
         $channel_b->waitDestroy();
 
+        // FIXME: sync
+        sleep(5); // Give Kazoo some time to realize call is parked
+
         $channel_c = self::ensureChannel( self::$c_device->originate($parking_spot) );
         $channel_c->waitPark();
 
