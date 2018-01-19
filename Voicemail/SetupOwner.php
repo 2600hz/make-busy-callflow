@@ -17,8 +17,6 @@ class SetupOwner extends VoicemailTestCase {
         $target  = self::B_USER_NUMBER . '@'. $sip_uri;
         $ch = self::ensureChannel( self::$b_device->originate($target) );
 
-        self::expectPrompt($ch, "VM-ENTER_PASS");
-        $ch->sendDtmf(self::DEFAULT_PIN);
         self::expectPrompt($ch, "VM-SETUP_INTRO");
         self::expectPrompt($ch, "VM-ENTER_NEW_PIN");
         $ch->sendDtmf(self::CHANGE_PIN);
