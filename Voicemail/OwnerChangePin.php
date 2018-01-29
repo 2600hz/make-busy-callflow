@@ -9,9 +9,13 @@ class OwnerChangePin extends VoicemailTestCase {
         self::$b_voicemail_box->resetVoicemailBox();
     }
 
+    public function setUpTest() {
+    	self::$b_voicemail_box->resetVoicemailBox();
+    }
+    
     public function main($sip_uri) {
         $target  = self::B_USER_NUMBER . '@'. $sip_uri;
-        $ch = self::ensureChannel( self::$b_device->originate($target) );
+        $ch = self::ensureAnswered( self::$b_device->originate($target), 30 );
 
         self::expectPrompt($ch, "VM-ENTER_PASS");
 

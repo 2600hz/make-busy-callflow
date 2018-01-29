@@ -5,6 +5,8 @@ use \MakeBusy\Common\Log;
 //MKBUSY-27
 class LeaveMessageRerecord extends VoicemailTestCase {
 
+	private $count;
+	
     public function setUpTest() {
         self::$b_voicemail_box->getVoicemailbox();
         $this->count  = count(self::$b_voicemail_box->getMessages());
@@ -17,7 +19,7 @@ class LeaveMessageRerecord extends VoicemailTestCase {
     public function main($sip_uri) {
         $target = self::B_USER_NUMBER . '@' . $sip_uri;
         
-        self::leaveMessage(self::$a_device, $target, "600", "1600");
+        self::leaveMessage(self::$a_device, self::VM_COMPOSE_B_CODE, "VM-SAMPLE-MESSAGE-1", "VM-SAMPLE-MESSAGE-2");
 
         $messages = self::$b_voicemail_box->getMessages();
 
@@ -27,8 +29,8 @@ class LeaveMessageRerecord extends VoicemailTestCase {
 
         self::assertNotNull($messages[0]->media_id);
 
-        $channel_b = self::ensureChannel( self::$b_device->originate($target) );
-
+        $channel_b = self::ensureAnswered( self::$b_device->originate($target), 30 );
+        
         self::expectPrompt($channel_b, "VM-ENTER_PASS");
         $channel_b->sendDtmf(self::DEFAULT_PIN);
 
@@ -39,7 +41,7 @@ class LeaveMessageRerecord extends VoicemailTestCase {
         $channel_b->sendDtmf('1');
 
         self::expectPrompt($channel_b, "VM-MESSAGE_NUMBER");
-        self::expectPrompt($channel_b, "1600");
+        self::expectPrompt($channel_b, "VM-SAMPLE-MESSAGE-2");
         self::expectPrompt($channel_b, "VM-RECEIVED");
         self::expectPrompt($channel_b, "VM-MESSAGE_MENU", 20);
 

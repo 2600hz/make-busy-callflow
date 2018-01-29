@@ -21,8 +21,8 @@ class PassCall extends IncomingTestCase {
         );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
 
-        self::ensureAnswer($channel_a, $channel_b);
         self::ensureEvent($channel_a->waitPark());
+        self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
         self::hangupBridged($channel_a, $channel_b);
     }

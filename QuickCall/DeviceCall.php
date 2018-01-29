@@ -7,12 +7,13 @@ class DeviceCall extends QuickCallTestCase {
         self::$admin_device->getDevice()->quickcall(self::A_EXT);
         $channel_a = self::ensureChannel( self::$admin_device->waitForInbound() );
         $channel_a->answer();
-        self::ensureEvent($channel_a->waitAnswer());
-
-        $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
+        self::ensureAnswered($channel_a);
+        
+        $channel_b = self::ensureChannel( self::$a_device->waitForInbound(null, 20) );
         $channel_b->answer();
-        self::ensureEvent($channel_b->waitAnswer());
-
+        self::ensureAnswered($channel_b);
+        
+        self::ensureTwoWayAudio($channel_a, $channel_b);
         self::hangupBridged($channel_a, $channel_b);
     }
 }

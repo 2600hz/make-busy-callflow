@@ -1,7 +1,9 @@
 <?php
-namespace KazooTests\Applications\Callflow;
+namespace KazooTests\Applications\Callflow\Device\CallForward;
 
-class BasicTest extends DeviceTestCase {
+use KazooTests\Applications\Callflow\DeviceTestCase;
+
+class Basic extends DeviceTestCase {
 
     public function setUpTest() {
         self::$b_device->resetCfParams(self::C_EXT);

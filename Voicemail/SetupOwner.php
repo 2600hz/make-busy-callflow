@@ -15,7 +15,7 @@ class SetupOwner extends VoicemailTestCase {
 
     public function main($sip_uri) {
         $target  = self::B_USER_NUMBER . '@'. $sip_uri;
-        $ch = self::ensureChannel( self::$b_device->originate($target) );
+        $ch = self::ensureAnswered( self::$b_device->originate($target) );
 
         self::expectPrompt($ch, "VM-SETUP_INTRO");
         self::expectPrompt($ch, "VM-ENTER_NEW_PIN");
@@ -25,12 +25,11 @@ class SetupOwner extends VoicemailTestCase {
         self::expectPrompt($ch, "VM-PIN_SET");
         self::expectPrompt($ch, "VM-SETUP_REC_GREETING");
         self::expectPrompt($ch, "VM-RECORD_GREETING");
-        $ch->playTone("600", 2000);
+        $ch->playTone(self::$message_tones["VM-SAMPLE-GREETING-1"], 2000);
         $ch->sendDtmf("1");
         self::expectPrompt($ch, "VM-REVIEW_RECORDING");
         $ch->sendDtmf("2");
-        $tone = $ch->detectTone("600");
-        $this->assertEquals("600", $tone);
+        self::expectPrompt($ch,"VM-SAMPLE-GREETING-1");
         self::expectPrompt($ch, "VM-REVIEW_RECORDING");
         $ch->sendDtmf("1");
         self::expectPrompt($ch, "VM-SAVED");

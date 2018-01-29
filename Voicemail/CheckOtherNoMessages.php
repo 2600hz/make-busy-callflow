@@ -3,7 +3,7 @@ namespace KazooTests\Applications\Callflow;
 use \MakeBusy\Common\Log;
 
 //MKBUSY-26
-class OwnerChangePin extends VoicemailTestCase {
+class CheckOtherNoMessages extends VoicemailTestCase {
 
     public function setUpTest() {
     }
@@ -14,7 +14,7 @@ class OwnerChangePin extends VoicemailTestCase {
 
     public function main($sip_uri) {
         $target  = self::B_USER_NUMBER . '@'. $sip_uri;
-        $ch = self::ensureChannel( self::$a_device->originate($target) );
+        $ch = self::ensureAnswered( self::$a_device->originate($target), 30);
 
         // TODO: speed-up redirect call to voicemail
         self::expectPrompt($ch, "VM-PERSON", 30);

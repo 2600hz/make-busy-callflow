@@ -6,14 +6,16 @@ use \MakeBusy\Common\Log;
 // Ensurue direct calls get forwarded and group calls do not
 class DirectCallsOnly extends UserTestCase {
 
+	private $cf;
+	
     public function setUpTest() {
+    	$this->cf = self::$b_user->getCallForward();
         self::$b_user->resetCfParams(self::C_NUMBER);
         self::$b_user->setCfParam("direct_calls_only", TRUE);
     }
 
     public function tearDownTest() {
-        self::$b_user->resetCfParams();
-        self::$b_user->setCfParam("direct_calls_only", FALSE);
+        self::$b_user->setCallForward($this->cf);
     }
 
     public function main($sip_uri) {

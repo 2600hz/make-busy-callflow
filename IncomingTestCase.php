@@ -24,6 +24,8 @@ class IncomingTestCase extends TestCase
     }
 
     public static function setUpCase() {
+    	Log::debug("SETTING UP ACCOUNT INCOMING");
+    	
         self::$account->system_config("number_manager/default")->fetch()->patch(["local_feature_override"], true);
 
         self::$number = self::getCarrierNumber(self::$account->getBaseType());

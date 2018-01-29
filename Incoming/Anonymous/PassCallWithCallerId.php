@@ -16,8 +16,8 @@ class PassCallWithCallerId extends IncomingTestCase {
         $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_number' => '12345']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
 
-        self::ensureAnswer($channel_a, $channel_b);
         self::ensureEvent($channel_a->waitPark());
+        self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
         self::hangupBridged($channel_a, $channel_b);
     }

@@ -1,5 +1,7 @@
 <?php
-namespace KazooTests\Applications\Callflow;
+namespace KazooTests\Applications\Callflow\Device;
+
+use KazooTests\Applications\Callflow\DeviceTestCase;
 use \MakeBusy\Common\Log;
 
 class TransferBlind extends DeviceTestCase {
@@ -11,8 +13,8 @@ class TransferBlind extends DeviceTestCase {
         $channel_a = self::ensureChannel( self::$a_device->originate($target_b) );
         $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
 
-        self::ensureAnswer($channel_a, $channel_b);
         self::ensureEvent($channel_a->waitPark());
+        self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
 
         $channel_b->deflect($target_c);

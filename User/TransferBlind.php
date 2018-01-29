@@ -11,8 +11,8 @@ class TransferBlind extends UserTestCase {
         $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
         $channel_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
 
-        self::ensureAnswer($channel_a, $channel_b);
         self::ensureEvent($channel_a->waitPark());
+        self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
 
         $channel_b->deflect($target_2);
