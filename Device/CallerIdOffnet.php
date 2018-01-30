@@ -13,7 +13,6 @@ class CallerIdOffnet extends DeviceTestCase {
         $number = self::$a_device->getCidParam("external")->number;
         $cid = $channel_b->getEvent()->getHeader("Caller-Caller-ID-Number");
         
-        Log::alert("EXTERNAL %s , CALL-ID => %s\n", $number , $cid);
         self::assertEquals(
             self::$a_device->getCidParam("external")->number,
             urldecode($channel_b->getEvent()->getHeader("Caller-Caller-ID-Number"))
