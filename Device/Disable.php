@@ -7,9 +7,8 @@ use \MakeBusy\Common\Log;
 class Disable extends DeviceTestCase {
 
     public function tearDownTest() {
-    	self::$b_device->enableDevice();
-    	self::$b_device->getGateway()->unregister();
-    	self::$b_device->getGateway()->register();
+   		self::$b_device->enableDevice();
+   		self::$b_device->getGateway()->reregister();
     }
 
     public function main($sip_uri) {
