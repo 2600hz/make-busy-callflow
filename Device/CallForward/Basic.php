@@ -7,6 +7,7 @@ class Basic extends DeviceTestCase {
 
     public function setUpTest() {
         self::$b_device->resetCfParams(self::C_EXT);
+        self::$a_device->getGateway()->register();
     }
 
     public function tearDownTest() {
