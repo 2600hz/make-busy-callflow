@@ -12,6 +12,7 @@ class Disable extends DeviceTestCase {
     }
 
     public function main($sip_uri) {
+    	self::assertTrue(self::$b_device->getGateway()->unregister());
     	self::$b_device->disableDevice();
     	self::assertFalse(self::$b_device->getGateway()->register());
     	$target = self::B_EXT .'@'. $sip_uri;
@@ -19,7 +20,7 @@ class Disable extends DeviceTestCase {
         $channel_b = self::$b_device->waitForInbound();
         self::assertEmpty($channel_b);
         self::$b_device->enableDevice();
-        self::assertTrue(self::$b_device->getGateway()->restart());
+        self::assertTrue(self::$b_device->getGateway()->register());
     }
 
 }
