@@ -19,6 +19,7 @@ class Disable extends DeviceTestCase {
         $channel_b = self::$b_device->waitForInbound();
         self::assertEmpty($channel_b);
         self::$b_device->enableDevice();
+        sleep(2);
         self::assertTrue(self::$b_device->getGateway()->register());
     }
 
