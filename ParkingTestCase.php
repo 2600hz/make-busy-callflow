@@ -26,7 +26,7 @@ class ParkingTestCase extends TestCase {
     public static function setUpCase() {
     	
         parent::setUpCase();
-        self::$account->system_config("callflow.park/default")->fetch()->patch(["default_ringback_timeout"], 5000);
+        self::$account->system_config("callflow.park/default")->fetch()->change(["default_ringback_timeout"], 5000);
 
         self::$a_device = self::$account->createDevice("auth", true);
         self::$a_device->createCallflow([self::A_EXT]);
