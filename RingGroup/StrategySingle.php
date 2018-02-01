@@ -19,12 +19,17 @@ class StrategySingle extends RingGroupTestCase {
 
         foreach (range('f', 'g') as $leg) {
             $race[$leg] = self::ensureChannel(self::$device[$leg]->waitForInbound(self::$device[$leg]->getSipUsername(), 30));
+//            Log::info("INBOUND LEG %s => %s", $leg, $race[$leg]->getEvent()->serialize('json'));
         }
 
         foreach (range('f', 'g') as $leg) {
+//        	Log::info("START LEG => %s", $leg);
             $destroy[$leg] = self::ensureEvent($race[$leg]->waitDestroy(30));
             $start[$leg] = $destroy[$leg]->getHeader('variable_start_epoch');
             $end[$leg] = $destroy[$leg]->getHeader('variable_end_epoch');
+//            Log::info("LEG => %s, start => %s, end %s", $leg, $start[$leg], $end[$leg]);
+//            Log::info("LEG %s => %s", $leg, $destroy[$leg]->serialize('json'));
+           
         }
         // one after another
         $this->assertEquals($end['f'], $start['g']);

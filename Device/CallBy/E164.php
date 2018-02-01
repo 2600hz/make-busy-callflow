@@ -1,5 +1,7 @@
 <?php
-namespace KazooTests\Applications\Callflow;
+namespace KazooTests\Applications\Callflow\Device\CallBy;
+
+use KazooTests\Applications\Callflow\DeviceTestCase;
 use \MakeBusy\Common\Log;
 
 class SipE164 extends DeviceTestCase {

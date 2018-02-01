@@ -4,7 +4,7 @@ use \MakeBusy\Common\Log;
 
 //MKBUSY-24
 // If device has no CID for emergency, use user CID
-class CallerIdEmergencySet extends UserTestCase {
+class CallerIdEmergencyUser extends UserTestCase {
 
     private $name;
     private $number;

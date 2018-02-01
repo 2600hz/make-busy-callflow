@@ -1,5 +1,7 @@
 <?php
-namespace KazooTests\Applications\Callflow;
+namespace KazooTests\Applications\Callflow\Device\CallBy;
+
+use KazooTests\Applications\Callflow\DeviceTestCase;
 use \MakeBusy\Common\Log;
 
 class SipRoute extends DeviceTestCase {
@@ -8,11 +10,12 @@ class SipRoute extends DeviceTestCase {
         $b_device_id = self::$b_device->getId();
         $raw_sip_uri = self::getProfile("auth")->getSipUri();
         $route_uri = preg_replace("/mod_sofia/", self::$b_device->getId(), $raw_sip_uri);
-        self::$b_device->setInviteFormat("route", $route_uri);
+        Log::info("route by %s", $route_uri);
+       	self::$b_device->setInviteFormat("route", $route_uri);        
     }
 
     public function tearDownTest() {
-        self::$b_device->setInviteFormat("username");
+       	self::$b_device->setInviteFormat("username");
     }
 
     public function main($sip_uri) {

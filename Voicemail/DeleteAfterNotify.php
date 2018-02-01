@@ -18,7 +18,7 @@ class DeleteAfterNotify extends VoicemailTestCase {
 
     public function main($sip_uri) {
         $target = self::B_USER_NUMBER . '@' . $sip_uri;
-        self::leaveMessage(self::$a_device, $target, "600");
+        self::leaveMessage(self::$a_device, self::VM_COMPOSE_B_CODE, "VM-SAMPLE-MESSAGE-1");
         self::assertEquals(self::$b_voicemail_box->getMessages(), $this->source);
     }
 

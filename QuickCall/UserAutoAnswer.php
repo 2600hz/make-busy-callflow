@@ -7,11 +7,11 @@ class UserAutoAnswer extends QuickCallTestCase {
         self::$admin_user->getUser()->quickcall(self::A_EXT);
         $channel_a = self::ensureChannel( self::$admin_device->waitForInbound() );
         $channel_a->answer();
-        self::ensureEvent($channel_a->waitAnswer());
-
+        self::ensureAnswered($channel_a);
+        
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
         $channel_b->answer();
-        self::ensureEvent($channel_b->waitAnswer());
+        self::ensureAnswered($channel_b);
 
         self::hangupBridged($channel_a, $channel_b);
     }

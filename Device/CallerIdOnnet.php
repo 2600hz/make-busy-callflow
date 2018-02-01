@@ -1,8 +1,10 @@
 <?php
-namespace KazooTests\Applications\Callflow;
+namespace KazooTests\Applications\Callflow\Device;
+
+use KazooTests\Applications\Callflow\DeviceTestCase;
 use \MakeBusy\Common\Log;
 
-class CallerIdOnnetTest extends DeviceTestCase {
+class CallerIdOnnet extends DeviceTestCase {
 
     public function main($sip_uri) {
         $target = self::B_EXT .'@'. $sip_uri;

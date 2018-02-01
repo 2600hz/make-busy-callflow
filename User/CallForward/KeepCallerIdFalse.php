@@ -4,7 +4,7 @@ use \MakeBusy\Common\Log;
 
 // MKBUSY-36 - test keep caller id false
 // Caller Id presented to c_devices should be B_user internal CID
-class KeepCallerId extends UserTestCase {
+class KeepCallerIdFalse extends UserTestCase {
 
     public function setUpTest() {
         self::$b_user->resetCfParams(self::C_NUMBER);
@@ -12,11 +12,13 @@ class KeepCallerId extends UserTestCase {
     }
 
     public function tearDownTest() {
+    	Log::info("RESETTING 5116");
         self::$b_user->resetCfParams();
     }
 
     public function main($sip_uri) {
-        $this->markTestIncomplete('Known issue, KAZOO-5116');
+    	Log::info("Known issue, KAZOO-5116");
+        $this->markTestIncomplete("");
         $target  = self::B_NUMBER .'@'. $sip_uri;
         $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
         $channel_c = self::ensureChannel( self::$c_device_1->waitForInbound() );

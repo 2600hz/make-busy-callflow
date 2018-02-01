@@ -4,6 +4,7 @@ namespace KazooTests\Applications\Callflow;
 
 use \KazooTests\TestCase;
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
+use MakeBusy\Kazoo\Applications\Callflow\FeatureCodes;
 
 class VoicemailTestCase extends TestCase
 {
@@ -22,6 +23,12 @@ class VoicemailTestCase extends TestCase
     const DEFAULT_PIN = '0000';
     const CHANGE_PIN  = '1111';
 
+    protected static $message_tones = [
+    		"VM-SAMPLE-MESSAGE-1" => 3500,
+    		"VM-SAMPLE-MESSAGE-2" => 3550,
+    		"VM-SAMPLE-GREETING-1" => 3600
+    ];
+
     public static function setUpCase() {
         self::$b_voicemail_box = self::$account->createVm(self::VM_BOX_ID);
         self::$b_user          = self::$account->createUser();
@@ -31,30 +38,38 @@ class VoicemailTestCase extends TestCase
         self::$b_voicemail_box->createCallflow([self::VM_ACCESS_NUMBER]);
         self::$b_voicemail_box->createUserVmCallflow([self::B_USER_NUMBER], self::$b_user->getId());
         self::$b_voicemail_box->createCheckCallflow([self::VM_CHECK_NUMBER]);
+        FeatureCodes::createVmCompose(self::$account);
 
         //set defaults, box should be setup when entering a test, we can force setup by setting is_setup=FALSE later.
         self::$b_voicemail_box->setVoicemailboxParam('owner_id', self::$b_user->getId());
         self::$b_voicemail_box->setVoicemailboxParam('is_setup', TRUE);
     }
 
-    static function leaveMessage($device, $target, $freq, $refreq = null){
-        $ch = self::ensureChannel( $device->originate($target) );
-        $ch->waitAnswer();
+    public static function onChannelReady($ch) {
+    	$ch->startToneDetection("VOICEMAIL");
+    }
+
+    public static function onChannelAnswer($ch) {
+    	$ch->startToneDetection("VOICEMAIL");
+    }
+
+    static function leaveMessage($device, $target, $msg1, $msg2 = null){
+        $ch = self::ensureAnswered($device->originate($target), 30);
 
         // TODO: speed-up redirect call to voicemail
         self::expectPrompt($ch, "VM-PERSON", 30);
         self::expectPrompt($ch, "VM-NOT_AVAILABLE");
         self::expectPrompt($ch, "VM-RECORD_MESSAGE");
 
-        $ch->playTone($freq);
+        $ch->playTone(self::$message_tones[$msg1]);
 
         $ch->sendDtmf("1");
 
         self::expectPrompt($ch, "VM-REVIEW_RECORDING", 20);
 
-        if ($refreq){
+        if ($msg2){
             $ch->sendDtmf("3");
-            $ch->playTone($refreq, 2000);
+            $ch->playTone(self::$message_tones[$msg2], 2000);
             $ch->sendDtmf("1");
             self::expectPrompt($ch, "VM-REVIEW_RECORDING", 20);
         }

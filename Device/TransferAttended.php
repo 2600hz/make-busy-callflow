@@ -1,5 +1,7 @@
 <?php
-namespace KazooTests\Applications\Callflow;
+namespace KazooTests\Applications\Callflow\Device;
+
+use KazooTests\Applications\Callflow\DeviceTestCase;
 use \MakeBusy\Common\Log;
 
 class TransferAttended extends DeviceTestCase {
@@ -12,8 +14,8 @@ class TransferAttended extends DeviceTestCase {
         $channel_a = self::ensureChannel( self::$a_device->originate($target) );
         $channel_b = self::ensureChannel( self::$b_device->waitForInbound() );
 
-        self::ensureAnswer($channel_a, $channel_b);
         self::ensureEvent($channel_a->waitPark());
+        self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
 
         self::assertEquals($channel_b->getChannelCallState(), "ACTIVE");
@@ -26,7 +28,6 @@ class TransferAttended extends DeviceTestCase {
         $channel_c->answer();
         self::ensureEvent($channel_c->waitAnswer());
         self::ensureEvent($channel_b_2->waitAnswer());
-        $channel_b_2->waitPark();
         self::ensureTwoWayAudio($channel_b_2, $channel_c);
 
         $channel_b->deflectChannel($channel_b_2, $referred_by);

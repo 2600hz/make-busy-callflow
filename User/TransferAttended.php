@@ -12,8 +12,8 @@ class TransferAttended extends UserTestCase {
         $channel_a = self::ensureChannel( self::$a_device_1->originate($target) );
         $channel_b = self::ensureChannel( self::$b_device_1->waitForInbound() );
 
-        self::ensureAnswer($channel_a, $channel_b);
         self::ensureEvent($channel_a->waitPark());
+        self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
 
         self::assertEquals($channel_b->getChannelCallState(), "ACTIVE");
@@ -25,8 +25,8 @@ class TransferAttended extends UserTestCase {
 
         $channel_c->answer();
         $channel_c->waitAnswer();
-        self::ensureEvent( $channel_b_2->waitAnswer() );
         self::ensureEvent( $channel_b_2->waitPark() );
+        self::ensureEvent( $channel_b_2->waitAnswer() );
         self::ensureTwoWayAudio($channel_b_2, $channel_c);
 
         $channel_b->deflectChannel($channel_b_2, $referred_by);

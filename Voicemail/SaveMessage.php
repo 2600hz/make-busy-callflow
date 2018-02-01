@@ -17,10 +17,9 @@ class SaveMessage extends VoicemailTestCase {
     public function main($sip_uri) {
         Log::debug("trying target %s", $sip_uri);
         $target = self::B_USER_NUMBER . '@' . $sip_uri;
-        self::leaveMessage(self::$a_device, $target, "600");
+        self::leaveMessage(self::$a_device, self::VM_COMPOSE_B_CODE, "VM-SAMPLE-MESSAGE-1");
 
-        $channel_b = self::ensureChannel( self::$b_device->originate($target) );
-        $channel_b->waitAnswer();
+        $channel_b = self::ensureAnswered( self::$b_device->originate($target), 30 );
 
         self::expectPrompt($channel_b, "VM-ENTER_PASS");
         $channel_b->sendDtmf(self::DEFAULT_PIN);
@@ -32,7 +31,7 @@ class SaveMessage extends VoicemailTestCase {
         $channel_b->sendDtmf('1');
 
         self::expectPrompt($channel_b, "VM-MESSAGE_NUMBER");
-        self::expectPrompt($channel_b, "600");
+        self::expectPrompt($channel_b, "VM-SAMPLE-MESSAGE-1");
         self::expectPrompt($channel_b, "VM-RECEIVED");
         self::expectPrompt($channel_b, "VM-MESSAGE_MENU", 20);
 
@@ -42,8 +41,7 @@ class SaveMessage extends VoicemailTestCase {
         $channel_b->hangup();
         $channel_b->waitHangup();
 
-        $channel_b = self::ensureChannel( self::$b_device->originate($target) );
-        $channel_b->waitAnswer();
+        $channel_b = self::ensureAnswered( self::$b_device->originate($target), 30 );
 
         self::expectPrompt($channel_b, "VM-ENTER_PASS");
         $channel_b->sendDtmf(self::DEFAULT_PIN);
@@ -55,7 +53,7 @@ class SaveMessage extends VoicemailTestCase {
         $channel_b->sendDtmf('2');
 
         self::expectPrompt($channel_b, "VM-MESSAGE_NUMBER");
-        self::expectPrompt($channel_b, "600");
+        self::expectPrompt($channel_b, "VM-SAMPLE-MESSAGE-1");
         self::expectPrompt($channel_b, "VM-RECEIVED");
         self::expectPrompt($channel_b, "VM-MESSAGE_MENU", 20);
 

@@ -13,8 +13,8 @@ class CallUserDevices extends UserTestCase {
         $channel_b_1 = self::ensureChannel( self::$b_device_1->waitForInbound() );
         $channel_b_2 = self::ensureChannel( self::$b_device_2->waitForInbound() );
 
-        self::ensureAnswer($channel_a, $channel_b_1);
         self::ensureEvent($channel_a->waitPark());
+        self::ensureAnswer($channel_a, $channel_b_1);
         self::ensureTwoWayAudio($channel_a, $channel_b_1);
         self::hangupBridged($channel_a, $channel_b_1);
     }
