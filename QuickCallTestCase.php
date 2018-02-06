@@ -5,7 +5,7 @@ namespace KazooTests\Applications\Callflow;
 use \KazooTests\TestCase;
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
-class QuickCallTestCase extends TestCase {
+abstract class QuickCallTestCase extends TestCase {
 
     public static $admin_user;
     public static $admin_device;

@@ -6,7 +6,7 @@ use \KazooTests\TestCase;
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 use MakeBusy\Kazoo\Applications\Callflow\FeatureCodes;
 
-class VoicemailTestCase extends TestCase
+abstract class VoicemailTestCase extends TestCase
 {
     public static $a_device;
     public static $b_user;

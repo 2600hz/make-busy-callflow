@@ -5,7 +5,7 @@ namespace KazooTests\Applications\Callflow;
 use \KazooTests\TestCase;
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
-class RingGroupTestCase extends TestCase {
+abstract class RingGroupTestCase extends TestCase {
     public static $user = array();
     public static $device = array();
 

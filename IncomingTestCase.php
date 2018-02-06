@@ -5,7 +5,7 @@ namespace KazooTests\Applications\Callflow;
 use \KazooTests\TestCase;
 use \MakeBusy\Common\Log;
 
-class IncomingTestCase extends TestCase
+abstract class IncomingTestCase extends TestCase
 {
     protected static $carrier;
     protected static $carrier_number;
@@ -24,7 +24,6 @@ class IncomingTestCase extends TestCase
     }
 
     public static function setUpCase() {
-    	Log::debug("SETTING UP ACCOUNT INCOMING");
     	
         self::$account->system_config("number_manager/default")->fetch()->change(["local_feature_override"], true);
 

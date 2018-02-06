@@ -5,7 +5,7 @@ namespace KazooTests\Applications\Callflow;
 use \KazooTests\TestCase;
 use \MakeBusy\Kazoo\Applications\Crossbar\TestAccount;
 
-class DeviceTestCase extends TestCase
+abstract class DeviceTestCase extends TestCase
 {
     protected static $a_device;
     protected static $b_device;
