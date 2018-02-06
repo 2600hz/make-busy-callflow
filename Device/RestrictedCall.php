@@ -7,13 +7,13 @@ use \MakeBusy\Common\Log;
 class RestrictedCall extends DeviceTestCase {
 
     public function setUpTest() {
-        self::$a_device->setRestriction("caribbean");        
-        self::$a_device->getGateway()->register();
+        self::$a_device->setRestriction("caribbean");
+        self::$a_device->getGateway()->reregister();
     }
 
     public function tearDownTest() {
         self::$a_device->resetRestrictions();
-        self::$a_device->getGateway()->register();
+        self::$a_device->getGateway()->reregister();
     }
 
     public function main($sip_uri) {
