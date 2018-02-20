@@ -2,28 +2,25 @@
 namespace KazooTests\Applications\Callflow\Device;
 
 use \KazooTests\Applications\Callflow\DeviceTestCase;
-use \MakeBusy\Common\Log;
+use \MakeBusy\Common\Utils;
 
 class PasswordChange extends DeviceTestCase {
 
 	private $password;
 	
     public function setUpTest() {
-//         $this->password = self::$a_device->getPassword();
-//         self::$a_device->setPassword("test_password");
-//         self::assertFalse( self::$a_device->getGateway()->register() );
+    	$this->password = self::$a_device->getPassword();
     }
 
     public function tearDownTest() {
         self::$a_device->setPassword($this->password);
         self::$a_device->getGateway()->kill();
-        self::getProfile('auth')->rescan();
+        self::rescanProfile('auth');
         self::$a_device->getGateway()->register();
     }
 
     public function main($sip_uri) {
-    	$this->password = self::$a_device->getPassword();
-    	self::$a_device->setPassword("test_password");
+    	self::$a_device->setPassword(Utils::randomString());
     	self::assertFalse( self::$a_device->getGateway()->register() );
     	
     	$target = self::B_EXT .'@'. $sip_uri;
@@ -31,8 +28,8 @@ class PasswordChange extends DeviceTestCase {
         $this->assertEmpty($channel_a);
 
         self::$a_device->getGateway()->kill();
-        self::getProfile('auth')->rescan();
-
+        self::rescanProfile('auth');
+        
         $this->assertTrue( self::$b_device->getGateway()->register() );
         $this->assertTrue( self::$a_device->getGateway()->register() );
 

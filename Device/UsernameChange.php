@@ -9,21 +9,17 @@ class UsernameChange extends DeviceTestCase {
     private $username;
 
     public function setUpTest() {
-//         $this->username = self::$a_device->getUsername();
-//         self::$a_device->setUsername("test_user");
-//         self::assertFalse( self::$a_device->getGateway()->register() );
+    	$this->username = self::$a_device->getUsername();
     }
 
     public function tearDownTest() {
         self::$a_device->setUsername($this->username);
         self::$a_device->getGateway()->kill();
-        self::getProfile('auth')->rescan();
+        self::rescanProfile('auth');
     }
 
     public function main($sip_uri) {
-    	$this->username = self::$a_device->getUsername();
     	self::$a_device->setUsername("test_user");
-    	sleep(3);
     	self::assertFalse( self::$a_device->getGateway()->register() );
     	
     	$target = self::B_EXT .'@'. $sip_uri;
@@ -31,7 +27,7 @@ class UsernameChange extends DeviceTestCase {
         self::assertEmpty( $channel_a );
 
         self::$a_device->getGateway()->kill();
-        self::getProfile("auth")->rescan(); 
+        self::rescanProfile("auth");
 
         $this->assertTrue( self::$a_device->getGateway()->register() );
 
