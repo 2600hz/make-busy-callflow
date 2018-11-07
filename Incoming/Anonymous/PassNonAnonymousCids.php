@@ -14,42 +14,42 @@ class PassNonAnonymousCids extends IncomingTestCase {
         $number = self::$carrier_number->toNpan();
         $target = self::$number .'@'. $sip_uri;
 
-        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_name' => 'anonymou']) );
+        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_name' => 'anonymou', 'origination_caller_id_number' => '12345']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
         self::ensureEvent($channel_a->waitPark());
         self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
         self::hangupBridged($channel_a, $channel_b);
 
-        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_number' => 'Anonymou']) );
+        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_number' => 'Anonymou', 'origination_caller_id_number' => '12345']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
         self::ensureEvent($channel_a->waitPark());
         self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
         self::hangupBridged($channel_a, $channel_b);
 
-        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_name' => 'restricte']) );
+        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_name' => 'restricte', 'origination_caller_id_number' => '12345']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
         self::ensureEvent($channel_a->waitPark());
         self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
         self::hangupBridged($channel_a, $channel_b);
 
-        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_number' => 'Restricte']) );
+        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_number' => 'Restricte', 'origination_caller_id_number' => '12345']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
         self::ensureEvent($channel_a->waitPark());
         self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
         self::hangupBridged($channel_a, $channel_b);
 
-        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_number' => '5024445555']) );
+        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_number' => '5024445555', 'origination_caller_id_number' => '12345']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
         self::ensureEvent($channel_a->waitPark());
         self::ensureAnswer($channel_a, $channel_b);
         self::ensureTwoWayAudio($channel_a, $channel_b);
         self::hangupBridged($channel_a, $channel_b);
 
-        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_name' => 'unknown']) );
+        $channel_a = self::ensureChannel( self::$offnet->originate($target, 5, ['origination_caller_id_name' => 'unknown', 'origination_caller_id_number' => '12345']) );
         $channel_b = self::ensureChannel( self::$a_device->waitForInbound() );
         self::ensureEvent($channel_a->waitPark());
         self::ensureAnswer($channel_a, $channel_b);
